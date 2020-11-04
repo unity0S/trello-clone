@@ -11,14 +11,15 @@
 	<groupId>io.molnarsandor</groupId>
 	<artifactId>pmtool</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>pmtool</name>
-	<description>Project Manager Tool</description>
+	<name>pmtool-upgraded-trello-clone</name>
+	<description>Trello Clone</description>
 
 	<properties>
 		<java.version>11</java.version>
 	</properties>
 
 	<dependencies>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -92,6 +93,19 @@
 			<artifactId>jjwt</artifactId>
 			<version>0.9.1</version>
 		</dependency>
+
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>2.9.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>2.9.2</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
