@@ -4,10 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Map;
+
 @AllArgsConstructor
 @Getter
 @Setter
-public class ProjectNotFoundExceptionResponse {
+public class ValidationErrorResponse {
 
-    private String ProjectNotFound;
+    private Map<String,String> validationError;
 }

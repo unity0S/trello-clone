@@ -1,34 +1,37 @@
 package io.molnarsandor.pmtool.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
 @Entity
-@Data
-public class User implements UserDetails {
+@Getter
+@Setter
+@NoArgsConstructor
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Email(message = "Username needs to be an email")
-    @NotBlank(message = "Username is required")
+    @Email(message = "Needs to be a valid email")
+    @NotBlank(message = "Email is required")
     @Column(unique = true)
-    private String username;
+    private String email;
     @NotBlank(message = "Please enter your full name")
     private String fullName;
     @NotBlank(message = "Password field is required")
     private String password;
+
+    private String activation;
+    private Boolean enabled;
 
     @Transient
     private String confirmPassword;
@@ -45,39 +48,6 @@ public class User implements UserDetails {
     @PrePersist
     protected void onCreate() { this.created_At = new Date(); }
 
-    @PreUpdate void onUpdate() { this.updated_At = new Date(); }
-
-    /*
-    UserDetails interface methods
-    */
-
-    @Override
-    @JsonIgnore
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
-    }
-
-    @Override
-    @JsonIgnore
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    @JsonIgnore
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    @JsonIgnore
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    @JsonIgnore
-    public boolean isEnabled() {
-        return true;
-    }
+    @PreUpdate
+    protected void onUpdate() { this.updated_At = new Date(); }
 }

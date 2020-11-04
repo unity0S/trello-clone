@@ -1,4 +1,4 @@
-package io.molnarsandor.pmtool.services;
+package io.molnarsandor.pmtool.service;
 
 import io.molnarsandor.pmtool.domain.Backlog;
 import io.molnarsandor.pmtool.domain.ProjectTask;
@@ -24,7 +24,6 @@ public class ProjectTaskService {
     @Autowired
     private ProjectService projectService;
 
-
     public ProjectTask addProjectTask(String projectIdentifier, ProjectTask projectTask, String username) {
 
         // Exceptions: Project not found
@@ -44,7 +43,7 @@ public class ProjectTaskService {
 
             // Add the sequence to the PT
             projectTask.setProjectSequence(backlog.getProjectIdentifier() + "-" + BacklogSequence);
-            projectTask.setProjectIdentifier(projectIdentifier);
+            projectTask.setProjectIdentifier(projectIdentifier.toUpperCase());
 
             // INITIAL priority when priority is null
             if(projectTask.getPriority() == null || projectTask.getPriority() == 0) {
@@ -52,8 +51,7 @@ public class ProjectTaskService {
             }
 
             // INITIAL status when status is null
-            if(projectTask.getStatus().equals("") || projectTask.getStatus() == null) {
-                // TODO refactor ENUM
+            if(projectTask.getStatus() == null || projectTask.getStatus().equals("")) {
                 projectTask.setStatus("TO_DO");
             }
 
@@ -69,7 +67,7 @@ public class ProjectTaskService {
 
         projectService.findProjectByIdentifier(id, username);
 
-        return projectTaskRepository.findByProjectIdentifierOrderByPriority(id);
+        return projectTaskRepository.findByProjectIdentifierIgnoreCaseOrderByPriority(id);
     }
 
     public ProjectTask findPTByProjectSequence(String backlog_id, String pt_id, String username) {
@@ -81,7 +79,7 @@ public class ProjectTaskService {
             throw new ProjectNotFoundException("Project Task '" + pt_id + "' was not found");
         }
 
-        if(!projectTask.getProjectIdentifier().equals(backlog_id)) {
+        if(!projectTask.getProjectIdentifier().equalsIgnoreCase(backlog_id)) {
             throw new ProjectNotFoundException("Project Task '" + pt_id + "' does not exists in project: '" + backlog_id);
         }
 

@@ -2,15 +2,21 @@ package io.molnarsandor.pmtool.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 public class Project {
 
     @Id
@@ -19,7 +25,7 @@ public class Project {
     @NotBlank(message = "Project name is required")
     private String projectName;
     @NotBlank(message = "Project Identifier is required")
-    @Size(min = 4, max = 6, message = "Please use 4 to 6 characters")
+    @Size(min = 4, max = 15, message = "Please use 4 to 15 characters")
     @Column(updatable = false, unique = true)
     private String projectIdentifier;
     @NotBlank(message = "Project description is required")
@@ -43,6 +49,10 @@ public class Project {
     private User user;
 
     private String projectLeader;
+
+    @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "project", orphanRemoval = true)
+    @JsonManagedReference
+    private Set<Collaborator> collaborators;
 
     @PrePersist
     protected void onCreate() {

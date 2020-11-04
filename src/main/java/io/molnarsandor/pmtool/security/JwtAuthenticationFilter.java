@@ -1,7 +1,9 @@
 package io.molnarsandor.pmtool.security;
 
 import io.molnarsandor.pmtool.domain.User;
-import io.molnarsandor.pmtool.services.CustomUserDetailsService;
+import io.molnarsandor.pmtool.service.UserService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,34 +23,37 @@ import static io.molnarsandor.pmtool.security.SecurityConstans.TOKEN_PREFIX;
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
+    private final Log log = LogFactory.getLog(this.getClass());
+
     @Autowired
     private JwtTokenProvider tokenProvider;
 
     @Autowired
-    private CustomUserDetailsService customUserDetailsService;
+    private UserService userService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest,
                                     HttpServletResponse httpServletResponse,
-                                    FilterChain filterChain) throws ServletException, IOException {
+                                    FilterChain filterChain) throws ServletException, IOException, NullPointerException {
         try {
 
             String jwt = getJWTFromRequest(httpServletRequest);
 
             if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
                 Long userId = tokenProvider.getUserIdFromJWT(jwt);
-                User userDetails = customUserDetailsService.loadUserById(userId);
+                User userDetails = userService.loadUserById(userId);
 
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                         userDetails, null, Collections.emptyList());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
-        } catch (Exception ex) {
-            logger.error("Could not set user authentication in security context", ex);
+            filterChain.doFilter(httpServletRequest, httpServletResponse);
+        } catch (ServletException | IOException | NullPointerException e) {
+            log.error("Could not set user authentication in security context");
+            throw e;
         }
 
-        filterChain.doFilter(httpServletRequest, httpServletResponse);
     }
 
     private String getJWTFromRequest(HttpServletRequest request) {

@@ -1,7 +1,6 @@
-package io.molnarsandor.pmtool.services;
+package io.molnarsandor.pmtool.service;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import io.molnarsandor.pmtool.exceptions.ValidationErrorException;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -13,7 +12,7 @@ import static java.util.stream.Collectors.toMap;
 @Service
 public class MapValidationErrorService {
 
-    public ResponseEntity<?> MapValidationService(BindingResult result) {
+    public void MapValidationService(BindingResult result) {
 
         if(result.hasErrors()) {
             Map<String, String> errorMap =
@@ -21,10 +20,7 @@ public class MapValidationErrorService {
                             .stream()
                             .collect(toMap(FieldError::getField, FieldError::getDefaultMessage, (e1, e2) -> e1));
 
-            return new ResponseEntity<Map<String, String>>(errorMap, HttpStatus.BAD_REQUEST);
+            throw new ValidationErrorException(errorMap);
         }
-
-        return null;
-
     }
 }

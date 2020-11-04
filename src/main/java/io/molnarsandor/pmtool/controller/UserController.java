@@ -1,11 +1,12 @@
-package io.molnarsandor.pmtool.web;
+package io.molnarsandor.pmtool.controller;
 
 import io.molnarsandor.pmtool.domain.User;
 import io.molnarsandor.pmtool.payload.JWTLoginSuccessResponse;
 import io.molnarsandor.pmtool.payload.LoginRequest;
 import io.molnarsandor.pmtool.security.JwtTokenProvider;
-import io.molnarsandor.pmtool.services.MapValidationErrorService;
-import io.molnarsandor.pmtool.services.UserService;
+import io.molnarsandor.pmtool.service.EmailService;
+import io.molnarsandor.pmtool.service.MapValidationErrorService;
+import io.molnarsandor.pmtool.service.UserServiceImpl;
 import io.molnarsandor.pmtool.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,7 +31,7 @@ public class UserController {
     private MapValidationErrorService mapValidationErrorService;
 
     @Autowired
-    private UserService userService;
+    private UserServiceImpl userServiceImpl;
 
     @Autowired
     private UserValidator userValidator;
@@ -41,10 +42,12 @@ public class UserController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @Autowired
+    private EmailService emailService;
+
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest, BindingResult result) {
-        ResponseEntity<?> erroMap = mapValidationErrorService.MapValidationService(result);
-        if(erroMap != null) return erroMap;
+        mapValidationErrorService.MapValidationService(result);
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -64,11 +67,18 @@ public class UserController {
         // Validate passwords match
         userValidator.validate(user, result);
 
-        ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(result);
-        if(errorMap != null) return errorMap;
+        mapValidationErrorService.MapValidationService(result);
 
-        User newUser = userService.saveUser(user);
+        User newUser = userServiceImpl.registerUser(user);
 
-        return new ResponseEntity<User>(newUser, HttpStatus.CREATED);
+        return new ResponseEntity<>(newUser, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/activation/{key}")
+    public ResponseEntity<?> activateUser(@PathVariable String key) {
+
+        String result = userServiceImpl.userActivation(key);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

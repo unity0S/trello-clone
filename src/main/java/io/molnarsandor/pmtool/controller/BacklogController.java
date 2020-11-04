@@ -1,8 +1,8 @@
-package io.molnarsandor.pmtool.web;
+package io.molnarsandor.pmtool.controller;
 
 import io.molnarsandor.pmtool.domain.ProjectTask;
-import io.molnarsandor.pmtool.services.MapValidationErrorService;
-import io.molnarsandor.pmtool.services.ProjectTaskService;
+import io.molnarsandor.pmtool.service.MapValidationErrorService;
+import io.molnarsandor.pmtool.service.ProjectTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,13 +27,11 @@ public class BacklogController {
     public ResponseEntity<?> addPTtoBacklog(@Valid @RequestBody ProjectTask projectTask,
                                             BindingResult result, @PathVariable String backlog_id, Principal principal) {
 
-        // TODO refactor
-        ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(result);
-        if(errorMap != null) return errorMap;
+        mapValidationErrorService.MapValidationService(result);
 
         ProjectTask projectTask1 = projectTaskService.addProjectTask(backlog_id, projectTask, principal.getName());
 
-        return new ResponseEntity<ProjectTask>(projectTask1, HttpStatus.CREATED);
+        return new ResponseEntity<>(projectTask1, HttpStatus.CREATED);
     }
 
     @GetMapping("/{backlog_id}")
@@ -47,19 +45,18 @@ public class BacklogController {
 
         ProjectTask projectTask = projectTaskService.findPTByProjectSequence(backlog_id, pt_id, principal.getName());
 
-        return new ResponseEntity<ProjectTask>(projectTask, HttpStatus.OK);
+        return new ResponseEntity<>(projectTask, HttpStatus.OK);
     }
 
     @PatchMapping("/{backlog_id}/{pt_id}")
     public ResponseEntity<?> updateProjectTask(@Valid @RequestBody ProjectTask projectTask, BindingResult result,
                                                @PathVariable String backlog_id, @PathVariable String pt_id, Principal principal) {
 
-        ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(result);
-        if(errorMap != null) return errorMap;
+        mapValidationErrorService.MapValidationService(result);
 
         ProjectTask updatedTask = projectTaskService.updateByProjectSequence(projectTask,backlog_id, pt_id, principal.getName());
 
-        return new ResponseEntity<ProjectTask>(updatedTask, HttpStatus.OK);
+        return new ResponseEntity<>(updatedTask, HttpStatus.OK);
     }
 
     @DeleteMapping("/{backlog_id}/{pt_id}")
@@ -67,6 +64,6 @@ public class BacklogController {
 
         projectTaskService.deletePTByProjectSequence(backlog_id, pt_id, principal.getName());
 
-        return new ResponseEntity<String>("Project Task '" + pt_id + "' was deleted successfully", HttpStatus.OK);
+        return new ResponseEntity<>("Project Task '" + pt_id + "' was deleted successfully", HttpStatus.OK);
     }
 }

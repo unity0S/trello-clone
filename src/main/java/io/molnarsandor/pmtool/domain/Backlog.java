@@ -1,14 +1,18 @@
 package io.molnarsandor.pmtool.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 public class Backlog {
 
     @Id
@@ -23,5 +27,5 @@ public class Backlog {
     private Project project;
 
     @OneToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER, mappedBy = "backlog", orphanRemoval = true)
-    private List<ProjectTask> projectTasks = new ArrayList<>();
+    private Set<ProjectTask> projectTasks = new HashSet<>();
 }

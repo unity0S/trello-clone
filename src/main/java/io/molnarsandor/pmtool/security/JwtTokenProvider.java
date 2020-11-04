@@ -2,6 +2,9 @@ package io.molnarsandor.pmtool.security;
 
 import io.jsonwebtoken.*;
 import io.molnarsandor.pmtool.domain.User;
+import io.molnarsandor.pmtool.service.UserDetailsImpl;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
@@ -15,10 +18,10 @@ import static io.molnarsandor.pmtool.security.SecurityConstans.SECRET;
 @Component
 public class JwtTokenProvider {
 
-    // Generate Token
+    private final Log log = LogFactory.getLog(this.getClass());
 
     public String generateToken(Authentication authentication) {
-        User user = (User)authentication.getPrincipal();
+        User user = ((UserDetailsImpl) authentication.getPrincipal()).getUser();
         Date now = new Date(System.currentTimeMillis());
 
         Date expiryDate = new Date(now.getTime() + EXPIRATION_TIME);
@@ -27,7 +30,7 @@ public class JwtTokenProvider {
 
         Map<String, Object> claims = new HashMap<>();
         claims.put("id", (Long.toString(user.getId())));
-        claims.put("username", user.getUsername());
+        claims.put("username", user.getEmail());
         claims.put("fullName", user.getFullName());
 
 
@@ -46,15 +49,15 @@ public class JwtTokenProvider {
             Jwts.parser().setSigningKey(SECRET).parseClaimsJws(token);
             return true;
         } catch (SignatureException ex) {
-            System.out.println("invalid JWT Signature");
+            log.error("Invalid JWT Signature");
         } catch (MalformedJwtException ex) {
-            System.out.println("Invalid JWT Token");
+            log.error("Invalid JWT Token");
         } catch (ExpiredJwtException ex) {
-            System.out.println("Expired JWT Token");
+            log.error("Expired JWT Token");
         } catch (UnsupportedJwtException ex) {
-            System.out.println("Unsupported JWT Token");
+            log.error("Unsupported JWT Token");
         } catch (IllegalArgumentException ex) {
-            System.out.println("JWT claims string is empty");
+            log.error("JWT claims string is empty");
         }
         return false;
     }

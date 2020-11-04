@@ -7,7 +7,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class ProjectNotFoundExceptionResponse {
+public class UserNotLoggedInExceptionResponse {
 
-    private String ProjectNotFound;
+    private String userNotLoggedIn;
 }

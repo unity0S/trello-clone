@@ -1,5 +1,6 @@
 package io.molnarsandor.pmtool.repositories;
 
+import io.molnarsandor.pmtool.domain.Collaborator;
 import io.molnarsandor.pmtool.domain.Project;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -7,10 +8,12 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProjectRepository extends CrudRepository<Project, Long> {
 
-    Project findByProjectIdentifier(String projectId);
+    Project findByProjectIdentifierIgnoreCase(String projectId);
 
     @Override
     Iterable<Project> findAll();
 
     Iterable<Project> findAllByProjectLeader(String username);
+
+    Iterable<Project> findAllByCollaborators(Collaborator collaborator);
 }
