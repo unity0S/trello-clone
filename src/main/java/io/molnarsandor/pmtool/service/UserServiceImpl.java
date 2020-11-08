@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             newUser.setActivation(uuid);
             userRepository.save(newUser);
 
-            emailService.sendMessage(newUser.getEmail(), "Activation email", "You can activate your account following this link: /activation/" + uuid);
+            emailService.sendMessage(newUser.getEmail(), "Activation email", "You can activate your account following this link: https://trello-clone-ms.herokuapp.com/api/users/activation/" + uuid);
             return newUser;
         } catch (Exception e) {
             throw new UsernameAlreadyExistsException("Username '" + newUser.getEmail() + "' already exists");
