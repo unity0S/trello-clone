@@ -55,6 +55,6 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
     public final ResponseEntity<Object> handleValidationErrorException(ValidationErrorException ex, WebRequest request) {
         ValidationErrorResponse exceptionResponse = new ValidationErrorResponse(ex.getMsg());
         log.error(exceptionResponse.getValidationError().toString());
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(exceptionResponse.getValidationError(), HttpStatus.BAD_REQUEST);
     }
 }

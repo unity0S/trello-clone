@@ -8,6 +8,9 @@ import io.molnarsandor.pmtool.service.EmailService;
 import io.molnarsandor.pmtool.service.MapValidationErrorService;
 import io.molnarsandor.pmtool.service.UserServiceImpl;
 import io.molnarsandor.pmtool.validator.UserValidator;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,7 +49,14 @@ public class UserController {
     private EmailService emailService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest, BindingResult result) {
+    @ApiOperation(value = "Login", notes = "Login existing User", response = JWTLoginSuccessResponse.class)
+    @ApiResponse(code = 200, message = "Success", response = JWTLoginSuccessResponse.class)
+    public ResponseEntity<?> authenticateUser(
+            @Valid
+            @RequestBody
+            @ApiParam(required = true, name = "loginRequest", value = "Email and password")
+            LoginRequest loginRequest,
+            BindingResult result) {
         mapValidationErrorService.MapValidationService(result);
 
         Authentication authentication = authenticationManager.authenticate(
@@ -63,8 +73,15 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody User user, BindingResult result) {
-        // Validate passwords match
+    @ApiOperation(value = "Register", notes = "Register New User", response = User.class)
+    @ApiResponse(code = 200, message = "Success", response = User.class)
+    public ResponseEntity<?> registerUser(
+            @Valid
+            @RequestBody
+            @ApiParam(required = true, name = "user", value = "New User")
+            User user,
+            BindingResult result) {
+
         userValidator.validate(user, result);
 
         mapValidationErrorService.MapValidationService(result);
@@ -74,8 +91,13 @@ public class UserController {
         return new ResponseEntity<>(newUser, HttpStatus.CREATED);
     }
 
-    @PostMapping("/activation/{key}")
-    public ResponseEntity<?> activateUser(@PathVariable String key) {
+    @GetMapping("/activation/{key}")
+    @ApiOperation(value = "Activation", notes = "Registered User activation endpoint", response = String.class)
+    @ApiResponse(code = 200, message = "Success", response = String.class)
+    public ResponseEntity<?> activateUser(
+            @PathVariable
+            @ApiParam(required = true, name = "key", value = "Activation key received in User Email")
+            String key) {
 
         String result = userServiceImpl.userActivation(key);
 

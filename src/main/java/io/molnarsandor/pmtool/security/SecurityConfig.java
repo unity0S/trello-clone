@@ -74,10 +74,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(SIGN_UP_URLS).permitAll()
                 .antMatchers(ACTIVATION_URL).permitAll()
                 .antMatchers(
-                        "/swagger-resources/**",
-                        "/swagger-ui.html",
                         "/v2/api-docs",
-                        "/webjars/**"
+                        "/swagger-resources",
+                        "/swagger-resources/**",
+                        "/configuration/ui",
+                        "/configuration/security",
+                        "/swagger-ui.html",
+                        "/webjars/**",
+                        "/api/users/activation/**"
                 ).permitAll()
                 .anyRequest().authenticated();
 

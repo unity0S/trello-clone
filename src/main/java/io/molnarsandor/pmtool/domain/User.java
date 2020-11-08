@@ -1,6 +1,9 @@
 package io.molnarsandor.pmtool.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -8,6 +11,8 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -16,6 +21,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@ApiModel
 public class User {
 
     @Id
@@ -24,25 +30,34 @@ public class User {
     @Email(message = "Needs to be a valid email")
     @NotBlank(message = "Email is required")
     @Column(unique = true)
+    @ApiModelProperty(value = "Existing email where the activation link will be sent", required = true)
     private String email;
     @NotBlank(message = "Please enter your full name")
+    @Size(min = 5, max = 50, message = "Please use 5 to 50 characters")
+    @Pattern(regexp = "^([A-Za-záéúőóüö.]+\\s?){5,}$", message = "Special characters not allowed!")
+    @ApiModelProperty(value = "Full name of the User", required = true)
     private String fullName;
     @NotBlank(message = "Password field is required")
+    @Size(min = 8, max = 100, message = "Please use 8 to 30 characters")
+    @ApiModelProperty(value = "Password", required = true)
     private String password;
 
+    @JsonIgnore
     private String activation;
+    @JsonIgnore
     private Boolean enabled;
 
     @Transient
     private String confirmPassword;
 
-    @JsonFormat(pattern = "yyyy-mm-dd hh:mm:ss")
+    @JsonFormat(pattern = "yyyy-mm-dd")
     @Column(updatable = false)
     private Date created_At;
-    @JsonFormat(pattern = "yyyy-mm-dd hh:mm:ss")
+    @JsonFormat(pattern = "yyyy-mm-dd")
     private Date updated_At;
 
     @OneToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER, mappedBy = "user", orphanRemoval = true)
+    @ApiModelProperty(hidden = true)
     private List<Project> projects = new ArrayList<>();
 
     @PrePersist

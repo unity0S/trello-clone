@@ -41,8 +41,8 @@ public class CollaboratorService {
             }
 
             collaborator.setProject(project);
-            collaborator.setProjectIdentifier(projectIdentifier);
-            collaborator.setCollaboratorSequence(projectIdentifier + "-" + collaborator.getEmail());
+            collaborator.setProjectIdentifier(project.getProjectIdentifier());
+            collaborator.setCollaboratorSequence(project.getProjectIdentifier() + "-" + collaborator.getEmail());
 
             return collaboratorRepository.save(collaborator);
 
