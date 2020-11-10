@@ -1,5 +1,6 @@
 package io.molnarsandor.pmtool.service;
 
+import com.google.gson.JsonObject;
 import io.molnarsandor.pmtool.domain.Collaborator;
 import io.molnarsandor.pmtool.domain.Project;
 import io.molnarsandor.pmtool.exceptions.CollaboratorAlreadyAssignedException;
@@ -48,7 +49,7 @@ public class CollaboratorService {
 
     }
 
-    public void deleteCollaborator(String projectIdentifier, String collaboratorSequence, String username) {
+    public JsonObject deleteCollaborator(String projectIdentifier, String collaboratorSequence, String username) {
 
         Project project = projectService.findProjectByIdentifier(projectIdentifier, username);
 
@@ -75,5 +76,11 @@ public class CollaboratorService {
         Collaborator collaborator = collaboratorRepository.findByCollaboratorSequence(collaboratorSequence);
 
         collaboratorRepository.delete(collaborator);
+
+        JsonObject response = new JsonObject();
+
+        response.addProperty("deleteCollaborator", "Collaborator with id " + collaboratorSequence + " deleted from Project " + projectIdentifier);
+
+        return response;
     }
 }
