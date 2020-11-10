@@ -4,6 +4,7 @@ import io.molnarsandor.pmtool.domain.Backlog;
 import io.molnarsandor.pmtool.domain.Collaborator;
 import io.molnarsandor.pmtool.domain.Project;
 import io.molnarsandor.pmtool.domain.User;
+import io.molnarsandor.pmtool.dto.DeleteDTO;
 import io.molnarsandor.pmtool.exceptions.ProjectIdException;
 import io.molnarsandor.pmtool.exceptions.ProjectNotFoundException;
 import io.molnarsandor.pmtool.exceptions.UserNotLoggedInException;
@@ -120,8 +121,10 @@ public class ProjectService {
         return byLeader;
     }
 
-    public void deleteProjectByIdentifier(String projectId, String username) {
+    public DeleteDTO deleteProjectByIdentifier(String projectId, String username) {
 
         projectRepository.delete(findProjectByIdentifier(projectId, username));
+
+        return new DeleteDTO("Project " + projectId + " deleted");
     }
 }

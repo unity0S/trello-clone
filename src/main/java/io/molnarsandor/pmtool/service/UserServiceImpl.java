@@ -1,9 +1,13 @@
 package io.molnarsandor.pmtool.service;
 
 import io.molnarsandor.pmtool.domain.User;
+import io.molnarsandor.pmtool.dto.ActivationDTO;
+import io.molnarsandor.pmtool.exceptions.ActivationKeyNotFoundException;
+import io.molnarsandor.pmtool.exceptions.CustomInternalServerErrorException;
 import io.molnarsandor.pmtool.exceptions.UsernameAlreadyExistsException;
 import io.molnarsandor.pmtool.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -29,6 +33,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public User registerUser(User newUser) {
 
+        User user = userRepository.findByEmail(newUser.getEmail());
+
+        if (user != null) throw new UsernameAlreadyExistsException("Username '" + newUser.getEmail() + "' already exists");
+
         try {
             String uuid = generateKey();
             newUser.setEmail(newUser.getEmail());
@@ -40,8 +48,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
             emailService.sendMessage(newUser.getEmail(), "Activation email", "You can activate your account following this link: https://trello-clone-ms.herokuapp.com/api/users/activation/" + uuid);
             return newUser;
-        } catch (Exception e) {
-            throw new UsernameAlreadyExistsException("Username '" + newUser.getEmail() + "' already exists");
+        } catch (DataAccessException io) {
+            throw new CustomInternalServerErrorException("Internal Server Error", io);
         }
     }
 
@@ -66,16 +74,19 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public String userActivation(String key) {
+    public ActivationDTO userActivation(String key) {
         User user = userRepository.findByActivation(key);
 
-        if(user == null) throw new UsernameNotFoundException(USER_NOT_FOUND);
+        if(user == null) throw new ActivationKeyNotFoundException("Activation key not found");
 
-        user.setEnabled(true);
-        user.setActivation("");
-        userRepository.save(user);
-
-        return "User activated";
+        try {
+            user.setEnabled(true);
+            user.setActivation("");
+            userRepository.save(user);
+        } catch (DataAccessException io) {
+            throw new CustomInternalServerErrorException("Internal Server Error", io);
+        }
+        return new ActivationDTO("User activated");
     }
 
 

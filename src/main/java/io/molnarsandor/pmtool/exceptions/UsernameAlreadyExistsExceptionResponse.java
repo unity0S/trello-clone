@@ -4,12 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Map;
-
 @AllArgsConstructor
 @Getter
 @Setter
-public class ValidationErrorResponse {
+public class UsernameAlreadyExistsExceptionResponse {
 
-    private Map<String,String> validationError;
+    private String username;
 }

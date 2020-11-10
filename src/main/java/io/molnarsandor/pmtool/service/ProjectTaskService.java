@@ -1,8 +1,8 @@
 package io.molnarsandor.pmtool.service;
 
-import com.google.gson.JsonObject;
 import io.molnarsandor.pmtool.domain.Backlog;
 import io.molnarsandor.pmtool.domain.ProjectTask;
+import io.molnarsandor.pmtool.dto.DeleteDTO;
 import io.molnarsandor.pmtool.exceptions.CustomInternalServerErrorException;
 import io.molnarsandor.pmtool.exceptions.ProjectNotFoundException;
 import io.molnarsandor.pmtool.repositories.BacklogRepository;
@@ -104,17 +104,13 @@ public class ProjectTaskService {
         return projectTaskRepository.save(updatedTask);
     }
 
-    public JsonObject deletePTByProjectSequence(String backlogId, String ptId, String username) {
+    public DeleteDTO deletePTByProjectSequence(String backlogId, String ptId, String username) {
 
         // TODO decouple
         ProjectTask projectTask = findPTByProjectSequence(backlogId, ptId, username);
 
         projectTaskRepository.delete(projectTask);
 
-        JsonObject response = new JsonObject();
-
-        response.addProperty("deleteTask", "Project task " + ptId + " deleted");
-
-        return response;
+        return new DeleteDTO("Project task " + ptId + " deleted");
     }
 }

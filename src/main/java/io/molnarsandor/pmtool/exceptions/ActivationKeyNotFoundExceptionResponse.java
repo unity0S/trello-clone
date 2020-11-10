@@ -7,7 +7,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class UsernameAlreadyExistsResponse {
+public class ActivationKeyNotFoundExceptionResponse {
 
-    private String username;
+    private String activationKey;
 }

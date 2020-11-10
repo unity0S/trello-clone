@@ -3,6 +3,7 @@ package io.molnarsandor.pmtool.controller;
 import com.google.gson.JsonObject;
 import io.molnarsandor.pmtool.domain.Collaborator;
 import io.molnarsandor.pmtool.domain.User;
+import io.molnarsandor.pmtool.dto.DeleteDTO;
 import io.molnarsandor.pmtool.exceptions.*;
 import io.molnarsandor.pmtool.service.CollaboratorService;
 import io.molnarsandor.pmtool.service.EmailService;
@@ -37,14 +38,14 @@ public class CollaboratorController {
     @PostMapping("/{projectIdentifier}")
     @ApiOperation(value = "Add Collaborator to Project", notes = "Add New Collaborator to Project", response = Collaborator.class)
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Success", response = Collaborator.class),
-        @ApiResponse(code = 400, message = "Bad Request", response = ValidationErrorResponse.class),
+        @ApiResponse(code = 201, message = "Created", response = Collaborator.class),
+        @ApiResponse(code = 400, message = "Bad Request", response = ValidationErrorExceptionResponse.class),
         @ApiResponse(code = 401, message = "Unauthorized", response = UserNotLoggedInExceptionResponse.class),
         @ApiResponse(code = 404, message = "Not Found", response = ProjectNotFoundExceptionResponse.class),
         @ApiResponse(code = 409, message = "Conflict", response = CollaboratorAlreadyAssignedExceptionResponse.class),
-        @ApiResponse(code = 500, message = "Internal server Error", response = CustomInternalServerErrorResponse.class)
+        @ApiResponse(code = 500, message = "Internal server Error", response = CustomInternalServerErrorExceptionResponse.class)
     })
-    public ResponseEntity<?> addCollaboratorToProject(
+    public ResponseEntity<Collaborator> addCollaboratorToProject(
             @Valid
             @RequestBody
             @ApiParam(required = true, name = "collaborator", value = "New Collaborator to be added to the Project")
@@ -70,14 +71,14 @@ public class CollaboratorController {
     @DeleteMapping("/{projectIdentifier}/{collaboratorSequence}")
     @ApiOperation(value = "Delete Collaborator from Project", notes = "Delete existing Collaborator from Project")
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Success"),
-        @ApiResponse(code = 400, message = "Bad Request", response = ValidationErrorResponse.class),
+        @ApiResponse(code = 200, message = "Success", response = JsonObject.class),
+        @ApiResponse(code = 400, message = "Bad Request", response = ValidationErrorExceptionResponse.class),
         @ApiResponse(code = 401, message = "Unauthorized", response = UserNotLoggedInExceptionResponse.class),
         @ApiResponse(code = 404, message = "Not Found", response = ProjectNotFoundExceptionResponse.class),
         @ApiResponse(code = 409, message = "Conflict", response = CollaboratorAlreadyAssignedExceptionResponse.class),
-        @ApiResponse(code = 500, message = "Internal server Error", response = CustomInternalServerErrorResponse.class)
+        @ApiResponse(code = 500, message = "Internal server Error", response = CustomInternalServerErrorExceptionResponse.class)
     })
-    public ResponseEntity<JsonObject> deleteCollaborator(
+    public ResponseEntity<DeleteDTO> deleteCollaborator(
             @PathVariable
             @ApiParam(required = true, name = "projectIdentifier", value = "ID of the Project where you want to Delete the Collaborator")
             String projectIdentifier,
@@ -88,7 +89,7 @@ public class CollaboratorController {
 
         User user = (User) authentication.getPrincipal();
 
-        JsonObject response = collaboratorService.deleteCollaborator(projectIdentifier.toUpperCase(), collaboratorSequence, user.getEmail());
+        DeleteDTO response = collaboratorService.deleteCollaborator(projectIdentifier.toUpperCase(), collaboratorSequence, user.getEmail());
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

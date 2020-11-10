@@ -33,8 +33,8 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
     }
 
     @ExceptionHandler
-    public final ResponseEntity<UsernameAlreadyExistsResponse> handleUsernameAlreadyExists(UsernameAlreadyExistsException ex, WebRequest request) {
-        UsernameAlreadyExistsResponse exceptionResponse = new UsernameAlreadyExistsResponse(ex.getMessage());
+    public final ResponseEntity<UsernameAlreadyExistsExceptionResponse> handleUsernameAlreadyExists(UsernameAlreadyExistsException ex, WebRequest request) {
+        UsernameAlreadyExistsExceptionResponse exceptionResponse = new UsernameAlreadyExistsExceptionResponse(ex.getMessage());
         log.error(exceptionResponse.getUsername());
         return new ResponseEntity<>(exceptionResponse, HttpStatus.CONFLICT);
     }
@@ -55,15 +55,22 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
 
     @ExceptionHandler
     public final ResponseEntity<Map<String, String>> handleValidationErrorException(ValidationErrorException ex, WebRequest request) {
-        ValidationErrorResponse exceptionResponse = new ValidationErrorResponse(ex.getMsg());
+        ValidationErrorExceptionResponse exceptionResponse = new ValidationErrorExceptionResponse(ex.getMsg());
         log.error(exceptionResponse.getValidationError().toString());
         return new ResponseEntity<>(exceptionResponse.getValidationError(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler
-    public final ResponseEntity<CustomInternalServerErrorResponse> handleCustomInternalServerErrorException(CustomInternalServerErrorException ex, WebRequest request) {
-        CustomInternalServerErrorResponse exceptionResponse = new CustomInternalServerErrorResponse(ex.getMessage());
+    public final ResponseEntity<CustomInternalServerErrorExceptionResponse> handleCustomInternalServerErrorException(CustomInternalServerErrorException ex, WebRequest request) {
+        CustomInternalServerErrorExceptionResponse exceptionResponse = new CustomInternalServerErrorExceptionResponse(ex.getMessage());
         log.error(ex.getCause());
         return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler
+    public final ResponseEntity<ActivationKeyNotFoundExceptionResponse> handleAvtivationKeyNotFoundException(ActivationKeyNotFoundException ex, WebRequest request) {
+        ActivationKeyNotFoundExceptionResponse exceptionResponse = new ActivationKeyNotFoundExceptionResponse(ex.getMessage());
+        log.error(ex);
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
     }
 }

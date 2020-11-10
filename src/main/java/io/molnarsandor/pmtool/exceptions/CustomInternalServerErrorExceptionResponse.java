@@ -7,7 +7,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class CustomInternalServerErrorResponse {
+public class CustomInternalServerErrorExceptionResponse {
 
     private String serverError;
 }
