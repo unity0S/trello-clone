@@ -52,17 +52,17 @@ public class User {
 
     @JsonFormat(pattern = "yyyy-mm-dd")
     @Column(updatable = false)
-    private Date created_At;
+    private Date createdAt;
     @JsonFormat(pattern = "yyyy-mm-dd")
-    private Date updated_At;
+    private Date updatedAt;
 
     @OneToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER, mappedBy = "user", orphanRemoval = true)
     @ApiModelProperty(hidden = true)
     private List<Project> projects = new ArrayList<>();
 
     @PrePersist
-    protected void onCreate() { this.created_At = new Date(); }
+    protected void onCreate() { this.createdAt = new Date(); }
 
     @PreUpdate
-    protected void onUpdate() { this.updated_At = new Date(); }
+    protected void onUpdate() { this.updatedAt = new Date(); }
 }

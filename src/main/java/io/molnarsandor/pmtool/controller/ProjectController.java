@@ -39,7 +39,7 @@ public class ProjectController {
             BindingResult result,
             Authentication authentication) {
 
-        mapValidationErrorService.MapValidationService(result);
+        mapValidationErrorService.mapValidationService(result);
 
         User user = (User) authentication.getPrincipal();
 

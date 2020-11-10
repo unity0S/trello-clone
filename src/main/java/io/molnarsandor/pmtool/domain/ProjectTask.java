@@ -52,18 +52,18 @@ public class ProjectTask {
     @Column(updatable = false)
     @JsonFormat(pattern = "yyyy-mm-dd")
     @ApiModelProperty(value = "Date when the Task was created")
-    private Date created_At;
+    private Date createdAt;
     @JsonFormat(pattern = "yyyy-mm-dd")
     @ApiModelProperty(value = "Date when the Task was Updated last time")
-    private Date updated_At;
+    private Date updatedAt;
 
     @PrePersist
     protected void onCreate() {
-        this.created_At = new Date();
+        this.createdAt = new Date();
     }
 
     @PreUpdate
     protected void onUpdate() {
-        this.updated_At = new Date();
+        this.updatedAt = new Date();
     }
 }

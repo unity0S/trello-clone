@@ -16,6 +16,7 @@ import java.util.UUID;
 @Service
 public class UserServiceImpl implements UserService, UserDetailsService {
 
+    public static final String USER_NOT_FOUND = "User not found";
     @Autowired
     private UserRepository userRepository;
 
@@ -50,7 +51,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public User loadUserById(Long id) {
         User user = userRepository.getById(id);
 
-        if(user == null) throw new UsernameNotFoundException("User not found");
+        if(user == null) throw new UsernameNotFoundException(USER_NOT_FOUND);
 
         return user;
     }
@@ -59,7 +60,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public UserDetails loadUserByUsername(String username) {
         User user = userRepository.findByEmail(username);
 
-        if (user == null) throw new UsernameNotFoundException("User not found");
+        if (user == null) throw new UsernameNotFoundException(USER_NOT_FOUND);
 
         return new UserDetailsImpl(user);
     }
@@ -68,7 +69,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public String userActivation(String key) {
         User user = userRepository.findByActivation(key);
 
-        if(user == null) throw new UsernameNotFoundException("User not found");
+        if(user == null) throw new UsernameNotFoundException(USER_NOT_FOUND);
 
         user.setEnabled(true);
         user.setActivation("");

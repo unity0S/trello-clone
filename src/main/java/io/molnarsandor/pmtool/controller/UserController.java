@@ -57,7 +57,7 @@ public class UserController {
             @ApiParam(required = true, name = "loginRequest", value = "Email and password")
             LoginRequest loginRequest,
             BindingResult result) {
-        mapValidationErrorService.MapValidationService(result);
+        mapValidationErrorService.mapValidationService(result);
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -84,7 +84,7 @@ public class UserController {
 
         userValidator.validate(user, result);
 
-        mapValidationErrorService.MapValidationService(result);
+        mapValidationErrorService.mapValidationService(result);
 
         User newUser = userServiceImpl.registerUser(user);
 

@@ -34,15 +34,15 @@ public class ProjectTaskService {
             projectTask.setBacklog(backlog);
 
             // Project sequence like this: IDPRO-1, IDPRO-2 ...IDPRO-100
-            Integer BacklogSequence = backlog.getPTSequence();
+            Integer backlogSequence = backlog.getPTSequence();
 
             // Update the BL sequence
-            BacklogSequence++;
+            backlogSequence++;
 
-            backlog.setPTSequence(BacklogSequence);
+            backlog.setPTSequence(backlogSequence);
 
             // Add the sequence to the PT
-            projectTask.setProjectSequence(backlog.getProjectIdentifier() + "-" + BacklogSequence);
+            projectTask.setProjectSequence(backlog.getProjectIdentifier() + "-" + backlogSequence);
             projectTask.setProjectIdentifier(projectIdentifier.toUpperCase());
 
             // INITIAL priority when priority is null
@@ -70,33 +70,33 @@ public class ProjectTaskService {
         return projectTaskRepository.findByProjectIdentifierIgnoreCaseOrderByPriority(id);
     }
 
-    public ProjectTask findPTByProjectSequence(String backlog_id, String pt_id, String username) {
+    public ProjectTask findPTByProjectSequence(String backlogId, String ptId, String username) {
 
-        projectService.findProjectByIdentifier(backlog_id, username);
+        projectService.findProjectByIdentifier(backlogId, username);
 
-        ProjectTask projectTask = projectTaskRepository.findByProjectSequence(pt_id);
+        ProjectTask projectTask = projectTaskRepository.findByProjectSequence(ptId);
         if(projectTask == null) {
-            throw new ProjectNotFoundException("Project Task '" + pt_id + "' was not found");
+            throw new ProjectNotFoundException("Project Task '" + ptId + "' was not found");
         }
 
-        if(!projectTask.getProjectIdentifier().equalsIgnoreCase(backlog_id)) {
-            throw new ProjectNotFoundException("Project Task '" + pt_id + "' does not exists in project: '" + backlog_id);
+        if(!projectTask.getProjectIdentifier().equalsIgnoreCase(backlogId)) {
+            throw new ProjectNotFoundException("Project Task '" + ptId + "' does not exists in project: '" + backlogId);
         }
 
         return projectTask;
     }
 
 
-    public ProjectTask updateByProjectSequence(ProjectTask updatedTask, String backlog_id, String pt_id, String username) {
+    public ProjectTask updateByProjectSequence(ProjectTask updatedTask, String backlogId, String ptId, String username) {
 
-        findPTByProjectSequence(backlog_id, pt_id, username);
+        findPTByProjectSequence(backlogId, ptId, username);
 
         return projectTaskRepository.save(updatedTask);
     }
 
-    public void deletePTByProjectSequence(String backlog_id, String pt_id, String username) {
+    public void deletePTByProjectSequence(String backlogId, String ptId, String username) {
 
-        ProjectTask projectTask = findPTByProjectSequence(backlog_id, pt_id, username);
+        ProjectTask projectTask = findPTByProjectSequence(backlogId, ptId, username);
 
         projectTaskRepository.delete(projectTask);
     }

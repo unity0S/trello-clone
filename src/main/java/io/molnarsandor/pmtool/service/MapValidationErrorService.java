@@ -12,7 +12,7 @@ import static java.util.stream.Collectors.toMap;
 @Service
 public class MapValidationErrorService {
 
-    public void MapValidationService(BindingResult result) {
+    public void mapValidationService(BindingResult result) {
 
         if(result.hasErrors()) {
             Map<String, String> errorMap =

@@ -28,7 +28,7 @@ public class BacklogController {
     @Autowired
     private MapValidationErrorService mapValidationErrorService;
 
-    @PostMapping("/{backlog_id}")
+    @PostMapping("/{backlogId}")
     @ApiOperation(value = "Add Project Task to Project", notes = "Add New Project Task to Project", response = Project.class)
     @ApiResponse(code = 200, message = "Success", response = Project.class)
     public ResponseEntity<?> addPTtoBacklog(
@@ -39,52 +39,52 @@ public class BacklogController {
             BindingResult result,
             @PathVariable
             @ApiParam(required = true, name = "projectIdentifier", value = "ID of the Project where you want to add a Project Task")
-            String backlog_id,
+            String backlogId,
             Authentication authentication) {
 
-        mapValidationErrorService.MapValidationService(result);
+        mapValidationErrorService.mapValidationService(result);
 
         User user = (User) authentication.getPrincipal();
 
-        ProjectTask projectTask1 = projectTaskService.addProjectTask(backlog_id, projectTask, user.getEmail());
+        ProjectTask projectTask1 = projectTaskService.addProjectTask(backlogId, projectTask, user.getEmail());
 
         return new ResponseEntity<>(projectTask1, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{backlog_id}")
+    @GetMapping("/{backlogId}")
     @ApiOperation(value = "Get Project Tasks", notes = "Retrieves Project Tasks", response = ProjectTask.class)
     @ApiResponse(code = 200, message = "Success", response = ProjectTask.class)
     public Iterable<ProjectTask> getProjectBacklog(
             @PathVariable
             @ApiParam(required = true, name = "projectIdentifier", value = "ID of the Project")
-            String backlog_id,
+            String backlogId,
             Authentication authentication) {
 
         User user = (User) authentication.getPrincipal();
 
-        return projectTaskService.findBacklogById(backlog_id, user.getEmail());
+        return projectTaskService.findBacklogById(backlogId, user.getEmail());
     }
 
-    @GetMapping("/{backlog_id}/{pt_id}")
+    @GetMapping("/{backlogId}/{ptId}")
     @ApiOperation(value = "Get Project Task", notes = "Retrieves a single Project Task", response = ProjectTask.class)
     @ApiResponse(code = 200, message = "Success", response = ProjectTask.class)
     public ResponseEntity<?> getProjectTask(
             @PathVariable
             @ApiParam(required = true, name = "projectIdentifier", value = "ID of the Project")
-            String backlog_id,
+            String backlogId,
             @PathVariable
             @ApiParam(required = true, name = "projectSequence", value = "ID of the Project Task you want to retrieve")
-            String pt_id,
+            String ptId,
             Authentication authentication) {
 
         User user = (User) authentication.getPrincipal();
 
-        ProjectTask projectTask = projectTaskService.findPTByProjectSequence(backlog_id, pt_id, user.getEmail());
+        ProjectTask projectTask = projectTaskService.findPTByProjectSequence(backlogId, ptId, user.getEmail());
 
         return new ResponseEntity<>(projectTask, HttpStatus.OK);
     }
 
-    @PatchMapping("/{backlog_id}/{pt_id}")
+    @PatchMapping("/{backlogId}/{ptId}")
     @ApiOperation(value = "Update Project Task", notes = "Updates a Project Task", response = ProjectTask.class)
     @ApiResponse(code = 200, message = "Success", response = ProjectTask.class)
     public ResponseEntity<?> updateProjectTask(
@@ -95,37 +95,37 @@ public class BacklogController {
             BindingResult result,
             @PathVariable
             @ApiParam(required = true, name = "projectIdentifier", value = "ID of the Project containing the updatable Project Task")
-            String backlog_id,
+            String backlogId,
             @PathVariable
             @ApiParam(required = true, name = "projectSequence", value = "ID of the Project Task to be updated")
-            String pt_id,
+            String ptId,
             Authentication authentication) {
 
         User user = (User) authentication.getPrincipal();
 
-        mapValidationErrorService.MapValidationService(result);
+        mapValidationErrorService.mapValidationService(result);
 
-        ProjectTask updatedTask = projectTaskService.updateByProjectSequence(projectTask,backlog_id, pt_id, user.getEmail());
+        ProjectTask updatedTask = projectTaskService.updateByProjectSequence(projectTask,backlogId, ptId, user.getEmail());
 
         return new ResponseEntity<>(updatedTask, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{backlog_id}/{pt_id}")
+    @DeleteMapping("/{backlogId}/{ptId}")
     @ApiOperation(value = "Delete Project Task", notes = "Deleting an existing Project Task")
     @ApiResponse(code = 200, message = "Success")
     public ResponseEntity<?> deleteProjectTask(
             @PathVariable
             @ApiParam(required = true, name = "projectIdentifier", value = "ID of the Project that contains the Project Task you want to delete")
-            String backlog_id,
+            String backlogId,
             @PathVariable
             @ApiParam(required = true, name = "projectSequence", value = "ID of the Project Task you want to delete")
-            String pt_id,
+            String ptId,
             Authentication authentication) {
 
         User user = (User) authentication.getPrincipal();
 
-        projectTaskService.deletePTByProjectSequence(backlog_id, pt_id, user.getEmail());
+        projectTaskService.deletePTByProjectSequence(backlogId, ptId, user.getEmail());
 
-        return new ResponseEntity<>("Project Task '" + pt_id + "' was deleted successfully", HttpStatus.OK);
+        return new ResponseEntity<>("Project Task '" + ptId + "' was deleted successfully", HttpStatus.OK);
     }
 }

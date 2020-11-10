@@ -45,17 +45,17 @@ public class Project {
     private String description;
     @JsonFormat(pattern = "yyyy-mm-dd")
     @ApiModelProperty(value = "The Date when the Project starts")
-    private Date start_date;
+    private Date startDate;
     @JsonFormat(pattern = "yyyy-mm-dd")
     @ApiModelProperty(value = "The Date when the Project finishes")
-    private Date end_date;
+    private Date endDate;
     @JsonFormat(pattern = "yyyy-mm-dd")
     @Column(updatable = false)
     @ApiModelProperty(value = "Date when the Project was created")
-    private Date created_At;
+    private Date createdAt;
     @JsonFormat(pattern = "yyyy-mm-dd")
     @ApiModelProperty(value = "Date when the Project was last updated, excluding the Project Task update dates")
-    private Date updated_At;
+    private Date updatedAt;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "project")
     @JsonIgnore
@@ -75,11 +75,11 @@ public class Project {
 
     @PrePersist
     protected void onCreate() {
-        this.created_At = new Date();
+        this.createdAt = new Date();
     }
 
     @PreUpdate
     protected void onUpdate() {
-        this.updated_At = new Date();
+        this.updatedAt = new Date();
     }
 }

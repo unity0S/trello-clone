@@ -115,6 +115,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
+		<finalName>trello-clone-ms</finalName>
 	</build>
 
 </project>

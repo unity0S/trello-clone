@@ -63,7 +63,7 @@ public class CollaboratorService {
                         collaborator.getProjectIdentifier().equalsIgnoreCase(projectIdentifier);
         boolean collaboratorExists = false;
 
-        if(collaborators.size() > 0) {
+        if(!collaborators.isEmpty()) {
             collaboratorExists = collaborators.stream()
                     .anyMatch(collaboratorPredicate);
         }

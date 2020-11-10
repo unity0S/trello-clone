@@ -47,12 +47,12 @@ public class CollaboratorController {
 
         User user = (User) authentication.getPrincipal();
 
-        mapValidationErrorService.MapValidationService(result);
+        mapValidationErrorService.mapValidationService(result);
 
         Collaborator collaborator1 = collaboratorService.addCollaborator(projectIdentifier, collaborator, user.getEmail());
 
         // TODO projectIdentifier to project name or desc or smthng
-        emailService.sendMessage(collaborator.getEmail(), "Invite", "You have been invited to collaborate in project: " + projectIdentifier);
+        emailService.sendMessage(collaborator1.getEmail(), "Invite", "You have been invited to collaborate in project: " + projectIdentifier);
 
         return new ResponseEntity<>(collaborator1, HttpStatus.CREATED);
     }
