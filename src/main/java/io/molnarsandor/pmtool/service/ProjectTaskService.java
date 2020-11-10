@@ -1,12 +1,15 @@
 package io.molnarsandor.pmtool.service;
 
+import com.google.gson.JsonObject;
 import io.molnarsandor.pmtool.domain.Backlog;
 import io.molnarsandor.pmtool.domain.ProjectTask;
+import io.molnarsandor.pmtool.exceptions.CustomInternalServerErrorException;
 import io.molnarsandor.pmtool.exceptions.ProjectNotFoundException;
 import io.molnarsandor.pmtool.repositories.BacklogRepository;
 import io.molnarsandor.pmtool.repositories.ProjectRepository;
 import io.molnarsandor.pmtool.repositories.ProjectTaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,6 +32,8 @@ public class ProjectTaskService {
         // Exceptions: Project not found
         try {
             // PTs to be added to a specific project, project != null, BL exists
+
+            // TODO decouple
             Backlog backlog = projectService.findProjectByIdentifier(projectIdentifier, username).getBacklog();
             // Set the BL to PT
             projectTask.setBacklog(backlog);
@@ -57,14 +62,15 @@ public class ProjectTaskService {
 
             return projectTaskRepository.save(projectTask);
 
-        } catch (Exception e) {
-            throw new ProjectNotFoundException("Project not found");
+        } catch (DataAccessException io) {
+            throw new CustomInternalServerErrorException("Internal Server Error", io);
         }
 
     }
 
     public Iterable<ProjectTask> findBacklogById(String id, String username) {
 
+        // TODO decouple
         projectService.findProjectByIdentifier(id, username);
 
         return projectTaskRepository.findByProjectIdentifierIgnoreCaseOrderByPriority(id);
@@ -72,13 +78,16 @@ public class ProjectTaskService {
 
     public ProjectTask findPTByProjectSequence(String backlogId, String ptId, String username) {
 
+        // TODO decouple
         projectService.findProjectByIdentifier(backlogId, username);
 
+        // TODO decouple
         ProjectTask projectTask = projectTaskRepository.findByProjectSequence(ptId);
         if(projectTask == null) {
             throw new ProjectNotFoundException("Project Task '" + ptId + "' was not found");
         }
 
+        // TODO decouple
         if(!projectTask.getProjectIdentifier().equalsIgnoreCase(backlogId)) {
             throw new ProjectNotFoundException("Project Task '" + ptId + "' does not exists in project: '" + backlogId);
         }
@@ -89,15 +98,23 @@ public class ProjectTaskService {
 
     public ProjectTask updateByProjectSequence(ProjectTask updatedTask, String backlogId, String ptId, String username) {
 
+        // TODO decouple
         findPTByProjectSequence(backlogId, ptId, username);
 
         return projectTaskRepository.save(updatedTask);
     }
 
-    public void deletePTByProjectSequence(String backlogId, String ptId, String username) {
+    public JsonObject deletePTByProjectSequence(String backlogId, String ptId, String username) {
 
+        // TODO decouple
         ProjectTask projectTask = findPTByProjectSequence(backlogId, ptId, username);
 
         projectTaskRepository.delete(projectTask);
+
+        JsonObject response = new JsonObject();
+
+        response.addProperty("deleteTask", "Project task " + ptId + " deleted");
+
+        return response;
     }
 }

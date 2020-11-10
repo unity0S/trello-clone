@@ -22,35 +22,35 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
     public final ResponseEntity<ProjectIdExceptionResponse> handleProjectIdException(ProjectIdException ex, WebRequest request) {
         ProjectIdExceptionResponse exceptionResponse = new ProjectIdExceptionResponse(ex.getMessage());
         log.error(exceptionResponse.getProjectIdentifier());
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler
     public final ResponseEntity<ProjectNotFoundExceptionResponse> handleProjectNotFoundException(ProjectNotFoundException ex, WebRequest request) {
         ProjectNotFoundExceptionResponse exceptionResponse = new ProjectNotFoundExceptionResponse(ex.getMessage());
         log.error(exceptionResponse.getProjectNotFound());
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler
     public final ResponseEntity<UsernameAlreadyExistsResponse> handleUsernameAlreadyExists(UsernameAlreadyExistsException ex, WebRequest request) {
         UsernameAlreadyExistsResponse exceptionResponse = new UsernameAlreadyExistsResponse(ex.getMessage());
         log.error(exceptionResponse.getUsername());
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler
     public final ResponseEntity<UserNotLoggedInExceptionResponse> handleUserNotLoggedInException(UserNotLoggedInException ex, WebRequest request) {
         UserNotLoggedInExceptionResponse exceptionResponse = new UserNotLoggedInExceptionResponse(ex.getMessage());
         log.error((exceptionResponse.getUserNotLoggedIn()));
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler
     public final ResponseEntity<CollaboratorAlreadyAssignedExceptionResponse> handleCollaboratorAlreadyAssignedException(CollaboratorAlreadyAssignedException ex, WebRequest request) {
         CollaboratorAlreadyAssignedExceptionResponse exceptionResponse = new CollaboratorAlreadyAssignedExceptionResponse(ex.getMessage());
         log.error(exceptionResponse.getCollaborator());
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler
@@ -58,5 +58,12 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
         ValidationErrorResponse exceptionResponse = new ValidationErrorResponse(ex.getMsg());
         log.error(exceptionResponse.getValidationError().toString());
         return new ResponseEntity<>(exceptionResponse.getValidationError(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
+    public final ResponseEntity<CustomInternalServerErrorResponse> handleCustomInternalServerErrorException(CustomInternalServerErrorException ex, WebRequest request) {
+        CustomInternalServerErrorResponse exceptionResponse = new CustomInternalServerErrorResponse(ex.getMessage());
+        log.error(ex.getCause());
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

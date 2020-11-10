@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @SpringBootApplication
-public class PmtoolApplication {
+public class TrelloCloneMs {
 
 	@Bean
 	BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -14,7 +14,7 @@ public class PmtoolApplication {
 	}
 
 	public static void main(String[] args) {
-		SpringApplication.run(PmtoolApplication.class, args);
+		SpringApplication.run(TrelloCloneMs.class, args);
 	}
 
 }

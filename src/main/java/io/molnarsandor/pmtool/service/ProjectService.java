@@ -76,7 +76,7 @@ public class ProjectService {
         Project project = projectRepository.findByProjectIdentifierIgnoreCase(projectId);
 
         if(project == null) {
-            throw new ProjectIdException("Project ID '" + projectId + "' does not exists");
+            throw new ProjectNotFoundException("Project ID '" + projectId + "' does not exists");
         }
 
        Set<Collaborator> collaborators = project.getCollaborators();
