@@ -13,7 +13,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -22,16 +22,15 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/backlog")
 @CrossOrigin
 public class BacklogController {
 
-    @Autowired
-    private ProjectTaskService projectTaskService;
+    private final ProjectTaskService projectTaskService;
 
-    @Autowired
-    private MapValidationErrorService mapValidationErrorService;
+    private final MapValidationErrorService mapValidationErrorService;
 
     @PostMapping("/{backlogId}")
     @ApiOperation(value = "Add Project Task to Project", notes = "Add New Project Task to Project", response = ProjectTask.class)

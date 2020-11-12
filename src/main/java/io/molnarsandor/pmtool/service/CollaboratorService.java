@@ -7,23 +7,19 @@ import io.molnarsandor.pmtool.exceptions.CollaboratorAlreadyAssignedException;
 import io.molnarsandor.pmtool.exceptions.ProjectNotFoundException;
 import io.molnarsandor.pmtool.repositories.CollaboratorRepository;
 import io.molnarsandor.pmtool.repositories.ProjectRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
 import java.util.function.Predicate;
 
+@RequiredArgsConstructor
 @Service
 public class CollaboratorService {
 
-    @Autowired
-    private CollaboratorRepository collaboratorRepository;
+    private final CollaboratorRepository collaboratorRepository;
 
-    @Autowired
-    private ProjectRepository projectRepository;
-
-    @Autowired
-    private ProjectService projectService;
+    private final ProjectService projectService;
 
 
     public Collaborator addCollaborator(String projectIdentifier, Collaborator collaborator, String username) {

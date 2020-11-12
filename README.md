@@ -70,7 +70,7 @@ Collaborators can:
 - [ ] Check optional and required Dependecies and fix DI accordingly (keep it simple, no spaghetti code!!!, think forward, you need to write unit/integration tests)
 - [ ] Extract ENUMs
 - [x] Feed env variables from outside, not from application.properties
-- [ ] Delete other Repo
+- [x] Delete other Repo
 - [ ] Rework Docker file
 - [ ] UserValidator review
 - [ ] ProjectTaskService and the other services: code smell => check them

@@ -8,24 +8,17 @@ import io.molnarsandor.pmtool.exceptions.ProjectNotFoundException;
 import io.molnarsandor.pmtool.repositories.BacklogRepository;
 import io.molnarsandor.pmtool.repositories.ProjectRepository;
 import io.molnarsandor.pmtool.repositories.ProjectTaskRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
+@RequiredArgsConstructor
 @Service
 public class ProjectTaskService {
 
-    @Autowired
-    private BacklogRepository backlogRepository;
+    private final ProjectTaskRepository projectTaskRepository;
 
-    @Autowired
-    private ProjectTaskRepository projectTaskRepository;
-
-    @Autowired
-    private ProjectRepository projectRepository;
-
-    @Autowired
-    private ProjectService projectService;
+    private final ProjectService projectService;
 
     public ProjectTask addProjectTask(String projectIdentifier, ProjectTask projectTask, String username) {
 

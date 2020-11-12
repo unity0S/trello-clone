@@ -12,7 +12,7 @@ import io.molnarsandor.pmtool.repositories.BacklogRepository;
 import io.molnarsandor.pmtool.repositories.CollaboratorRepository;
 import io.molnarsandor.pmtool.repositories.ProjectRepository;
 import io.molnarsandor.pmtool.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
@@ -22,20 +22,17 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+@RequiredArgsConstructor
 @Service
 public class ProjectService {
 
-    @Autowired
-    private ProjectRepository projectRepository;
+    private final ProjectRepository projectRepository;
 
-    @Autowired
-    private BacklogRepository backlogRepository;
+    private final BacklogRepository backlogRepository;
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private CollaboratorRepository collaboratorRepository;
+    private final CollaboratorRepository collaboratorRepository;
 
     public Project saveOrUpdateProject(Project project, String username) {
 

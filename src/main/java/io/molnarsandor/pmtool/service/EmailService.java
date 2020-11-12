@@ -1,13 +1,14 @@
 package io.molnarsandor.pmtool.service;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+@RequiredArgsConstructor
 @Service
 public class EmailService {
     private final Log log = LogFactory.getLog(this.getClass());
@@ -15,12 +16,7 @@ public class EmailService {
     @Value("${spring.mail.username}")
     private String MESSAGE_FROM;
 
-    private JavaMailSender javaMailSender;
-
-    @Autowired
-    public void setJavaMailSender(JavaMailSender javaMailSender) {
-        this.javaMailSender = javaMailSender;
-    }
+    private final JavaMailSender javaMailSender;
 
     public void sendMessage(String email, String subject, String text) {
         SimpleMailMessage message;

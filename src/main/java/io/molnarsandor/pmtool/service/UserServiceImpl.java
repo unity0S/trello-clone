@@ -6,7 +6,7 @@ import io.molnarsandor.pmtool.exceptions.ActivationKeyNotFoundException;
 import io.molnarsandor.pmtool.exceptions.CustomInternalServerErrorException;
 import io.molnarsandor.pmtool.exceptions.UsernameAlreadyExistsException;
 import io.molnarsandor.pmtool.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,18 +17,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
+@RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService, UserDetailsService {
 
     public static final String USER_NOT_FOUND = "User not found";
-    @Autowired
-    private UserRepository userRepository;
 
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private EmailService emailService;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    private final EmailService emailService;
 
     @Override
     public User registerUser(User newUser) {
