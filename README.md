@@ -67,11 +67,12 @@ Collaborators can:
 - [x] Adding error codes to documentation
 - [x] Refractor variable names
 - [x] Check thrown Exceptions and fix them
-- [ ] Check optional and required Dependecies and fix DI accordingly (keep it simple, no spaghetti code!!!, think forward, you need to write unit/integration tests)
+- [x] Check field based Dependencies and change it to Constructor based Dep.
+- [x] Add and use DTO's
 - [ ] Extract ENUMs
 - [x] Feed env variables from outside, not from application.properties
 - [x] Delete other Repo
 - [ ] Rework Docker file
-- [ ] UserValidator review
+- [x] UserValidator review (no changes, checks password and confirm password are the same)
 - [ ] ProjectTaskService and the other services: code smell => check them
 - [ ] Unit/Integration Tests
