@@ -1,10 +1,10 @@
 package io.molnarsandor.pmtool.service;
 
-import io.molnarsandor.pmtool.domain.Backlog;
-import io.molnarsandor.pmtool.domain.Collaborator;
-import io.molnarsandor.pmtool.domain.Project;
-import io.molnarsandor.pmtool.domain.User;
-import io.molnarsandor.pmtool.dto.DeleteDTO;
+import io.molnarsandor.pmtool.domain.dto.DeleteDTO;
+import io.molnarsandor.pmtool.domain.entity.Backlog;
+import io.molnarsandor.pmtool.domain.entity.Collaborator;
+import io.molnarsandor.pmtool.domain.entity.Project;
+import io.molnarsandor.pmtool.domain.entity.User;
 import io.molnarsandor.pmtool.exceptions.ProjectIdException;
 import io.molnarsandor.pmtool.exceptions.ProjectNotFoundException;
 import io.molnarsandor.pmtool.exceptions.UserNotLoggedInException;
@@ -19,8 +19,6 @@ import java.security.Principal;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @RequiredArgsConstructor
 @Service
@@ -103,18 +101,14 @@ public class ProjectService {
             throw new UserNotLoggedInException("Log in to continue");
         }
 
-        List<Project> byLeader = StreamSupport.stream(
-                projectRepository.findAllByProjectLeader(username.getName())
-                        .spliterator(), false)
-                .collect(Collectors.toList());
+        List<Project> byLeader = projectRepository.findAllByProjectLeader(username.getName());
 
         Collaborator collaborator = collaboratorRepository.findByEmail(username.getName());
 
-        List<Project> byCollaborator = StreamSupport.stream(
-                projectRepository.findAllByCollaborators(collaborator)
-                        .spliterator(), false)
-                .collect(Collectors.toList());
+        List<Project> byCollaborator = projectRepository.findAllByCollaborators(collaborator);
+
         byLeader.addAll(byCollaborator);
+
         return byLeader;
     }
 

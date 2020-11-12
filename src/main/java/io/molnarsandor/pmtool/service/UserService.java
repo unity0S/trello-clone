@@ -1,11 +1,11 @@
 package io.molnarsandor.pmtool.service;
 
-import io.molnarsandor.pmtool.domain.User;
-import io.molnarsandor.pmtool.dto.ActivationDTO;
+import io.molnarsandor.pmtool.domain.entity.User;
+import io.molnarsandor.pmtool.domain.dto.UserActivationDTO;
 
 public interface UserService {
 
     User registerUser(User newUser);
     User loadUserById(Long id);
-    ActivationDTO userActivation(String key);
+    UserActivationDTO userActivation(String key);
 }

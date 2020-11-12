@@ -1,4 +1,4 @@
-package io.molnarsandor.pmtool.domain;
+package io.molnarsandor.pmtool.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;

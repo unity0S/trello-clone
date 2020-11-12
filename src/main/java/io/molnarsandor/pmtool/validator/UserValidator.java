@@ -1,6 +1,6 @@
 package io.molnarsandor.pmtool.validator;
 
-import io.molnarsandor.pmtool.domain.User;
+import io.molnarsandor.pmtool.domain.entity.User;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;

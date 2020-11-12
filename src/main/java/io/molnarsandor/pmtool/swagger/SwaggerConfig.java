@@ -2,6 +2,7 @@ package io.molnarsandor.pmtool.swagger;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import springfox.documentation.annotations.ApiIgnore;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.service.ApiInfo;
@@ -36,6 +37,8 @@ public class SwaggerConfig {
                 .securityContexts(Collections.singletonList(securityContext()))
                 .securitySchemes(Collections.singletonList(apiKey()))
                 .useDefaultResponseMessages(false);
+
+        docket.ignoredParameterTypes(ApiIgnore.class);
 
         return docket.select()
                 .paths(regex("/api/.*"))

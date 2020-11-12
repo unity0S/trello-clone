@@ -1,16 +1,16 @@
 package io.molnarsandor.pmtool.service;
 
-import io.molnarsandor.pmtool.domain.Backlog;
-import io.molnarsandor.pmtool.domain.ProjectTask;
-import io.molnarsandor.pmtool.dto.DeleteDTO;
+import io.molnarsandor.pmtool.domain.entity.Backlog;
+import io.molnarsandor.pmtool.domain.entity.ProjectTask;
+import io.molnarsandor.pmtool.domain.dto.DeleteDTO;
 import io.molnarsandor.pmtool.exceptions.CustomInternalServerErrorException;
 import io.molnarsandor.pmtool.exceptions.ProjectNotFoundException;
-import io.molnarsandor.pmtool.repositories.BacklogRepository;
-import io.molnarsandor.pmtool.repositories.ProjectRepository;
 import io.molnarsandor.pmtool.repositories.ProjectTaskRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -32,12 +32,12 @@ public class ProjectTaskService {
             projectTask.setBacklog(backlog);
 
             // Project sequence like this: IDPRO-1, IDPRO-2 ...IDPRO-100
-            Integer backlogSequence = backlog.getPTSequence();
+            Integer backlogSequence = backlog.getPtSequence();
 
             // Update the BL sequence
             backlogSequence++;
 
-            backlog.setPTSequence(backlogSequence);
+            backlog.setPtSequence(backlogSequence);
 
             // Add the sequence to the PT
             projectTask.setProjectSequence(backlog.getProjectIdentifier() + "-" + backlogSequence);
@@ -61,7 +61,7 @@ public class ProjectTaskService {
 
     }
 
-    public Iterable<ProjectTask> findBacklogById(String id, String username) {
+    public List<ProjectTask> findBacklogById(String id, String username) {
 
         // TODO decouple
         projectService.findProjectByIdentifier(id, username);

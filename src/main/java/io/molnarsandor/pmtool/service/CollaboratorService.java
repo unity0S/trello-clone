@@ -1,12 +1,11 @@
 package io.molnarsandor.pmtool.service;
 
-import io.molnarsandor.pmtool.domain.Collaborator;
-import io.molnarsandor.pmtool.domain.Project;
-import io.molnarsandor.pmtool.dto.DeleteDTO;
+import io.molnarsandor.pmtool.domain.entity.Collaborator;
+import io.molnarsandor.pmtool.domain.entity.Project;
+import io.molnarsandor.pmtool.domain.dto.DeleteDTO;
 import io.molnarsandor.pmtool.exceptions.CollaboratorAlreadyAssignedException;
 import io.molnarsandor.pmtool.exceptions.ProjectNotFoundException;
 import io.molnarsandor.pmtool.repositories.CollaboratorRepository;
-import io.molnarsandor.pmtool.repositories.ProjectRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -1,6 +1,6 @@
 package io.molnarsandor.pmtool.repositories;
 
-import io.molnarsandor.pmtool.domain.User;
+import io.molnarsandor.pmtool.domain.entity.User;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

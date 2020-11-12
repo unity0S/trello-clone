@@ -1,4 +1,4 @@
-package io.molnarsandor.pmtool.domain;
+package io.molnarsandor.pmtool.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -25,6 +25,9 @@ public class ProjectTask {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonIgnore
     private Long id;
+    @Column(updatable = false)
+    @ApiModelProperty(value = "Unique identifier of the Project where the Task belongs to", required = true)
+    private String projectIdentifier;
     @Column(updatable = false, unique = true)
     @ApiModelProperty(value = "Unique identifier of a Project Task")
     private String projectSequence;
@@ -33,8 +36,6 @@ public class ProjectTask {
     @Pattern(regexp = "^([A-Z0-9a-záéúőóüö.]+\\s?){2,}$", message = "Special characters not allowed!")
     @ApiModelProperty(value = "Description of the Project Task", required = true)
     private String summary;
-//    @Pattern(regexp = "^([A-Z0-9]([a-záéúőóüö.]+\\s?)){2,}$", message = "Special characters not allowed!")
-//    private String acceptanceCriteria;
     @ApiModelProperty(value = "Status of a task")
     private String status;
     @ApiModelProperty(value = "Priority of a task")
@@ -46,9 +47,6 @@ public class ProjectTask {
     @JoinColumn(name = "backlog_id", updatable = false, nullable = false)
     @JsonIgnore
     private Backlog backlog;
-    @Column(updatable = false)
-    @ApiModelProperty(value = "Unique identifier of the Project where the Task belongs to", required = true)
-    private String projectIdentifier;
     @Column(updatable = false)
     @JsonFormat(pattern = "yyyy-mm-dd")
     @ApiModelProperty(value = "Date when the Task was created")

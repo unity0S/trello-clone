@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>io.molnarsandor</groupId>
-	<artifactId>pmtool</artifactId>
+	<artifactId>trello-clone</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>pmtool-upgraded-trello-clone</name>
+	<name>trello-clone-ms</name>
 	<description>Trello Clone</description>
 
 	<properties>

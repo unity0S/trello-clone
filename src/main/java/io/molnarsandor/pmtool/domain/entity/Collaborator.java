@@ -1,4 +1,4 @@
-package io.molnarsandor.pmtool.domain;
+package io.molnarsandor.pmtool.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -29,10 +29,10 @@ public class Collaborator {
     @ApiModelProperty(value = "Unique email of an existing or a non-existing User", required = true)
     private String email;
     @Column(updatable = false)
-    @ApiModelProperty(value = "Unique Project Identifier", required = true)
+    @ApiModelProperty(value = "Unique Project Identifier", required = true, position = 1)
     private String projectIdentifier;
     @Column(updatable = false, unique = true)
-    @ApiModelProperty(value = "Unique Collaborator identifier")
+    @ApiModelProperty(value = "Unique Collaborator identifier", position = 2)
     private String collaboratorSequence;
 
     @ManyToOne

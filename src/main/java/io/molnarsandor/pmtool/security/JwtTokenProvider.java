@@ -1,7 +1,7 @@
 package io.molnarsandor.pmtool.security;
 
 import io.jsonwebtoken.*;
-import io.molnarsandor.pmtool.domain.User;
+import io.molnarsandor.pmtool.domain.entity.User;
 import io.molnarsandor.pmtool.service.UserDetailsImpl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

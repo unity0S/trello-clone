@@ -1,6 +1,6 @@
 package io.molnarsandor.pmtool.security;
 
-import io.molnarsandor.pmtool.domain.User;
+import io.molnarsandor.pmtool.domain.entity.User;
 import io.molnarsandor.pmtool.service.UserService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

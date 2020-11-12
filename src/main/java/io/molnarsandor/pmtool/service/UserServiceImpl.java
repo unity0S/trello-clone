@@ -1,7 +1,7 @@
 package io.molnarsandor.pmtool.service;
 
-import io.molnarsandor.pmtool.domain.User;
-import io.molnarsandor.pmtool.dto.ActivationDTO;
+import io.molnarsandor.pmtool.domain.entity.User;
+import io.molnarsandor.pmtool.domain.dto.UserActivationDTO;
 import io.molnarsandor.pmtool.exceptions.ActivationKeyNotFoundException;
 import io.molnarsandor.pmtool.exceptions.CustomInternalServerErrorException;
 import io.molnarsandor.pmtool.exceptions.UsernameAlreadyExistsException;
@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public ActivationDTO userActivation(String key) {
+    public UserActivationDTO userActivation(String key) {
         User user = userRepository.findByActivation(key);
 
         if(user == null) throw new ActivationKeyNotFoundException("Activation key not found");
@@ -85,7 +85,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         } catch (DataAccessException io) {
             throw new CustomInternalServerErrorException("Internal Server Error", io);
         }
-        return new ActivationDTO("User activated");
+        return new UserActivationDTO("User activated");
     }
 
 

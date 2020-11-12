@@ -1,6 +1,6 @@
 package io.molnarsandor.pmtool.service;
 
-import io.molnarsandor.pmtool.domain.User;
+import io.molnarsandor.pmtool.domain.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 

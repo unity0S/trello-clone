@@ -1,4 +1,4 @@
-package io.molnarsandor.pmtool.domain;
+package io.molnarsandor.pmtool.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
@@ -18,7 +18,7 @@ public class Backlog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Integer PTSequence = 0;
+    private Integer ptSequence = 0;
     private String projectIdentifier;
 
     @OneToOne(fetch = FetchType.EAGER)
