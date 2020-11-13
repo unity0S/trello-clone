@@ -34,7 +34,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
         User user = userRepository.findByEmail(newUser.getEmail());
 
-        if (user != null) throw new UsernameAlreadyExistsException("Username '" + newUser.getEmail() + "' already exists");
+        if (user != null) {
+            throw new UsernameAlreadyExistsException("Username '" + newUser.getEmail() + "' already exists");
+        }
 
         try {
             String uuid = generateKey();
@@ -58,7 +60,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public User loadUserById(Long id) {
         User user = userRepository.getById(id);
 
-        if(user == null) throw new UsernameNotFoundException(USER_NOT_FOUND);
+        if (user == null) {
+            throw new UsernameNotFoundException(USER_NOT_FOUND);
+        }
 
         return user;
     }
@@ -67,7 +71,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public UserDetails loadUserByUsername(String username) {
         User user = userRepository.findByEmail(username);
 
-        if (user == null) throw new UsernameNotFoundException(USER_NOT_FOUND);
+        if (user == null) {
+            throw new UsernameNotFoundException(USER_NOT_FOUND);
+        }
 
         return new UserDetailsImpl(user);
     }
@@ -76,7 +82,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public UserActivationDTO userActivation(String key) {
         User user = userRepository.findByActivation(key);
 
-        if(user == null) throw new ActivationKeyNotFoundException("Activation key not found");
+        if (user == null) {
+            throw new ActivationKeyNotFoundException("Activation key not found");
+        }
 
         try {
             user.setEnabled(true);

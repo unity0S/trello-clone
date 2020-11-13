@@ -118,7 +118,7 @@ public class BacklogController {
         User user = (User) authentication.getPrincipal();
 
         ProjectTaskDTO projectTask = modelConverter.projectTaskEntityToDto(
-                projectTaskService.findPTByProjectSequence(backlogId, ptId, user.getEmail()));
+                projectTaskService.findPtByProjectSequence(backlogId, ptId, user.getEmail()));
 
         return new ResponseEntity<>(projectTask, HttpStatus.OK);
     }

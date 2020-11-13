@@ -18,8 +18,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collections;
 
-import static io.molnarsandor.pmtool.security.SecurityConstans.HEADER_STRING;
-import static io.molnarsandor.pmtool.security.SecurityConstans.TOKEN_PREFIX;
+import static io.molnarsandor.pmtool.security.SecurityConstants.HEADER_STRING;
+import static io.molnarsandor.pmtool.security.SecurityConstants.TOKEN_PREFIX;
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 

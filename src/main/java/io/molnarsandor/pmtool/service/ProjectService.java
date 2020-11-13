@@ -5,7 +5,7 @@ import io.molnarsandor.pmtool.domain.entity.Backlog;
 import io.molnarsandor.pmtool.domain.entity.Collaborator;
 import io.molnarsandor.pmtool.domain.entity.Project;
 import io.molnarsandor.pmtool.domain.entity.User;
-import io.molnarsandor.pmtool.exceptions.ProjectIdException;
+import io.molnarsandor.pmtool.exceptions.CustomInternalServerErrorException;
 import io.molnarsandor.pmtool.exceptions.ProjectNotFoundException;
 import io.molnarsandor.pmtool.exceptions.UserNotLoggedInException;
 import io.molnarsandor.pmtool.repositories.BacklogRepository;
@@ -13,6 +13,7 @@ import io.molnarsandor.pmtool.repositories.CollaboratorRepository;
 import io.molnarsandor.pmtool.repositories.ProjectRepository;
 import io.molnarsandor.pmtool.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
@@ -34,12 +35,12 @@ public class ProjectService {
 
     public Project saveOrUpdateProject(Project project, String username) {
 
-        if(project.getId() != null) {
+        if (project.getId() != null) {
             Project existingProject = projectRepository.findByProjectIdentifierIgnoreCase(project.getProjectIdentifier());
 
-            if(existingProject != null && !existingProject.getProjectLeader().equals(username)) {
+            if (existingProject != null && !existingProject.getProjectLeader().equals(username)) {
                 throw new ProjectNotFoundException("Project not found in your account");
-            } else if(existingProject == null) {
+            } else if (existingProject == null) {
                 throw new ProjectNotFoundException("Project with ID: '" + project.getProjectIdentifier() + "' cannot be updated because it does not exist");
             }
 
@@ -50,20 +51,20 @@ public class ProjectService {
             project.setProjectLeader(user.getEmail());
             project.setProjectIdentifier(project.getProjectIdentifier().toUpperCase());
 
-            if(project.getId() == null) {
+            if (project.getId() == null) {
                 Backlog backlog = new Backlog();
                 project.setBacklog(backlog);
                 backlog.setProject(project);
                 backlog.setProjectIdentifier(project.getProjectIdentifier().toUpperCase());
             }
 
-            if(project.getId() != null) {
+            if (project.getId() != null) {
                 project.setBacklog(backlogRepository.findByProjectIdentifierIgnoreCase(project.getProjectIdentifier().toUpperCase()));
             }
 
             return projectRepository.save(project);
-        } catch (Exception e) {
-            throw new ProjectIdException("Project ID '" + project.getProjectIdentifier().toUpperCase() + "' already exists");
+        } catch (DataAccessException io) {
+            throw new CustomInternalServerErrorException("Internal Server Error", io);
         }
     }
 
@@ -71,7 +72,7 @@ public class ProjectService {
 
         Project project = projectRepository.findByProjectIdentifierIgnoreCase(projectId);
 
-        if(project == null) {
+        if (project == null) {
             throw new ProjectNotFoundException("Project ID '" + projectId + "' does not exists");
         }
 
@@ -89,7 +90,7 @@ public class ProjectService {
                     .anyMatch(collaboratorPredicate);
         }
 
-        if(!project.getProjectLeader().equals(username) && !collaboratorExists) {
+        if (!project.getProjectLeader().equals(username) && !collaboratorExists) {
             throw new ProjectNotFoundException("Project not found in your account");
         }
 
@@ -97,7 +98,7 @@ public class ProjectService {
     }
 
     public List<Project> findAllProject(Principal username) {
-        if(username == null || username.getName() == null) {
+        if (username == null || username.getName() == null) {
             throw new UserNotLoggedInException("Log in to continue");
         }
 

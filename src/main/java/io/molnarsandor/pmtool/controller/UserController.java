@@ -28,7 +28,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
 
-import static io.molnarsandor.pmtool.security.SecurityConstans.TOKEN_PREFIX;
+import static io.molnarsandor.pmtool.security.SecurityConstants.TOKEN_PREFIX;
 
 @RequiredArgsConstructor
 @RestController

@@ -1,8 +1,9 @@
 package io.molnarsandor.pmtool.service;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import io.molnarsandor.pmtool.domain.dto.DeleteDTO;
 import io.molnarsandor.pmtool.domain.entity.Backlog;
 import io.molnarsandor.pmtool.domain.entity.ProjectTask;
-import io.molnarsandor.pmtool.domain.dto.DeleteDTO;
 import io.molnarsandor.pmtool.exceptions.CustomInternalServerErrorException;
 import io.molnarsandor.pmtool.exceptions.ProjectNotFoundException;
 import io.molnarsandor.pmtool.repositories.ProjectTaskRepository;
@@ -12,15 +13,17 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+
 @RequiredArgsConstructor
 @Service
-public class ProjectTaskService {
+public final class ProjectTaskService {
 
     private final ProjectTaskRepository projectTaskRepository;
 
     private final ProjectService projectService;
 
-    public ProjectTask addProjectTask(String projectIdentifier, ProjectTask projectTask, String username) {
+    @SuppressFBWarnings("DLS_DEAD_LOCAL_STORE")
+    public ProjectTask addProjectTask(final String projectIdentifier, final ProjectTask projectTask, final String username) {
 
         // Exceptions: Project not found
         try {
@@ -44,12 +47,12 @@ public class ProjectTaskService {
             projectTask.setProjectIdentifier(projectIdentifier.toUpperCase());
 
             // INITIAL priority when priority is null
-            if(projectTask.getPriority() == null || projectTask.getPriority() == 0) {
+            if (projectTask.getPriority() == null || projectTask.getPriority() == 0) {
                 projectTask.setPriority(3);
             }
 
             // INITIAL status when status is null
-            if(projectTask.getStatus() == null || projectTask.getStatus().equals("")) {
+            if (projectTask.getStatus() == null || projectTask.getStatus().equals("")) {
                 projectTask.setStatus("TO_DO");
             }
 
@@ -61,7 +64,7 @@ public class ProjectTaskService {
 
     }
 
-    public List<ProjectTask> findBacklogById(String id, String username) {
+    public List<ProjectTask> findBacklogById(final String id, final String username) {
 
         // TODO decouple
         projectService.findProjectByIdentifier(id, username);
@@ -69,19 +72,19 @@ public class ProjectTaskService {
         return projectTaskRepository.findByProjectIdentifierIgnoreCaseOrderByPriority(id);
     }
 
-    public ProjectTask findPTByProjectSequence(String backlogId, String ptId, String username) {
+    public ProjectTask findPtByProjectSequence(final String backlogId, final String ptId, final String username) {
 
         // TODO decouple
         projectService.findProjectByIdentifier(backlogId, username);
 
         // TODO decouple
         ProjectTask projectTask = projectTaskRepository.findByProjectSequence(ptId);
-        if(projectTask == null) {
+        if (projectTask == null) {
             throw new ProjectNotFoundException("Project Task '" + ptId + "' was not found");
         }
 
         // TODO decouple
-        if(!projectTask.getProjectIdentifier().equalsIgnoreCase(backlogId)) {
+        if (!projectTask.getProjectIdentifier().equalsIgnoreCase(backlogId)) {
             throw new ProjectNotFoundException("Project Task '" + ptId + "' does not exists in project: '" + backlogId);
         }
 
@@ -89,18 +92,18 @@ public class ProjectTaskService {
     }
 
 
-    public ProjectTask updateByProjectSequence(ProjectTask updatedTask, String backlogId, String ptId, String username) {
+    public ProjectTask updateByProjectSequence(final ProjectTask updatedTask, final String backlogId, final String ptId, final String username) {
 
         // TODO decouple
-        findPTByProjectSequence(backlogId, ptId, username);
+        findPtByProjectSequence(backlogId, ptId, username);
 
         return projectTaskRepository.save(updatedTask);
     }
 
-    public DeleteDTO deletePTByProjectSequence(String backlogId, String ptId, String username) {
+    public DeleteDTO deletePTByProjectSequence(final String backlogId, final String ptId, final String username) {
 
         // TODO decouple
-        ProjectTask projectTask = findPTByProjectSequence(backlogId, ptId, username);
+        ProjectTask projectTask = findPtByProjectSequence(backlogId, ptId, username);
 
         projectTaskRepository.delete(projectTask);
 

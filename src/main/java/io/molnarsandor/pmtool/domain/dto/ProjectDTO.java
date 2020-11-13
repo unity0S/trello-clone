@@ -1,6 +1,7 @@
 package io.molnarsandor.pmtool.domain.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.molnarsandor.pmtool.domain.entity.Collaborator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -12,6 +13,7 @@ import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.Set;
 
+@SuppressFBWarnings({"EI_EXPOSE_REP", "EI_EXPOSE_REP2"})
 @Data
 @ApiModel
 public class ProjectDTO {

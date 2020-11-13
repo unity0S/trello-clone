@@ -12,8 +12,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import static io.molnarsandor.pmtool.security.SecurityConstans.EXPIRATION_TIME;
-import static io.molnarsandor.pmtool.security.SecurityConstans.SECRET;
+import static io.molnarsandor.pmtool.security.SecurityConstants.EXPIRATION_TIME;
+import static io.molnarsandor.pmtool.security.SecurityConstants.SECRET;
 
 @Component
 public class JwtTokenProvider {

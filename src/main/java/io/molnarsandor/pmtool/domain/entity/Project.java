@@ -3,6 +3,7 @@ package io.molnarsandor.pmtool.domain.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -16,6 +17,7 @@ import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.Set;
 
+@SuppressFBWarnings({"EI_EXPOSE_REP2", "EI_EXPOSE_REP"})
 @Entity
 @Getter
 @Setter
@@ -46,13 +48,16 @@ public class Project {
     @JsonFormat(pattern = "yyyy-mm-dd")
     @ApiModelProperty(value = "The Date when the Project starts")
     private Date startDate;
+    @SuppressFBWarnings("EI_EXPOSE_REP")
     @JsonFormat(pattern = "yyyy-mm-dd")
     @ApiModelProperty(value = "The Date when the Project finishes")
     private Date endDate;
+    @SuppressFBWarnings("EI_EXPOSE_REP")
     @JsonFormat(pattern = "yyyy-mm-dd")
     @Column(updatable = false)
     @ApiModelProperty(value = "Date when the Project was created")
     private Date createdAt;
+    @SuppressFBWarnings("EI_EXPOSE_REP")
     @JsonFormat(pattern = "yyyy-mm-dd")
     @ApiModelProperty(value = "Date when the Project was last updated, excluding the Project Task update dates")
     private Date updatedAt;
