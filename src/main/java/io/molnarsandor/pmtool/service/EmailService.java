@@ -14,7 +14,7 @@ public class EmailService {
     private final Log log = LogFactory.getLog(this.getClass());
 
     @Value("${spring.mail.username}")
-    private final String MESSAGE_FROM;
+    private String MESSAGE_FROM;
 
     private final JavaMailSender javaMailSender;
 
