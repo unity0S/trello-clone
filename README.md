@@ -1,18 +1,18 @@
 # Trello Clone Reference Project
 
 ## About
-This project is about to represent my knowledge of  `Java`, `OOP`, `Spring Boot`, `Junit`, `React` and some other related technologies.
+This projectEntity is about to represent my knowledge of  `Java`, `OOP`, `Spring Boot`, `Junit`, `React` and some other related technologies.
 The application itself is a simplified version of Trello with the basic features, such as:
-- Registering a user with email verification
-- Creating a project
-- Adding tasks to a project
-- Invite collaborators to a project
+- Registering a userEntity with email verification
+- Creating a projectEntity
+- Adding tasks to a projectEntity
+- Invite collaboratorEntities to a projectEntity
 
-You can find the documentation [here](https://trello-clone-ms.herokuapp.com/swagger-ui.html) and you can check out and test the enpoints there and see the models. The application is deployed on Heroku, so you have to wait a few seconds for Heroku to wake up.
+You can find the documentation [here](https://trello-clone-ms.herokuapp.com/swagger-ui.html) and you can check out and test the endpoints there and see the models. The application is deployed on Heroku, so you have to wait a few seconds for Heroku to wake up.
 
 ### IMPORTANT
 
-For registering a user please use a valid email address, the application sends you an activation link, which you have to visit.
+For registering a userEntity please use a valid email address, the application sends you an activation link, which you have to visit.
 If you dont want to register use :
 
 - username: test@test.com
@@ -41,14 +41,14 @@ After Activation you can log in with your email address and password. The backen
 - /swagger-ui.html
 
 ## Project
-You can use the project endpoints to create, update or delete a project. When you CREATE a project you became a project leader/owner.
-Upon deletion the projects tasks and the added collaborators will be deleted too.
+You can use the projectEntity endpoints to create, update or delete a projectEntity. When you CREATE a projectEntity you became a projectEntity leader/owner.
+Upon deletion the projectEntities tasks and the added collaboratorEntities will be deleted too.
 
 ## Project Task
-You can add Ptoject Tasks to an exising and only existing Project. Create, update, delete with the corresponding endpoints. Project Leaders and Collaborators can manipulate project tasks.
+You can add Ptoject Tasks to an exising and only existing Project. Create, update, delete with the corresponding endpoints. Project Leaders and Collaborators can manipulate projectEntity tasks.
 
 ## Collaborators
-You can add Collaborators to an existing Project. This Collaborator can be an existing user or a non-existing user as well. They will receive an email that states they have been added to specified Project. If you are already a User, you have nothing to do, once you Log in you will see the Project. If you are not yet registered, you need to register and use the email address which received the system notification about the invite.
+You can add Collaborators to an existing Project. This Collaborator can be an existing userEntity or a non-existing userEntity as well. They will receive an email that states they have been added to specified Project. If you are already a User, you have nothing to do, once you Log in you will see the Project. If you are not yet registered, you need to register and use the email address which received the system notification about the invite.
 
 ## Project Leaders vs Collaborators
 When you create a new Project you automatically became the Project Leader.
