@@ -1,4 +1,4 @@
-package io.molnarsandor.pmtool.domain.dto;
+package io.molnarsandor.trelloclone.project_task;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -11,7 +11,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.Date;
 
-@SuppressFBWarnings("EI_EXPOSE_REP2")
+@SuppressFBWarnings({"EI_EXPOSE_REP2", "EI_EXPOSE_REP"})
 @Data
 @ApiModel
 public class ProjectTaskDTO {
@@ -29,7 +29,6 @@ public class ProjectTaskDTO {
     private String status;
     @ApiModelProperty(value = "Priority of a task", position = 4)
     private Integer priority;
-    @SuppressFBWarnings("EI_EXPOSE_REP")
     @JsonFormat(pattern = "yyyy-mm-dd")
     @ApiModelProperty(value = "Date when the task should be finished", position = 5)
     private Date dueDate;

@@ -1,16 +1,13 @@
-package io.molnarsandor.pmtool.controller;
+package io.molnarsandor.trelloclone.project_task;
 
-import io.molnarsandor.pmtool.domain.dto.ProjectTaskDTO;
-import io.molnarsandor.pmtool.domain.entity.ProjectTask;
-import io.molnarsandor.pmtool.domain.entity.User;
-import io.molnarsandor.pmtool.domain.dto.DeleteDTO;
-import io.molnarsandor.pmtool.exceptions.CustomInternalServerErrorExceptionResponse;
-import io.molnarsandor.pmtool.exceptions.ProjectNotFoundExceptionResponse;
-import io.molnarsandor.pmtool.exceptions.UserNotLoggedInExceptionResponse;
-import io.molnarsandor.pmtool.exceptions.ValidationErrorExceptionResponse;
-import io.molnarsandor.pmtool.service.MapValidationErrorService;
-import io.molnarsandor.pmtool.service.ProjectTaskService;
-import io.molnarsandor.pmtool.util.ModelConverter;
+import io.molnarsandor.trelloclone.user.UserEntity;
+import io.molnarsandor.trelloclone.util.DeleteDTO;
+import io.molnarsandor.trelloclone.exceptions.CustomInternalServerErrorExceptionResponse;
+import io.molnarsandor.trelloclone.project.exceptions.ProjectNotFoundExceptionResponse;
+import io.molnarsandor.trelloclone.user.exceptions.UserNotLoggedInExceptionResponse;
+import io.molnarsandor.trelloclone.exceptions.ValidationErrorExceptionResponse;
+import io.molnarsandor.trelloclone.util.MapValidationErrorService;
+import io.molnarsandor.trelloclone.util.ModelConverter;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
@@ -62,12 +59,12 @@ public class BacklogController {
 
         mapValidationErrorService.mapValidationService(result);
 
-        User user = (User) authentication.getPrincipal();
+        UserEntity userEntity = (UserEntity) authentication.getPrincipal();
 
-        ProjectTask projectTask = modelConverter.projectTaskDtoToEntity(projectTaskDTO);
+        ProjectTaskEntity projectTaskEntity = modelConverter.projectTaskDtoToEntity(projectTaskDTO);
 
         ProjectTaskDTO savedProjectTask = modelConverter.projectTaskEntityToDto(
-                projectTaskService.addProjectTask(backlogId, projectTask, user.getEmail()));
+                projectTaskService.addProjectTask(backlogId, projectTaskEntity, userEntity.getEmail()));
 
         return new ResponseEntity<>(savedProjectTask, HttpStatus.CREATED);
     }
@@ -88,10 +85,10 @@ public class BacklogController {
             @ApiIgnore
             Authentication authentication) {
 
-        User user = (User) authentication.getPrincipal();
+        UserEntity userEntity = (UserEntity) authentication.getPrincipal();
 
         List<ProjectTaskDTO> projectTasks = modelConverter.projectTasksEntityListToDto(
-                projectTaskService.findBacklogById(backlogId, user.getEmail()));
+                projectTaskService.findBacklogById(backlogId, userEntity.getEmail()));
 
         return new ResponseEntity<>(projectTasks, HttpStatus.OK);
     }
@@ -115,10 +112,10 @@ public class BacklogController {
             @ApiIgnore
             Authentication authentication) {
 
-        User user = (User) authentication.getPrincipal();
+        UserEntity userEntity = (UserEntity) authentication.getPrincipal();
 
         ProjectTaskDTO projectTask = modelConverter.projectTaskEntityToDto(
-                projectTaskService.findPtByProjectSequence(backlogId, ptId, user.getEmail()));
+                projectTaskService.findPtByProjectSequence(backlogId, ptId, userEntity.getEmail()));
 
         return new ResponseEntity<>(projectTask, HttpStatus.OK);
     }
@@ -148,14 +145,14 @@ public class BacklogController {
             @ApiIgnore
             Authentication authentication) {
 
-        User user = (User) authentication.getPrincipal();
+        UserEntity userEntity = (UserEntity) authentication.getPrincipal();
 
         mapValidationErrorService.mapValidationService(result);
 
-        ProjectTask projectTask = modelConverter.projectTaskDtoToEntity(projectTaskDTO);
+        ProjectTaskEntity projectTaskEntity = modelConverter.projectTaskDtoToEntity(projectTaskDTO);
 
         ProjectTaskDTO updatedTask = modelConverter.projectTaskEntityToDto(
-                projectTaskService.updateByProjectSequence(projectTask,backlogId, ptId, user.getEmail()));
+                projectTaskService.updateByProjectSequence(projectTaskEntity,backlogId, ptId, userEntity.getEmail()));
 
         return new ResponseEntity<>(updatedTask, HttpStatus.OK);
     }
@@ -179,9 +176,9 @@ public class BacklogController {
             @ApiIgnore
             Authentication authentication) {
 
-        User user = (User) authentication.getPrincipal();
+        UserEntity userEntity = (UserEntity) authentication.getPrincipal();
 
-        DeleteDTO response = projectTaskService.deletePTByProjectSequence(backlogId, ptId, user.getEmail());
+        DeleteDTO response = projectTaskService.deletePTByProjectSequence(backlogId, ptId, userEntity.getEmail());
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

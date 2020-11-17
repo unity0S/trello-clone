@@ -1,4 +1,4 @@
-package io.molnarsandor.pmtool.domain.entity;
+package io.molnarsandor.trelloclone.project_task;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -17,11 +17,12 @@ import java.util.Date;
 
 @SuppressFBWarnings({"EI_EXPOSE_REP2", "EI_EXPOSE_REP"})
 @Entity
+@Table(name = "project_task")
 @Getter
 @Setter
 @NoArgsConstructor
 @ApiModel(value = "Project Task", description = "A Project Task")
-public class ProjectTask {
+public class ProjectTaskEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,13 +49,11 @@ public class ProjectTask {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "backlog_id", updatable = false, nullable = false)
     @JsonIgnore
-    private Backlog backlog;
-    @SuppressFBWarnings("EI_EXPOSE_REP")
+    private BacklogEntity backlog;
     @Column(updatable = false)
     @JsonFormat(pattern = "yyyy-mm-dd")
     @ApiModelProperty(value = "Date when the Task was created")
     private Date createdAt;
-    @SuppressFBWarnings("EI_EXPOSE_REP")
     @JsonFormat(pattern = "yyyy-mm-dd")
     @ApiModelProperty(value = "Date when the Task was Updated last time")
     private Date updatedAt;
