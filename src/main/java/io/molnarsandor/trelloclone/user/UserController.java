@@ -1,9 +1,9 @@
 package io.molnarsandor.trelloclone.user;
 
 import io.molnarsandor.trelloclone.user.exceptions.ActivationKeyNotFoundExceptionResponse;
-import io.molnarsandor.trelloclone.exceptions.CustomInternalServerErrorExceptionResponse;
+import io.molnarsandor.trelloclone.global_exceptions.CustomInternalServerErrorExceptionResponse;
 import io.molnarsandor.trelloclone.user.exceptions.UserNotLoggedInExceptionResponse;
-import io.molnarsandor.trelloclone.exceptions.ValidationErrorExceptionResponse;
+import io.molnarsandor.trelloclone.global_exceptions.ValidationErrorExceptionResponse;
 import io.molnarsandor.trelloclone.security.JwtTokenProvider;
 import io.molnarsandor.trelloclone.util.MapValidationErrorService;
 import io.molnarsandor.trelloclone.util.ModelConverter;

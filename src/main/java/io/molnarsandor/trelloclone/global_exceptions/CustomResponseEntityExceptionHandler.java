@@ -1,4 +1,4 @@
-package io.molnarsandor.trelloclone.exceptions;
+package io.molnarsandor.trelloclone.global_exceptions;
 
 import io.molnarsandor.trelloclone.collaborator.exceptions.CollaboratorAlreadyAssignedException;
 import io.molnarsandor.trelloclone.collaborator.exceptions.CollaboratorAlreadyAssignedExceptionResponse;
@@ -69,7 +69,7 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
 
     @ExceptionHandler
     public final ResponseEntity<CustomInternalServerErrorExceptionResponse> handleCustomInternalServerErrorException(CustomInternalServerErrorException ex, WebRequest request) {
-        CustomInternalServerErrorExceptionResponse exceptionResponse = new CustomInternalServerErrorExceptionResponse(ex.getMessage());
+        CustomInternalServerErrorExceptionResponse exceptionResponse = new CustomInternalServerErrorExceptionResponse();
         log.error(ex.getCause());
         return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }

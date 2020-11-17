@@ -2,7 +2,7 @@ package io.molnarsandor.trelloclone.project;
 
 import io.molnarsandor.trelloclone.collaborator.CollaboratorEntity;
 import io.molnarsandor.trelloclone.collaborator.CollaboratorRepository;
-import io.molnarsandor.trelloclone.exceptions.CustomInternalServerErrorException;
+import io.molnarsandor.trelloclone.global_exceptions.CustomInternalServerErrorException;
 import io.molnarsandor.trelloclone.project.exceptions.ProjectNotFoundException;
 import io.molnarsandor.trelloclone.project_task.BacklogEntity;
 import io.molnarsandor.trelloclone.project_task.BacklogRepository;
@@ -29,24 +29,49 @@ public class ProjectService {
 
     private final CollaboratorRepository collaboratorRepository;
 
-    public ProjectEntity saveOrUpdateProject(ProjectEntity projectEntity, String username) {
+    // == PUBLIC METHODS ==
+    public ProjectEntity findProjectByIdentifier(String projectId, String username) {
 
+        ProjectEntity projectEntity;
+
+        try {
+            projectEntity = projectRepository.findByProjectIdentifierIgnoreCase(projectId);
+        } catch (DataAccessException io) {
+            throw new CustomInternalServerErrorException(io);
+        }
+
+        validateProjectWithCollaborators(projectEntity, projectId, username);
+
+        return projectEntity;
+    }
+
+    // == PROTECTED METHODS ==
+    protected ProjectEntity saveOrUpdateProject(ProjectEntity projectEntity, String username) {
+
+        // IF UPDATE
         if (projectEntity.getId() != null) {
-            ProjectEntity existingProjectEntity = projectRepository.findByProjectIdentifierIgnoreCase(projectEntity.getProjectIdentifier());
+            ProjectEntity existingProjectEntity;
 
-            if (existingProjectEntity != null && !existingProjectEntity.getProjectLeader().equals(username)) {
-                throw new ProjectNotFoundException("Project not found in your account");
-            } else if (existingProjectEntity == null) {
-                throw new ProjectNotFoundException("Project with ID: '" + projectEntity.getProjectIdentifier() + "' cannot be updated because it does not exist");
+            // GET FROM DB
+            try {
+                existingProjectEntity = projectRepository.findByProjectIdentifierIgnoreCase(projectEntity.getProjectIdentifier());
+            } catch (DataAccessException io) {
+                throw new CustomInternalServerErrorException(io);
             }
 
+            // THEN VALIDATE
+            validateProject(existingProjectEntity, projectEntity.getProjectIdentifier(), username);
         }
+
+        // IF VALID
         try {
+            // GET USER FROM DB AND CONSTRUCT THE ENTITY
             UserEntity userEntity = userRepository.findByEmail(username);
             projectEntity.setUser(userEntity);
             projectEntity.setProjectLeader(userEntity.getEmail());
             projectEntity.setProjectIdentifier(projectEntity.getProjectIdentifier().toUpperCase());
 
+            // IF ITS A NEW PROJECT CREATE AND SET A NEW BACKLOG
             if (projectEntity.getId() == null) {
                 BacklogEntity backlogEntity = new BacklogEntity();
                 projectEntity.setBacklog(backlogEntity);
@@ -54,46 +79,20 @@ public class ProjectService {
                 backlogEntity.setProjectIdentifier(projectEntity.getProjectIdentifier().toUpperCase());
             }
 
+            // IF ITS AN UPDATE GET AND SET EXISTING BACKLOG FROM DB
             if (projectEntity.getId() != null) {
                 projectEntity.setBacklog(backlogRepository.findByProjectIdentifierIgnoreCase(projectEntity.getProjectIdentifier().toUpperCase()));
             }
 
+            // SAVE TO DB
             return projectRepository.save(projectEntity);
         } catch (DataAccessException io) {
-            throw new CustomInternalServerErrorException("Internal Server Error", io);
+            throw new CustomInternalServerErrorException(io);
         }
     }
 
-    public ProjectEntity findProjectByIdentifier(String projectId, String username) {
 
-        ProjectEntity projectEntity = projectRepository.findByProjectIdentifierIgnoreCase(projectId);
-
-        if (projectEntity == null) {
-            throw new ProjectNotFoundException("Project ID '" + projectId + "' does not exists");
-        }
-
-       Set<CollaboratorEntity> collaboratorEntities = projectEntity.getCollaborators();
-
-        Predicate<CollaboratorEntity> collaboratorPredicate = collaborator ->
-                collaborator.getProjectIdentifier().equalsIgnoreCase(projectId) &&
-                collaborator.getEmail().equals(username);
-
-
-        boolean collaboratorExists = false;
-        if (!collaboratorEntities.isEmpty()) {
-            collaboratorExists = collaboratorEntities
-                    .stream()
-                    .anyMatch(collaboratorPredicate);
-        }
-
-        if (!projectEntity.getProjectLeader().equals(username) && !collaboratorExists) {
-            throw new ProjectNotFoundException("Project not found in your account");
-        }
-
-        return projectEntity;
-    }
-
-    public List<ProjectEntity> findAllProject(String username) {
+    protected List<ProjectEntity> findAllProject(String username) {
 
         List<ProjectEntity> byLeader = projectRepository.findAllByProjectLeader(username);
 
@@ -106,10 +105,43 @@ public class ProjectService {
         return byLeader;
     }
 
-    public DeleteDTO deleteProjectByIdentifier(String projectId, String username) {
+    protected DeleteDTO deleteProjectByIdentifier(String projectId, String username) {
 
         projectRepository.delete(findProjectByIdentifier(projectId, username));
 
         return new DeleteDTO("Project " + projectId + " deleted");
+    }
+
+    // == PRIVATE METHODS ==
+    private void validateProject(ProjectEntity projectEntity, String projectIdentifier, String username) {
+        if (projectEntity != null && !projectEntity.getProjectLeader().equals(username)) {
+            throw new ProjectNotFoundException("Project not found in your account");
+        } else if (projectEntity == null) {
+            throw new ProjectNotFoundException("Project with ID: '" + projectIdentifier + "' cannot be updated because it does not exist");
+        }
+    }
+
+    private void validateProjectWithCollaborators(ProjectEntity projectEntity, String projectId, String username) {
+        if (projectEntity == null) {
+            throw new ProjectNotFoundException("Project ID '" + projectId + "' does not exists");
+        }
+
+        Set<CollaboratorEntity> collaboratorEntities = projectEntity.getCollaborators();
+
+        Predicate<CollaboratorEntity> collaboratorPredicate = collaborator ->
+                collaborator.getProjectIdentifier().equalsIgnoreCase(projectId) &&
+                        collaborator.getEmail().equals(username);
+
+
+        boolean collaboratorExists = false;
+        if (!collaboratorEntities.isEmpty()) {
+            collaboratorExists = collaboratorEntities
+                    .stream()
+                    .anyMatch(collaboratorPredicate);
+        }
+
+        if (!projectEntity.getProjectLeader().equals(username) && !collaboratorExists) {
+            throw new ProjectNotFoundException("Project not found in your account");
+        }
     }
 }

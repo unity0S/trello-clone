@@ -1,110 +1,133 @@
 package io.molnarsandor.trelloclone.project_task;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import io.molnarsandor.trelloclone.util.DeleteDTO;
-import io.molnarsandor.trelloclone.exceptions.CustomInternalServerErrorException;
+import io.molnarsandor.trelloclone.global_exceptions.CustomInternalServerErrorException;
+import io.molnarsandor.trelloclone.project.ProjectEntity;
 import io.molnarsandor.trelloclone.project.ProjectService;
 import io.molnarsandor.trelloclone.project.exceptions.ProjectNotFoundException;
+import io.molnarsandor.trelloclone.util.DeleteDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-
 @RequiredArgsConstructor
 @Service
 public final class ProjectTaskService {
+
+    private static final String TO_DO = "TO_DO";
+
+    private static final int PRIORITY = 3;
 
     private final ProjectTaskRepository projectTaskRepository;
 
     private final ProjectService projectService;
 
+    // == PROTECTED METHODS ==
     @SuppressFBWarnings("DLS_DEAD_LOCAL_STORE")
-    public ProjectTaskEntity addProjectTask(final String projectIdentifier, final ProjectTaskEntity projectTaskEntity, final String username) {
+    protected ProjectTaskEntity addProjectTask(final String projectIdentifier, final ProjectTaskEntity projectTaskEntity, final String username) {
 
-        // Exceptions: Project not found
         try {
-            // PTs to be added to a specific project, project != null, BL exists
+            // VALIDATE PROJECT
+            ProjectEntity projectEntity = projectService.findProjectByIdentifier(projectIdentifier, username);
 
-            // TODO decouple
-            BacklogEntity backlogEntity = projectService.findProjectByIdentifier(projectIdentifier, username).getBacklog();
-            // Set the BL to PT
+            // GET BACKLOG
+            BacklogEntity backlogEntity = projectEntity.getBacklog();
+
+            // SET BACKLOG TO PROJECTTASK
             projectTaskEntity.setBacklog(backlogEntity);
 
-            // Project sequence like this: IDPRO-1, IDPRO-2 ...IDPRO-100
+            // GET CURRENT PROJECTTASK SEQUENCE FROM BACKLOG
             Integer backlogSequence = backlogEntity.getPtSequence();
 
-            // Update the BL sequence
+            // UPDATE THE SEQUENCE
             backlogSequence++;
 
+            // SET UPDATED SEQUENCE TO BACKLOG
             backlogEntity.setPtSequence(backlogSequence);
 
-            // Add the sequence to the PT
+            // SET THE UPDATED SEQUENCE TO THE PROJECTTASK
             projectTaskEntity.setProjectSequence(backlogEntity.getProjectIdentifier() + "-" + backlogSequence);
             projectTaskEntity.setProjectIdentifier(projectIdentifier.toUpperCase());
 
-            // INITIAL priority when priority is null
+            // INITIAL PRIORITY
             if (projectTaskEntity.getPriority() == null || projectTaskEntity.getPriority() == 0) {
-                projectTaskEntity.setPriority(3);
+                projectTaskEntity.setPriority(PRIORITY);
             }
 
-            // INITIAL status when status is null
+            // INITIAL STATUS
             if (projectTaskEntity.getStatus() == null || projectTaskEntity.getStatus().equals("")) {
-                projectTaskEntity.setStatus("TO_DO");
+                projectTaskEntity.setStatus(TO_DO);
             }
 
             return projectTaskRepository.save(projectTaskEntity);
 
         } catch (DataAccessException io) {
-            throw new CustomInternalServerErrorException("Internal Server Error", io);
+            throw new CustomInternalServerErrorException(io);
         }
 
     }
 
-    public List<ProjectTaskEntity> findBacklogById(final String id, final String username) {
+    protected List<ProjectTaskEntity> findBacklogById(final String id, final String username) {
 
-        // TODO decouple
+        // VALIDATE PROJECT
         projectService.findProjectByIdentifier(id, username);
 
-        return projectTaskRepository.findByProjectIdentifierIgnoreCaseOrderByPriority(id);
+        List<ProjectTaskEntity> projectTaskEntities;
+
+        try {
+            projectTaskEntities = projectTaskRepository.findByProjectIdentifierIgnoreCaseOrderByPriority(id);
+        } catch (DataAccessException io) {
+            throw new CustomInternalServerErrorException(io);
+        }
+
+        return  projectTaskEntities;
     }
 
-    public ProjectTaskEntity findPtByProjectSequence(final String backlogId, final String ptId, final String username) {
+    protected ProjectTaskEntity findPtByProjectSequence(final String backlogId, final String ptId, final String username) {
 
-        // TODO decouple
+        // VALIDATE PROJECT
         projectService.findProjectByIdentifier(backlogId, username);
 
-        // TODO decouple
-        ProjectTaskEntity projectTaskEntity = projectTaskRepository.findByProjectSequence(ptId);
-        if (projectTaskEntity == null) {
-            throw new ProjectNotFoundException("Project Task '" + ptId + "' was not found");
+        ProjectTaskEntity projectTaskEntity;
+
+        try {
+            projectTaskEntity = projectTaskRepository.findByProjectSequence(ptId);
+        } catch (DataAccessException io) {
+            throw new CustomInternalServerErrorException(io);
         }
 
-        // TODO decouple
-        if (!projectTaskEntity.getProjectIdentifier().equalsIgnoreCase(backlogId)) {
-            throw new ProjectNotFoundException("Project Task '" + ptId + "' does not exists in project: '" + backlogId);
-        }
+        validateProjectTask(projectTaskEntity, ptId, backlogId);
 
         return projectTaskEntity;
     }
 
+    protected ProjectTaskEntity updateByProjectSequence(final ProjectTaskEntity updatedTask, final String backlogId, final String ptId, final String username) {
 
-    public ProjectTaskEntity updateByProjectSequence(final ProjectTaskEntity updatedTask, final String backlogId, final String ptId, final String username) {
-
-        // TODO decouple
         findPtByProjectSequence(backlogId, ptId, username);
 
         return projectTaskRepository.save(updatedTask);
     }
 
-    public DeleteDTO deletePTByProjectSequence(final String backlogId, final String ptId, final String username) {
+    protected DeleteDTO deletePTByProjectSequence(final String backlogId, final String ptId, final String username) {
 
-        // TODO decouple
         ProjectTaskEntity projectTaskEntity = findPtByProjectSequence(backlogId, ptId, username);
 
         projectTaskRepository.delete(projectTaskEntity);
 
         return new DeleteDTO("Project task " + ptId + " deleted");
+    }
+
+    // == PRIVATE METHODS ==
+    private void validateProjectTask(ProjectTaskEntity projectTaskEntity, String ptId, String backlogId) {
+
+        if (projectTaskEntity == null) {
+            throw new ProjectNotFoundException("Project Task '" + ptId + "' was not found");
+        }
+
+        if (!projectTaskEntity.getProjectIdentifier().equalsIgnoreCase(backlogId)) {
+            throw new ProjectNotFoundException("Project Task '" + ptId + "' does not exists in project: '" + backlogId);
+        }
     }
 }

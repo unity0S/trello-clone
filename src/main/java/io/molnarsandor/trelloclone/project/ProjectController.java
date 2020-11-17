@@ -1,7 +1,7 @@
 package io.molnarsandor.trelloclone.project;
 
-import io.molnarsandor.trelloclone.exceptions.CustomInternalServerErrorExceptionResponse;
-import io.molnarsandor.trelloclone.exceptions.ValidationErrorExceptionResponse;
+import io.molnarsandor.trelloclone.global_exceptions.CustomInternalServerErrorExceptionResponse;
+import io.molnarsandor.trelloclone.global_exceptions.ValidationErrorExceptionResponse;
 import io.molnarsandor.trelloclone.project.exceptions.ProjectIdExceptionResponse;
 import io.molnarsandor.trelloclone.project.exceptions.ProjectNotFoundExceptionResponse;
 import io.molnarsandor.trelloclone.user.UserEntity;

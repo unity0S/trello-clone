@@ -1,6 +1,5 @@
 package io.molnarsandor.trelloclone.user;
 
-import io.molnarsandor.trelloclone.user.UserEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 

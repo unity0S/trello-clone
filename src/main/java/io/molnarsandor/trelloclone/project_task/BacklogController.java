@@ -2,10 +2,10 @@ package io.molnarsandor.trelloclone.project_task;
 
 import io.molnarsandor.trelloclone.user.UserEntity;
 import io.molnarsandor.trelloclone.util.DeleteDTO;
-import io.molnarsandor.trelloclone.exceptions.CustomInternalServerErrorExceptionResponse;
+import io.molnarsandor.trelloclone.global_exceptions.CustomInternalServerErrorExceptionResponse;
 import io.molnarsandor.trelloclone.project.exceptions.ProjectNotFoundExceptionResponse;
 import io.molnarsandor.trelloclone.user.exceptions.UserNotLoggedInExceptionResponse;
-import io.molnarsandor.trelloclone.exceptions.ValidationErrorExceptionResponse;
+import io.molnarsandor.trelloclone.global_exceptions.ValidationErrorExceptionResponse;
 import io.molnarsandor.trelloclone.util.MapValidationErrorService;
 import io.molnarsandor.trelloclone.util.ModelConverter;
 import io.swagger.annotations.ApiOperation;

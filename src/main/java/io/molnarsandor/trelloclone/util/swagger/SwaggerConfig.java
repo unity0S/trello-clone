@@ -1,4 +1,4 @@
-package io.molnarsandor.trelloclone.swagger;
+package io.molnarsandor.trelloclone.util.swagger;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,12 +14,14 @@ import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger.web.UiConfiguration;
 import springfox.documentation.swagger.web.UiConfigurationBuilder;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.Collections;
 import java.util.List;
 
 import static springfox.documentation.builders.PathSelectors.regex;
 
+@EnableSwagger2
 @Configuration
 public class SwaggerConfig {
 

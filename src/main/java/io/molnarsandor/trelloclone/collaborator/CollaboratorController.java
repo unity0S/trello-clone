@@ -2,8 +2,8 @@ package io.molnarsandor.trelloclone.collaborator;
 
 import io.molnarsandor.trelloclone.util.DeleteDTO;
 import io.molnarsandor.trelloclone.collaborator.exceptions.CollaboratorAlreadyAssignedExceptionResponse;
-import io.molnarsandor.trelloclone.exceptions.CustomInternalServerErrorExceptionResponse;
-import io.molnarsandor.trelloclone.exceptions.ValidationErrorExceptionResponse;
+import io.molnarsandor.trelloclone.global_exceptions.CustomInternalServerErrorExceptionResponse;
+import io.molnarsandor.trelloclone.global_exceptions.ValidationErrorExceptionResponse;
 import io.molnarsandor.trelloclone.project.exceptions.ProjectNotFoundExceptionResponse;
 import io.molnarsandor.trelloclone.util.EmailService;
 import io.molnarsandor.trelloclone.util.MapValidationErrorService;
@@ -70,7 +70,6 @@ public class CollaboratorController {
         CollaboratorDTO savedCollaborator = modelConverter.collaboratorEntityToDto(
                 collaboratorService.addCollaborator(projectIdentifier, collaboratorEntity, userEntity.getEmail()));
 
-        // TODO projectIdentifier to project name or desc or smthng
         emailService.sendMessage(savedCollaborator.getEmail(), "Invite", "You have been invited to collaborate in project: " + projectIdentifier);
 
         return new ResponseEntity<>(savedCollaborator, HttpStatus.CREATED);
