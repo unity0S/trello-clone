@@ -1,8 +1,8 @@
-package io.molnarsandor.trelloclone.project;
+package io.molnarsandor.trelloclone.project.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import io.molnarsandor.trelloclone.collaborator.CollaboratorEntity;
+import io.molnarsandor.trelloclone.collaborator.model.CollaboratorEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

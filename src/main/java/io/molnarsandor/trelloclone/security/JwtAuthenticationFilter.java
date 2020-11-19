@@ -1,10 +1,10 @@
 package io.molnarsandor.trelloclone.security;
 
-import io.molnarsandor.trelloclone.user.UserEntity;
 import io.molnarsandor.trelloclone.user.UserService;
+import io.molnarsandor.trelloclone.user.model.UserEntity;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -21,14 +21,13 @@ import java.util.Collections;
 import static io.molnarsandor.trelloclone.security.SecurityConstants.HEADER_STRING;
 import static io.molnarsandor.trelloclone.security.SecurityConstants.TOKEN_PREFIX;
 
+@RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final Log log = LogFactory.getLog(this.getClass());
 
-    @Autowired
     private JwtTokenProvider tokenProvider;
 
-    @Autowired
     private UserService userService;
 
     @Override

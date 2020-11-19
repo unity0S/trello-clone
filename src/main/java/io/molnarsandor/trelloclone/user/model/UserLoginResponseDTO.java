@@ -1,4 +1,4 @@
-package io.molnarsandor.trelloclone.user;
+package io.molnarsandor.trelloclone.user.model;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

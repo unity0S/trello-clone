@@ -1,14 +1,14 @@
 package io.molnarsandor.trelloclone.util;
 
-import io.molnarsandor.trelloclone.collaborator.CollaboratorDTO;
-import io.molnarsandor.trelloclone.collaborator.CollaboratorEntity;
-import io.molnarsandor.trelloclone.project_task.ProjectTaskDTO;
-import io.molnarsandor.trelloclone.user.UserDTO;
-import io.molnarsandor.trelloclone.user.UserEntity;
-import io.molnarsandor.trelloclone.project.ProjectDTO;
-import io.molnarsandor.trelloclone.project.ProjectEntity;
-import io.molnarsandor.trelloclone.project_task.ProjectTaskEntity;
-import io.molnarsandor.trelloclone.user.UserRegisterDTO;
+import io.molnarsandor.trelloclone.collaborator.model.CollaboratorDTO;
+import io.molnarsandor.trelloclone.collaborator.model.CollaboratorEntity;
+import io.molnarsandor.trelloclone.project_task.model.ProjectTaskDTO;
+import io.molnarsandor.trelloclone.user.model.UserDTO;
+import io.molnarsandor.trelloclone.user.model.UserEntity;
+import io.molnarsandor.trelloclone.project.model.ProjectDTO;
+import io.molnarsandor.trelloclone.project.model.ProjectEntity;
+import io.molnarsandor.trelloclone.project_task.model.ProjectTaskEntity;
+import io.molnarsandor.trelloclone.user.model.UserRegisterDTO;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;

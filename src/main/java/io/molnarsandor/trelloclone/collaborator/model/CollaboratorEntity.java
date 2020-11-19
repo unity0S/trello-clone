@@ -1,8 +1,8 @@
-package io.molnarsandor.trelloclone.collaborator;
+package io.molnarsandor.trelloclone.collaborator.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.molnarsandor.trelloclone.project.ProjectEntity;
+import io.molnarsandor.trelloclone.project.model.ProjectEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;

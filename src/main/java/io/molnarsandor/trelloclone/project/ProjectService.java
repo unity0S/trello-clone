@@ -1,12 +1,13 @@
 package io.molnarsandor.trelloclone.project;
 
-import io.molnarsandor.trelloclone.collaborator.CollaboratorEntity;
+import io.molnarsandor.trelloclone.collaborator.model.CollaboratorEntity;
 import io.molnarsandor.trelloclone.collaborator.CollaboratorRepository;
 import io.molnarsandor.trelloclone.global_exceptions.CustomInternalServerErrorException;
 import io.molnarsandor.trelloclone.project.exceptions.ProjectNotFoundException;
-import io.molnarsandor.trelloclone.project_task.BacklogEntity;
+import io.molnarsandor.trelloclone.project.model.ProjectEntity;
+import io.molnarsandor.trelloclone.project_task.model.BacklogEntity;
 import io.molnarsandor.trelloclone.project_task.BacklogRepository;
-import io.molnarsandor.trelloclone.user.UserEntity;
+import io.molnarsandor.trelloclone.user.model.UserEntity;
 import io.molnarsandor.trelloclone.user.UserRepository;
 import io.molnarsandor.trelloclone.util.DeleteDTO;
 import lombok.RequiredArgsConstructor;
@@ -45,33 +46,24 @@ public class ProjectService {
         return projectEntity;
     }
 
-    // == PROTECTED METHODS ==
-    protected ProjectEntity saveOrUpdateProject(ProjectEntity projectEntity, String username) {
+    public ProjectEntity saveOrUpdateProject(ProjectEntity projectEntity, String username) {
 
-        // IF UPDATE
         if (projectEntity.getId() != null) {
             ProjectEntity existingProjectEntity;
-
-            // GET FROM DB
             try {
                 existingProjectEntity = projectRepository.findByProjectIdentifierIgnoreCase(projectEntity.getProjectIdentifier());
             } catch (DataAccessException io) {
                 throw new CustomInternalServerErrorException(io);
             }
-
-            // THEN VALIDATE
             validateProject(existingProjectEntity, projectEntity.getProjectIdentifier(), username);
         }
 
-        // IF VALID
         try {
-            // GET USER FROM DB AND CONSTRUCT THE ENTITY
             UserEntity userEntity = userRepository.findByEmail(username);
             projectEntity.setUser(userEntity);
             projectEntity.setProjectLeader(userEntity.getEmail());
             projectEntity.setProjectIdentifier(projectEntity.getProjectIdentifier().toUpperCase());
 
-            // IF ITS A NEW PROJECT CREATE AND SET A NEW BACKLOG
             if (projectEntity.getId() == null) {
                 BacklogEntity backlogEntity = new BacklogEntity();
                 projectEntity.setBacklog(backlogEntity);
@@ -79,20 +71,17 @@ public class ProjectService {
                 backlogEntity.setProjectIdentifier(projectEntity.getProjectIdentifier().toUpperCase());
             }
 
-            // IF ITS AN UPDATE GET AND SET EXISTING BACKLOG FROM DB
             if (projectEntity.getId() != null) {
                 projectEntity.setBacklog(backlogRepository.findByProjectIdentifierIgnoreCase(projectEntity.getProjectIdentifier().toUpperCase()));
             }
 
-            // SAVE TO DB
             return projectRepository.save(projectEntity);
         } catch (DataAccessException io) {
             throw new CustomInternalServerErrorException(io);
         }
     }
 
-
-    protected List<ProjectEntity> findAllProject(String username) {
+    public List<ProjectEntity> findAllProject(String username) {
 
         List<ProjectEntity> byLeader = projectRepository.findAllByProjectLeader(username);
 
@@ -105,7 +94,7 @@ public class ProjectService {
         return byLeader;
     }
 
-    protected DeleteDTO deleteProjectByIdentifier(String projectId, String username) {
+    public DeleteDTO deleteProjectByIdentifier(String projectId, String username) {
 
         projectRepository.delete(findProjectByIdentifier(projectId, username));
 

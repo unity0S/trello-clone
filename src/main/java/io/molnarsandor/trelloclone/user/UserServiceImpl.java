@@ -3,6 +3,8 @@ package io.molnarsandor.trelloclone.user;
 import io.molnarsandor.trelloclone.global_exceptions.CustomInternalServerErrorException;
 import io.molnarsandor.trelloclone.user.exceptions.ActivationKeyNotFoundException;
 import io.molnarsandor.trelloclone.user.exceptions.UsernameAlreadyExistsException;
+import io.molnarsandor.trelloclone.user.model.UserActivationDTO;
+import io.molnarsandor.trelloclone.user.model.UserEntity;
 import io.molnarsandor.trelloclone.util.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
@@ -67,8 +69,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return new UserDetailsImpl(userEntity);
     }
 
-    // == PROTECTED METHODS ==
-    protected UserEntity registerUser(UserEntity newUserEntity) {
+    public UserEntity registerUser(UserEntity newUserEntity) {
 
         checkIsUserExists(newUserEntity.getEmail());
 
@@ -88,7 +89,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
     }
 
-    protected UserActivationDTO userActivation(String key) {
+    public UserActivationDTO userActivation(String key) {
 
         UserEntity userEntity;
 

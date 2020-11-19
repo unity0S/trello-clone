@@ -1,4 +1,4 @@
-package io.molnarsandor.trelloclone.collaborator;
+package io.molnarsandor.trelloclone.collaborator.model;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

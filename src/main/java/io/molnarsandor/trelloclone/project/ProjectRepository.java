@@ -1,6 +1,7 @@
 package io.molnarsandor.trelloclone.project;
 
-import io.molnarsandor.trelloclone.collaborator.CollaboratorEntity;
+import io.molnarsandor.trelloclone.collaborator.model.CollaboratorEntity;
+import io.molnarsandor.trelloclone.project.model.ProjectEntity;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

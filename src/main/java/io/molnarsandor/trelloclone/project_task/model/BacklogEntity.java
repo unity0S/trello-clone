@@ -1,7 +1,7 @@
-package io.molnarsandor.trelloclone.project_task;
+package io.molnarsandor.trelloclone.project_task.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.molnarsandor.trelloclone.project.ProjectEntity;
+import io.molnarsandor.trelloclone.project.model.ProjectEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

@@ -1,7 +1,7 @@
 package io.molnarsandor.trelloclone.security;
 
 import io.jsonwebtoken.*;
-import io.molnarsandor.trelloclone.user.UserEntity;
+import io.molnarsandor.trelloclone.user.model.UserEntity;
 import io.molnarsandor.trelloclone.user.UserDetailsImpl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

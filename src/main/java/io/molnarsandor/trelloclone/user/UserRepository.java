@@ -1,5 +1,6 @@
 package io.molnarsandor.trelloclone.user;
 
+import io.molnarsandor.trelloclone.user.model.UserEntity;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

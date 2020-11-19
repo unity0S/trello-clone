@@ -1,5 +1,6 @@
 package io.molnarsandor.trelloclone.user;
 
+import io.molnarsandor.trelloclone.user.model.UserEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;

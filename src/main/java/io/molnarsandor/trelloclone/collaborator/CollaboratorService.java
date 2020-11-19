@@ -1,8 +1,9 @@
 package io.molnarsandor.trelloclone.collaborator;
 
 import io.molnarsandor.trelloclone.collaborator.exceptions.CollaboratorAlreadyAssignedException;
+import io.molnarsandor.trelloclone.collaborator.model.CollaboratorEntity;
 import io.molnarsandor.trelloclone.global_exceptions.CustomInternalServerErrorException;
-import io.molnarsandor.trelloclone.project.ProjectEntity;
+import io.molnarsandor.trelloclone.project.model.ProjectEntity;
 import io.molnarsandor.trelloclone.project.ProjectService;
 import io.molnarsandor.trelloclone.project.exceptions.ProjectNotFoundException;
 import io.molnarsandor.trelloclone.util.DeleteDTO;
@@ -21,8 +22,8 @@ public class CollaboratorService {
 
     private final ProjectService projectService;
 
-    // == PROTECTED METHODS ==
-    protected CollaboratorEntity addCollaborator(String projectIdentifier, CollaboratorEntity collaboratorEntity, String username) {
+    // == PUBLIC METHODS ==
+    public CollaboratorEntity addCollaborator(String projectIdentifier, CollaboratorEntity collaboratorEntity, String username) {
 
             ProjectEntity projectEntity = projectService.findProjectByIdentifier(projectIdentifier, username);
 
@@ -43,14 +44,13 @@ public class CollaboratorService {
             return savedCollaborator;
     }
 
-    protected DeleteDTO deleteCollaborator(String projectIdentifier, String collaboratorSequence, String username) {
+    public DeleteDTO deleteCollaborator(String projectIdentifier, String collaboratorSequence, String username) {
 
         ProjectEntity projectEntity = projectService.findProjectByIdentifier(projectIdentifier, username);
 
         checkCollaboratorBeforeDelete(projectEntity, username, projectIdentifier, collaboratorSequence);
 
         CollaboratorEntity collaboratorEntity = collaboratorRepository.findByCollaboratorSequence(collaboratorSequence);
-
         collaboratorRepository.delete(collaboratorEntity);
 
         return new DeleteDTO("Collaborator with id " + collaboratorSequence + " deleted from Project " + projectIdentifier);
