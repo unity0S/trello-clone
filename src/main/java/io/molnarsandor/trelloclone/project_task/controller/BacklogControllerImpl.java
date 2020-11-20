@@ -1,20 +1,19 @@
 package io.molnarsandor.trelloclone.project_task.controller;
 
+import io.molnarsandor.trelloclone.project_task.ProjectTaskService;
 import io.molnarsandor.trelloclone.project_task.model.ProjectTaskDTO;
 import io.molnarsandor.trelloclone.project_task.model.ProjectTaskEntity;
-import io.molnarsandor.trelloclone.project_task.ProjectTaskService;
-import io.molnarsandor.trelloclone.user.model.UserEntity;
 import io.molnarsandor.trelloclone.util.DeleteDTO;
 import io.molnarsandor.trelloclone.util.MapValidationErrorService;
 import io.molnarsandor.trelloclone.util.ModelConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -37,13 +36,12 @@ public class BacklogControllerImpl implements BacklogController {
                                                          BindingResult result,
                                                          @PathVariable
                                                          String backlogId,
-                                                         Authentication authentication) {
+                                                         Principal principal) {
 
         mapValidationErrorService.mapValidationService(result);
-        UserEntity userEntity = (UserEntity) authentication.getPrincipal();
         ProjectTaskEntity projectTaskEntity = modelConverter.projectTaskDtoToEntity(projectTaskDTO);
         ProjectTaskDTO savedProjectTask = modelConverter.projectTaskEntityToDto(
-                projectTaskService.addProjectTask(backlogId, projectTaskEntity, userEntity.getEmail()));
+                projectTaskService.addProjectTask(backlogId, projectTaskEntity, principal.getName()));
 
         return new ResponseEntity<>(savedProjectTask, HttpStatus.CREATED);
     }
@@ -52,11 +50,10 @@ public class BacklogControllerImpl implements BacklogController {
     @GetMapping("/{backlogId}")
     public ResponseEntity<List<ProjectTaskDTO>> getProjectBacklog(@PathVariable
                                                                   String backlogId,
-                                                                  Authentication authentication) {
+                                                                  Principal principal) {
 
-        UserEntity userEntity = (UserEntity) authentication.getPrincipal();
         List<ProjectTaskDTO> projectTasks = modelConverter.projectTasksEntityListToDto(
-                projectTaskService.findBacklogById(backlogId, userEntity.getEmail()));
+                projectTaskService.findBacklogById(backlogId, principal.getName()));
 
         return new ResponseEntity<>(projectTasks, HttpStatus.OK);
     }
@@ -67,11 +64,10 @@ public class BacklogControllerImpl implements BacklogController {
                                                          String backlogId,
                                                          @PathVariable
                                                          String ptId,
-                                                         Authentication authentication) {
+                                                         Principal principal) {
 
-        UserEntity userEntity = (UserEntity) authentication.getPrincipal();
         ProjectTaskDTO projectTask = modelConverter.projectTaskEntityToDto(
-                projectTaskService.findPtByProjectSequence(backlogId, ptId, userEntity.getEmail()));
+                projectTaskService.findPtByProjectSequence(backlogId, ptId, principal.getName()));
 
         return new ResponseEntity<>(projectTask, HttpStatus.OK);
     }
@@ -86,13 +82,12 @@ public class BacklogControllerImpl implements BacklogController {
                                                             String backlogId,
                                                             @PathVariable
                                                             String ptId,
-                                                            Authentication authentication) {
+                                                            Principal principal) {
 
-        UserEntity userEntity = (UserEntity) authentication.getPrincipal();
         mapValidationErrorService.mapValidationService(result);
         ProjectTaskEntity projectTaskEntity = modelConverter.projectTaskDtoToEntity(projectTaskDTO);
         ProjectTaskDTO updatedTask = modelConverter.projectTaskEntityToDto(
-                projectTaskService.updateByProjectSequence(projectTaskEntity,backlogId, ptId, userEntity.getEmail()));
+                projectTaskService.updateByProjectSequence(projectTaskEntity,backlogId, ptId, principal.getName()));
 
         return new ResponseEntity<>(updatedTask, HttpStatus.OK);
     }
@@ -103,10 +98,9 @@ public class BacklogControllerImpl implements BacklogController {
                                                        String backlogId,
                                                        @PathVariable
                                                        String ptId,
-                                                       Authentication authentication) {
+                                                       Principal principal) {
 
-        UserEntity userEntity = (UserEntity) authentication.getPrincipal();
-        DeleteDTO response = projectTaskService.deletePTByProjectSequence(backlogId, ptId, userEntity.getEmail());
+        DeleteDTO response = projectTaskService.deletePTByProjectSequence(backlogId, ptId, principal.getName());
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

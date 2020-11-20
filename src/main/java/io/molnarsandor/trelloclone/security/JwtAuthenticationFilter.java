@@ -1,12 +1,13 @@
 package io.molnarsandor.trelloclone.security;
 
 import io.molnarsandor.trelloclone.user.UserService;
-import io.molnarsandor.trelloclone.user.model.UserEntity;
-import lombok.RequiredArgsConstructor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -21,29 +22,30 @@ import java.util.Collections;
 import static io.molnarsandor.trelloclone.security.SecurityConstants.HEADER_STRING;
 import static io.molnarsandor.trelloclone.security.SecurityConstants.TOKEN_PREFIX;
 
-@RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final Log log = LogFactory.getLog(this.getClass());
 
+    @Autowired
     private JwtTokenProvider tokenProvider;
 
+    @Autowired
     private UserService userService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest httpServletRequest,
-                                    HttpServletResponse httpServletResponse,
-                                    FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(@NonNull HttpServletRequest httpServletRequest,
+                                    @NonNull HttpServletResponse httpServletResponse,
+                                    @NonNull FilterChain filterChain) throws ServletException, IOException {
         try {
 
             String jwt = getJWTFromRequest(httpServletRequest);
 
             if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
                 Long userId = tokenProvider.getUserIdFromJWT(jwt);
-                UserEntity userEntityDetails = userService.loadUserById(userId);
+                UserDetails userDetails = userService.loadUserById(userId);
 
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        userEntityDetails, null, Collections.emptyList());
+                        userDetails, null, Collections.emptyList());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }

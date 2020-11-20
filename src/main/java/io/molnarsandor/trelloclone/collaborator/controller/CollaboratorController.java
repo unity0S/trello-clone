@@ -1,7 +1,7 @@
 package io.molnarsandor.trelloclone.collaborator.controller;
 
-import io.molnarsandor.trelloclone.collaborator.model.CollaboratorDTO;
 import io.molnarsandor.trelloclone.collaborator.exceptions.CollaboratorAlreadyAssignedExceptionResponse;
+import io.molnarsandor.trelloclone.collaborator.model.CollaboratorDTO;
 import io.molnarsandor.trelloclone.global_exceptions.CustomInternalServerErrorExceptionResponse;
 import io.molnarsandor.trelloclone.global_exceptions.ValidationErrorExceptionResponse;
 import io.molnarsandor.trelloclone.project.exceptions.ProjectNotFoundExceptionResponse;
@@ -12,9 +12,10 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.validation.BindingResult;
 import springfox.documentation.annotations.ApiIgnore;
+
+import java.security.Principal;
 
 public interface CollaboratorController {
 
@@ -33,7 +34,7 @@ public interface CollaboratorController {
                                                              @ApiParam(required = true, name = "projectIdentifier", value = "ID of the Project where you want to add the Collaborator")
                                                              String projectIdentifier,
                                                              @ApiIgnore
-                                                             Authentication authentication);
+                                                             Principal principal);
 
     @ApiOperation(value = "Delete Collaborator from Project", notes = "Delete existing Collaborator from Project")
     @ApiResponses({
@@ -48,5 +49,5 @@ public interface CollaboratorController {
                                                  @ApiParam(required = true, name = "collaboratorSequence", value = "ID of the Collaborator which you want to Delete")
                                                  String collaboratorSequence,
                                                  @ApiIgnore
-                                                 Authentication authentication);
+                                                 Principal principal);
 }

@@ -11,10 +11,10 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.validation.BindingResult;
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.security.Principal;
 import java.util.List;
 
 public interface BacklogController {
@@ -33,7 +33,7 @@ public interface BacklogController {
                                                   @ApiParam(required = true, name = "projectIdentifier", value = "ID of the Project where you want to add a Project Task")
                                                   String backlogId,
                                                   @ApiIgnore
-                                                  Authentication authentication);
+                                                  Principal principal);
 
     @ApiOperation(value = "Get Project Tasks", notes = "Retrieves List of Project Tasks", response = ProjectTaskDTO.class)
     @ApiResponses({
@@ -45,7 +45,7 @@ public interface BacklogController {
     ResponseEntity<List<ProjectTaskDTO>> getProjectBacklog(@ApiParam(required = true, name = "projectIdentifier", value = "ID of the Project")
                                                            String backlogId,
                                                            @ApiIgnore
-                                                           Authentication authentication);
+                                                           Principal principal);
 
     @ApiOperation(value = "Get Project Task", notes = "Retrieves a single Project Task", response = ProjectTaskDTO.class)
     @ApiResponses({
@@ -59,7 +59,7 @@ public interface BacklogController {
                                                   @ApiParam(required = true, name = "projectSequence", value = "ID of the Project Task you want to retrieve")
                                                   String ptId,
                                                   @ApiIgnore
-                                                  Authentication authentication);
+                                                  Principal principal);
 
     @ApiOperation(value = "Update Project Task", notes = "Updates a Project Task", response = ProjectTaskDTO.class)
     @ApiResponses({
@@ -77,7 +77,7 @@ public interface BacklogController {
                                                      @ApiParam(required = true, name = "projectSequence", value = "ID of the Project Task to be updated")
                                                      String ptId,
                                                      @ApiIgnore
-                                                     Authentication authentication);
+                                                     Principal principal);
 
     @ApiOperation(value = "Delete Project Task", notes = "Deleting an existing Project Task", response = DeleteDTO.class)
     @ApiResponses({
@@ -91,5 +91,5 @@ public interface BacklogController {
                                                 @ApiParam(required = true, name = "projectSequence", value = "ID of the Project Task you want to delete")
                                                 String ptId,
                                                 @ApiIgnore
-                                                Authentication authentication);
+                                                Principal principal);
 }

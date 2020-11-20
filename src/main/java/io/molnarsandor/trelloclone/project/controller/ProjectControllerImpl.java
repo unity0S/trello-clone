@@ -1,20 +1,19 @@
 package io.molnarsandor.trelloclone.project.controller;
 
+import io.molnarsandor.trelloclone.project.ProjectService;
 import io.molnarsandor.trelloclone.project.model.ProjectDTO;
 import io.molnarsandor.trelloclone.project.model.ProjectEntity;
-import io.molnarsandor.trelloclone.project.ProjectService;
-import io.molnarsandor.trelloclone.user.model.UserEntity;
 import io.molnarsandor.trelloclone.util.DeleteDTO;
 import io.molnarsandor.trelloclone.util.MapValidationErrorService;
 import io.molnarsandor.trelloclone.util.ModelConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -35,13 +34,12 @@ public class ProjectControllerImpl implements ProjectController {
                                                        @RequestBody
                                                        ProjectDTO projectDTO,
                                                        BindingResult result,
-                                                       Authentication authentication) {
+                                                       Principal principal) {
 
         mapValidationErrorService.mapValidationService(result);
         ProjectEntity projectEntity = modelConverter.projectDtoToEntity(projectDTO);
-        UserEntity userEntity = (UserEntity) authentication.getPrincipal();
         ProjectDTO savedProject = modelConverter.projectEntityToDto(
-                projectService.saveOrUpdateProject(projectEntity, userEntity.getEmail()));
+                projectService.saveOrUpdateProject(projectEntity, principal.getName()));
 
         return new ResponseEntity<>(savedProject, HttpStatus.CREATED);
     }
@@ -50,22 +48,20 @@ public class ProjectControllerImpl implements ProjectController {
     @GetMapping("/{projectId}")
     public ResponseEntity<ProjectDTO> getProjectById(@PathVariable
                                                      String projectId,
-                                                     Authentication authentication) {
+                                                     Principal principal) {
 
-        UserEntity userEntity = (UserEntity) authentication.getPrincipal();
         ProjectDTO project = modelConverter.projectEntityToDto(
-                projectService.findProjectByIdentifier(projectId, userEntity.getEmail()));
+                projectService.findProjectByIdentifier(projectId, principal.getName()));
 
         return new ResponseEntity<>(project, HttpStatus.OK);
     }
 
     @Override
     @GetMapping("/all")
-    public ResponseEntity<List<ProjectDTO>> getAllProjects(Authentication authentication) {
+    public ResponseEntity<List<ProjectDTO>> getAllProjects(Principal principal) {
 
-        UserEntity userEntity = (UserEntity) authentication.getPrincipal();
         List<ProjectDTO> projects = modelConverter.projectEntityListToDto(
-                projectService.findAllProject(userEntity.getEmail()));
+                projectService.findAllProject(principal.getName()));
 
         return new ResponseEntity<>(projects, HttpStatus.OK);
     }
@@ -74,10 +70,9 @@ public class ProjectControllerImpl implements ProjectController {
     @DeleteMapping("/{projectId}")
     public ResponseEntity<DeleteDTO> deleteProject(@PathVariable
                                                    String projectId,
-                                                   Authentication authentication) {
+                                                   Principal principal) {
 
-        UserEntity userEntity = (UserEntity) authentication.getPrincipal();
-        DeleteDTO response = projectService.deleteProjectByIdentifier(projectId, userEntity.getEmail());
+        DeleteDTO response = projectService.deleteProjectByIdentifier(projectId, principal.getName());
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

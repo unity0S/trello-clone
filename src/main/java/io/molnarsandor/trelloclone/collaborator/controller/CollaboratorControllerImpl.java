@@ -1,9 +1,8 @@
 package io.molnarsandor.trelloclone.collaborator.controller;
 
+import io.molnarsandor.trelloclone.collaborator.CollaboratorService;
 import io.molnarsandor.trelloclone.collaborator.model.CollaboratorDTO;
 import io.molnarsandor.trelloclone.collaborator.model.CollaboratorEntity;
-import io.molnarsandor.trelloclone.collaborator.CollaboratorService;
-import io.molnarsandor.trelloclone.user.model.UserEntity;
 import io.molnarsandor.trelloclone.util.DeleteDTO;
 import io.molnarsandor.trelloclone.util.EmailService;
 import io.molnarsandor.trelloclone.util.MapValidationErrorService;
@@ -11,11 +10,11 @@ import io.molnarsandor.trelloclone.util.ModelConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 
 @RequiredArgsConstructor
 @RestController
@@ -39,13 +38,12 @@ public class CollaboratorControllerImpl implements CollaboratorController {
                                                                     BindingResult result,
                                                                     @PathVariable
                                                                     String projectIdentifier,
-                                                                    Authentication authentication) {
+                                                                    Principal principal) {
 
-        UserEntity userEntity = (UserEntity) authentication.getPrincipal();
         mapValidationErrorService.mapValidationService(result);
         CollaboratorEntity collaboratorEntity = modelConverter.collaboratorDtoToEntity(collaboratorDTO);
         CollaboratorDTO savedCollaborator = modelConverter.collaboratorEntityToDto(
-                collaboratorService.addCollaborator(projectIdentifier, collaboratorEntity, userEntity.getEmail()));
+                collaboratorService.addCollaborator(projectIdentifier, collaboratorEntity, principal.getName()));
 
         emailService.sendMessage(savedCollaborator.getEmail(), "Invite", "You have been invited to collaborate in project: " + projectIdentifier);
 
@@ -58,10 +56,9 @@ public class CollaboratorControllerImpl implements CollaboratorController {
                                                         String projectIdentifier,
                                                         @PathVariable
                                                         String collaboratorSequence,
-                                                        Authentication authentication) {
+                                                        Principal principal) {
 
-        UserEntity userEntity = (UserEntity) authentication.getPrincipal();
-        DeleteDTO response = collaboratorService.deleteCollaborator(projectIdentifier.toUpperCase(), collaboratorSequence, userEntity.getEmail());
+        DeleteDTO response = collaboratorService.deleteCollaborator(projectIdentifier.toUpperCase(), collaboratorSequence, principal.getName());
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
