@@ -1,8 +1,8 @@
 package io.molnarsandor.trelloclone.user;
 
-import io.molnarsandor.trelloclone.user.model.UserEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 
 public interface UserService {
 
-    UserEntity loadUserById(Long id);
+    UserDetails loadUserById(Long id);
 }

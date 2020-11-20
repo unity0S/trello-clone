@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     // == PUBLIC METHODS ==
     @Transactional
     @Override
-    public UserEntity loadUserById(Long id) {
+    public UserDetails loadUserById(Long id) {
 
         UserEntity userEntity;
 
@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             throw new UsernameNotFoundException(USER_NOT_FOUND);
         }
 
-        return userEntity;
+        return new UserDetailsImpl(userEntity);
     }
 
     @Override
