@@ -5,7 +5,6 @@ import io.molnarsandor.trelloclone.collaborator.model.CollaboratorDTO;
 import io.molnarsandor.trelloclone.util.DeleteDTO;
 import io.molnarsandor.trelloclone.util.EmailService;
 import io.molnarsandor.trelloclone.util.MapValidationErrorService;
-import io.molnarsandor.trelloclone.util.ModelConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
