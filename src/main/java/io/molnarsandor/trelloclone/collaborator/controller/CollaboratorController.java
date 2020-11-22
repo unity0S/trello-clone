@@ -2,7 +2,7 @@ package io.molnarsandor.trelloclone.collaborator.controller;
 
 import io.molnarsandor.trelloclone.collaborator.exceptions.CollaboratorAlreadyAssignedExceptionResponse;
 import io.molnarsandor.trelloclone.collaborator.model.CollaboratorDTO;
-import io.molnarsandor.trelloclone.global_exceptions.CustomInternalServerErrorExceptionResponse;
+import io.molnarsandor.trelloclone.global_exceptions.CustomGlobalExceptionResponse;
 import io.molnarsandor.trelloclone.global_exceptions.ValidationErrorExceptionResponse;
 import io.molnarsandor.trelloclone.project.exceptions.ProjectNotFoundExceptionResponse;
 import io.molnarsandor.trelloclone.user.exceptions.UserNotLoggedInExceptionResponse;
@@ -26,7 +26,7 @@ public interface CollaboratorController {
         @ApiResponse(code = 401, message = "Unauthorized", response = UserNotLoggedInExceptionResponse.class),
         @ApiResponse(code = 404, message = "Not Found", response = ProjectNotFoundExceptionResponse.class),
         @ApiResponse(code = 409, message = "Conflict", response = CollaboratorAlreadyAssignedExceptionResponse.class),
-        @ApiResponse(code = 500, message = "Internal server Error", response = CustomInternalServerErrorExceptionResponse.class)})
+        @ApiResponse(code = 500, message = "Internal server Error", response = CustomGlobalExceptionResponse.class)})
     ResponseEntity<CollaboratorDTO> addCollaboratorToProject(@ApiParam(required = true, name = "collaborator", value = "New Collaborator to be added to the Project")
                                                              CollaboratorDTO collaboratorDTO,
                                                              @ApiIgnore
@@ -43,7 +43,7 @@ public interface CollaboratorController {
         @ApiResponse(code = 401, message = "Unauthorized", response = UserNotLoggedInExceptionResponse.class),
         @ApiResponse(code = 404, message = "Not Found", response = ProjectNotFoundExceptionResponse.class),
         @ApiResponse(code = 409, message = "Conflict", response = CollaboratorAlreadyAssignedExceptionResponse.class),
-        @ApiResponse(code = 500, message = "Internal server Error", response = CustomInternalServerErrorExceptionResponse.class)})
+        @ApiResponse(code = 500, message = "Internal server Error", response = CustomGlobalExceptionResponse.class)})
     ResponseEntity<DeleteDTO> deleteCollaborator(@ApiParam(required = true, name = "projectIdentifier", value = "ID of the Project where you want to Delete the Collaborator")
                                                  String projectIdentifier,
                                                  @ApiParam(required = true, name = "collaboratorSequence", value = "ID of the Collaborator which you want to Delete")

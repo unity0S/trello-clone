@@ -2,7 +2,6 @@ package io.molnarsandor.trelloclone.collaborator.controller;
 
 import io.molnarsandor.trelloclone.collaborator.CollaboratorService;
 import io.molnarsandor.trelloclone.collaborator.model.CollaboratorDTO;
-import io.molnarsandor.trelloclone.collaborator.model.CollaboratorEntity;
 import io.molnarsandor.trelloclone.util.DeleteDTO;
 import io.molnarsandor.trelloclone.util.EmailService;
 import io.molnarsandor.trelloclone.util.MapValidationErrorService;
@@ -28,8 +27,6 @@ public class CollaboratorControllerImpl implements CollaboratorController {
 
     private final EmailService emailService;
 
-    private final ModelConverter modelConverter;
-
     @Override
     @PostMapping("/{projectIdentifier}")
     public ResponseEntity<CollaboratorDTO> addCollaboratorToProject(@Valid
@@ -41,9 +38,7 @@ public class CollaboratorControllerImpl implements CollaboratorController {
                                                                     Principal principal) {
 
         mapValidationErrorService.mapValidationService(result);
-        CollaboratorEntity collaboratorEntity = modelConverter.collaboratorDtoToEntity(collaboratorDTO);
-        CollaboratorDTO savedCollaborator = modelConverter.collaboratorEntityToDto(
-                collaboratorService.addCollaborator(projectIdentifier, collaboratorEntity, principal.getName()));
+        CollaboratorDTO savedCollaborator = collaboratorService.addCollaborator(projectIdentifier, collaboratorDTO, principal.getName());
 
         emailService.sendMessage(savedCollaborator.getEmail(), "Invite", "You have been invited to collaborate in project: " + projectIdentifier);
 

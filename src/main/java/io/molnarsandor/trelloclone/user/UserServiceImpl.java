@@ -1,19 +1,21 @@
 package io.molnarsandor.trelloclone.user;
 
-import io.molnarsandor.trelloclone.global_exceptions.CustomInternalServerErrorException;
 import io.molnarsandor.trelloclone.user.exceptions.ActivationKeyNotFoundException;
 import io.molnarsandor.trelloclone.user.exceptions.UsernameAlreadyExistsException;
 import io.molnarsandor.trelloclone.user.model.UserActivationDTO;
 import io.molnarsandor.trelloclone.user.model.UserEntity;
+import io.molnarsandor.trelloclone.user.model.UserRegisterDTO;
+import io.molnarsandor.trelloclone.user.model.UserRegistrationResponseDTO;
 import io.molnarsandor.trelloclone.util.EmailService;
+import io.molnarsandor.trelloclone.util.ModelConverter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
 
 import java.util.UUID;
 
@@ -29,20 +31,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final EmailService emailService;
 
+    private final ModelConverter modelConverter;
 
+    private final UserValidator userValidator;
 
     // == PUBLIC METHODS ==
     @Transactional
     @Override
     public UserDetails loadUserById(Long id) {
 
-        UserEntity userEntity;
-
-        try {
-            userEntity = userRepository.getById(id);
-        } catch (DataAccessException io) {
-            throw new CustomInternalServerErrorException(io);
-        }
+        UserEntity userEntity = userRepository.getById(id);
 
         if (userEntity == null) {
             throw new UsernameNotFoundException(USER_NOT_FOUND);
@@ -54,13 +52,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) {
 
-        UserEntity userEntity;
-
-        try {
-            userEntity = userRepository.findByEmail(username);
-        } catch (DataAccessException io) {
-            throw new CustomInternalServerErrorException(io);
-        }
+        UserEntity userEntity = userRepository.findByEmail(username);
 
         if (userEntity == null) {
             throw new UsernameNotFoundException(USER_NOT_FOUND);
@@ -69,47 +61,39 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return new UserDetailsImpl(userEntity);
     }
 
-    public UserEntity registerUser(UserEntity newUserEntity) {
+    @Override
+    public UserRegistrationResponseDTO registerUser(UserRegisterDTO userRegisterDTO, BindingResult result) {
 
-        checkIsUserExists(newUserEntity.getEmail());
+        UserEntity userEntity = modelConverter.userRegisterDtoToEntity(userRegisterDTO);
 
-        try {
-            String uuid = generateKey();
-            newUserEntity.setEmail(newUserEntity.getEmail());
-            newUserEntity.setPassword(bCryptPasswordEncoder.encode(newUserEntity.getPassword()));
-            newUserEntity.setConfirmPassword("");
-            newUserEntity.setEnabled(false);
-            newUserEntity.setActivation(uuid);
-            userRepository.save(newUserEntity);
+        userValidator.validate(userEntity, result);
 
-            emailService.sendMessage(newUserEntity.getEmail(), "Activation email", "You can activate your account following this link: https://trello-clone-ms.herokuapp.com/api/users/activation/" + uuid);
-            return newUserEntity;
-        } catch (DataAccessException io) {
-            throw new CustomInternalServerErrorException(io);
-        }
+        checkIsUserExists(userEntity.getEmail());
+
+        String uuid = generateKey();
+        userEntity.setEmail(userEntity.getEmail());
+        userEntity.setPassword(bCryptPasswordEncoder.encode(userEntity.getPassword()));
+        userEntity.setConfirmPassword("");
+        userEntity.setEnabled(false);
+        userEntity.setActivation(uuid);
+        userRepository.save(userEntity);
+
+        emailService.sendMessage(userEntity.getEmail(), "Activation email", "You can activate your account following this link: https://trello-clone-ms.herokuapp.com/api/users/activation/" + uuid);
+        return modelConverter.userEntityToDto(userEntity);
     }
 
     public UserActivationDTO userActivation(String key) {
 
-        UserEntity userEntity;
-
-        try {
-            userEntity = userRepository.findByActivation(key);
-        } catch (DataAccessException io) {
-            throw new CustomInternalServerErrorException(io);
-        }
+        UserEntity userEntity = userRepository.findByActivation(key);
 
         if (userEntity == null) {
             throw new ActivationKeyNotFoundException("Activation key not found");
         }
 
-        try {
-            userEntity.setEnabled(true);
-            userEntity.setActivation("");
-            userRepository.save(userEntity);
-        } catch (DataAccessException io) {
-            throw new CustomInternalServerErrorException(io);
-        }
+        userEntity.setEnabled(true);
+        userEntity.setActivation("");
+        userRepository.save(userEntity);
+
         return new UserActivationDTO("User activated");
     }
 
@@ -120,13 +104,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     private void checkIsUserExists(String email) {
 
-        UserEntity userEntity;
-
-        try {
-            userEntity = userRepository.findByEmail(email);
-        } catch (DataAccessException io) {
-            throw new CustomInternalServerErrorException(io);
-        }
+        UserEntity userEntity = userRepository.findByEmail(email);
 
         if (userEntity != null) {
             throw new UsernameAlreadyExistsException("Username '" + email + "' already exists");

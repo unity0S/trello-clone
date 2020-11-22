@@ -1,17 +1,17 @@
 package io.molnarsandor.trelloclone.project;
 
-import io.molnarsandor.trelloclone.collaborator.model.CollaboratorEntity;
 import io.molnarsandor.trelloclone.collaborator.CollaboratorRepository;
-import io.molnarsandor.trelloclone.global_exceptions.CustomInternalServerErrorException;
+import io.molnarsandor.trelloclone.collaborator.model.CollaboratorEntity;
 import io.molnarsandor.trelloclone.project.exceptions.ProjectNotFoundException;
+import io.molnarsandor.trelloclone.project.model.ProjectDTO;
 import io.molnarsandor.trelloclone.project.model.ProjectEntity;
-import io.molnarsandor.trelloclone.project_task.model.BacklogEntity;
 import io.molnarsandor.trelloclone.project_task.BacklogRepository;
-import io.molnarsandor.trelloclone.user.model.UserEntity;
+import io.molnarsandor.trelloclone.project_task.model.BacklogEntity;
 import io.molnarsandor.trelloclone.user.UserRepository;
+import io.molnarsandor.trelloclone.user.model.UserEntity;
 import io.molnarsandor.trelloclone.util.DeleteDTO;
+import io.molnarsandor.trelloclone.util.ModelConverter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,58 +30,55 @@ public class ProjectService {
 
     private final CollaboratorRepository collaboratorRepository;
 
+    private final ModelConverter modelConverter;
+
     // == PUBLIC METHODS ==
     public ProjectEntity findProjectByIdentifier(String projectId, String username) {
 
-        ProjectEntity projectEntity;
-
-        try {
-            projectEntity = projectRepository.findByProjectIdentifierIgnoreCase(projectId);
-        } catch (DataAccessException io) {
-            throw new CustomInternalServerErrorException(io);
-        }
-
-        validateProjectWithCollaborators(projectEntity, projectId, username);
-
-        return projectEntity;
+        return getProjectById(projectId, username);
     }
 
-    public ProjectEntity saveOrUpdateProject(ProjectEntity projectEntity, String username) {
+    public ProjectDTO findProjectByIdentifierDTO(String projectId, String username) {
+
+        return modelConverter.projectEntityToDto(
+                getProjectById(projectId, username));
+    }
+
+    public ProjectDTO saveOrUpdateProject(ProjectDTO projectDTO, String username) {
+
+        ProjectEntity projectEntity = modelConverter.projectDtoToEntity(projectDTO);
 
         if (projectEntity.getId() != null) {
             ProjectEntity existingProjectEntity;
-            try {
-                existingProjectEntity = projectRepository.findByProjectIdentifierIgnoreCase(projectEntity.getProjectIdentifier());
-            } catch (DataAccessException io) {
-                throw new CustomInternalServerErrorException(io);
-            }
+
+            existingProjectEntity = projectRepository.findByProjectIdentifierIgnoreCase(projectEntity.getProjectIdentifier());
+
             validateProject(existingProjectEntity, projectEntity.getProjectIdentifier(), username);
         }
 
-        try {
-            UserEntity userEntity = userRepository.findByEmail(username);
-            projectEntity.setUser(userEntity);
-            projectEntity.setProjectLeader(userEntity.getEmail());
-            projectEntity.setProjectIdentifier(projectEntity.getProjectIdentifier().toUpperCase());
 
-            if (projectEntity.getId() == null) {
-                BacklogEntity backlogEntity = new BacklogEntity();
-                projectEntity.setBacklog(backlogEntity);
-                backlogEntity.setProject(projectEntity);
-                backlogEntity.setProjectIdentifier(projectEntity.getProjectIdentifier().toUpperCase());
-            }
+        UserEntity userEntity = userRepository.findByEmail(username);
+        projectEntity.setUser(userEntity);
+        projectEntity.setProjectLeader(userEntity.getEmail());
+        projectEntity.setProjectIdentifier(projectEntity.getProjectIdentifier().toUpperCase());
 
-            if (projectEntity.getId() != null) {
-                projectEntity.setBacklog(backlogRepository.findByProjectIdentifierIgnoreCase(projectEntity.getProjectIdentifier().toUpperCase()));
-            }
-
-            return projectRepository.save(projectEntity);
-        } catch (DataAccessException io) {
-            throw new CustomInternalServerErrorException(io);
+        if (projectEntity.getId() == null) {
+            BacklogEntity backlogEntity = new BacklogEntity();
+            projectEntity.setBacklog(backlogEntity);
+            backlogEntity.setProject(projectEntity);
+            backlogEntity.setProjectIdentifier(projectEntity.getProjectIdentifier().toUpperCase());
         }
+
+        if (projectEntity.getId() != null) {
+            projectEntity.setBacklog(backlogRepository.findByProjectIdentifierIgnoreCase(projectEntity.getProjectIdentifier().toUpperCase()));
+        }
+
+        return modelConverter.projectEntityToDto(
+                projectRepository.save(projectEntity));
+
     }
 
-    public List<ProjectEntity> findAllProject(String username) {
+    public List<ProjectDTO> findAllProject(String username) {
 
         List<ProjectEntity> byLeader = projectRepository.findAllByProjectLeader(username);
 
@@ -91,7 +88,7 @@ public class ProjectService {
 
         byLeader.addAll(byCollaborator);
 
-        return byLeader;
+        return modelConverter.projectEntityListToDto(byLeader);
     }
 
     public DeleteDTO deleteProjectByIdentifier(String projectId, String username) {
@@ -132,5 +129,13 @@ public class ProjectService {
         if (!projectEntity.getProjectLeader().equals(username) && !collaboratorExists) {
             throw new ProjectNotFoundException("Project not found in your account");
         }
+    }
+
+    private ProjectEntity getProjectById(String projectId, String username) {
+        ProjectEntity projectEntity = projectRepository.findByProjectIdentifierIgnoreCase(projectId);
+
+        validateProjectWithCollaborators(projectEntity, projectId, username);
+
+        return projectEntity;
     }
 }

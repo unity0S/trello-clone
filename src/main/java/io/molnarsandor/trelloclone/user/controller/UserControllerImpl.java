@@ -1,10 +1,9 @@
 package io.molnarsandor.trelloclone.user.controller;
 
 import io.molnarsandor.trelloclone.security.JwtTokenProvider;
-import io.molnarsandor.trelloclone.user.*;
+import io.molnarsandor.trelloclone.user.UserServiceImpl;
 import io.molnarsandor.trelloclone.user.model.*;
 import io.molnarsandor.trelloclone.util.MapValidationErrorService;
-import io.molnarsandor.trelloclone.util.ModelConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,19 +28,15 @@ public class UserControllerImpl implements UserController {
 
     private final UserServiceImpl userServiceImpl;
 
-    private final UserValidator userValidator;
-
-    private final JwtTokenProvider tokenProvider;
-
     private final AuthenticationManager authenticationManager;
 
-    private final ModelConverter modelConverter;
+    private final JwtTokenProvider tokenProvider;
 
     @Override
     @PostMapping("/login")
     public ResponseEntity<UserLoginResponseDTO> authenticateUser(@Valid
                                                                  @RequestBody
-                                                                         UserLoginDTO userLoginDTO,
+                                                                 UserLoginDTO userLoginDTO,
                                                                  BindingResult result) {
 
         mapValidationErrorService.mapValidationService(result);
@@ -59,16 +54,13 @@ public class UserControllerImpl implements UserController {
 
     @Override
     @PostMapping("/register")
-    public ResponseEntity<UserDTO> registerUser(@Valid
-                                                @RequestBody
-                                                UserRegisterDTO userRegisterDTO,
-                                                BindingResult result) {
+    public ResponseEntity<UserRegistrationResponseDTO> registerUser(@Valid
+                                                                    @RequestBody
+                                                                    UserRegisterDTO userRegisterDTO,
+                                                                    BindingResult result) {
 
-        UserEntity userEntity = modelConverter.userRegisterDtoToEntity(userRegisterDTO);
-        userValidator.validate(userEntity, result);
         mapValidationErrorService.mapValidationService(result);
-        UserDTO newUser = modelConverter.userEntityToDto(
-                userServiceImpl.registerUser(userEntity));
+        UserRegistrationResponseDTO newUser = userServiceImpl.registerUser(userRegisterDTO, result);
 
         return new ResponseEntity<>(newUser, HttpStatus.CREATED);
     }

@@ -2,7 +2,6 @@ package io.molnarsandor.trelloclone.project_task.controller;
 
 import io.molnarsandor.trelloclone.project_task.ProjectTaskService;
 import io.molnarsandor.trelloclone.project_task.model.ProjectTaskDTO;
-import io.molnarsandor.trelloclone.project_task.model.ProjectTaskEntity;
 import io.molnarsandor.trelloclone.util.DeleteDTO;
 import io.molnarsandor.trelloclone.util.MapValidationErrorService;
 import io.molnarsandor.trelloclone.util.ModelConverter;
@@ -38,10 +37,7 @@ public class BacklogControllerImpl implements BacklogController {
                                                          String backlogId,
                                                          Principal principal) {
 
-        mapValidationErrorService.mapValidationService(result);
-        ProjectTaskEntity projectTaskEntity = modelConverter.projectTaskDtoToEntity(projectTaskDTO);
-        ProjectTaskDTO savedProjectTask = modelConverter.projectTaskEntityToDto(
-                projectTaskService.addProjectTask(backlogId, projectTaskEntity, principal.getName()));
+        ProjectTaskDTO savedProjectTask = projectTaskService.addProjectTask(backlogId, projectTaskDTO, principal.getName());
 
         return new ResponseEntity<>(savedProjectTask, HttpStatus.CREATED);
     }
@@ -52,8 +48,7 @@ public class BacklogControllerImpl implements BacklogController {
                                                                   String backlogId,
                                                                   Principal principal) {
 
-        List<ProjectTaskDTO> projectTasks = modelConverter.projectTasksEntityListToDto(
-                projectTaskService.findBacklogById(backlogId, principal.getName()));
+        List<ProjectTaskDTO> projectTasks = projectTaskService.findBacklogById(backlogId, principal.getName());
 
         return new ResponseEntity<>(projectTasks, HttpStatus.OK);
     }
@@ -66,8 +61,7 @@ public class BacklogControllerImpl implements BacklogController {
                                                          String ptId,
                                                          Principal principal) {
 
-        ProjectTaskDTO projectTask = modelConverter.projectTaskEntityToDto(
-                projectTaskService.findPtByProjectSequence(backlogId, ptId, principal.getName()));
+        ProjectTaskDTO projectTask = projectTaskService.findPtByProjectSequenceDTO(backlogId, ptId, principal.getName());
 
         return new ResponseEntity<>(projectTask, HttpStatus.OK);
     }
@@ -85,9 +79,7 @@ public class BacklogControllerImpl implements BacklogController {
                                                             Principal principal) {
 
         mapValidationErrorService.mapValidationService(result);
-        ProjectTaskEntity projectTaskEntity = modelConverter.projectTaskDtoToEntity(projectTaskDTO);
-        ProjectTaskDTO updatedTask = modelConverter.projectTaskEntityToDto(
-                projectTaskService.updateByProjectSequence(projectTaskEntity,backlogId, ptId, principal.getName()));
+        ProjectTaskDTO updatedTask = projectTaskService.updateByProjectSequence(projectTaskDTO,backlogId, ptId, principal.getName());
 
         return new ResponseEntity<>(updatedTask, HttpStatus.OK);
     }

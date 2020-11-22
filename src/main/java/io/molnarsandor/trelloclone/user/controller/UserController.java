@@ -1,6 +1,6 @@
 package io.molnarsandor.trelloclone.user.controller;
 
-import io.molnarsandor.trelloclone.global_exceptions.CustomInternalServerErrorExceptionResponse;
+import io.molnarsandor.trelloclone.global_exceptions.CustomGlobalExceptionResponse;
 import io.molnarsandor.trelloclone.global_exceptions.ValidationErrorExceptionResponse;
 import io.molnarsandor.trelloclone.user.exceptions.ActivationKeyNotFoundExceptionResponse;
 import io.molnarsandor.trelloclone.user.exceptions.UserNotLoggedInExceptionResponse;
@@ -20,7 +20,7 @@ public interface UserController {
         @ApiResponse(code = 200, message = "Success", response = UserLoginResponseDTO.class),
         @ApiResponse(code = 400, message = "Bad Request", response = ValidationErrorExceptionResponse.class),
         @ApiResponse(code = 401, message = "Unauthorized", response = UserNotLoggedInExceptionResponse.class),
-        @ApiResponse(code = 500, message = "Internal server Error", response = CustomInternalServerErrorExceptionResponse.class)
+        @ApiResponse(code = 500, message = "Internal server Error", response = CustomGlobalExceptionResponse.class)
     })
     ResponseEntity<UserLoginResponseDTO> authenticateUser(@ApiParam(required = true, name = "loginRequest", value = "Email and password")
                                                                   UserLoginDTO userLoginDTO,
@@ -29,20 +29,20 @@ public interface UserController {
 
     @ApiOperation(value = "Register", notes = "Register New User", response = UserRegisterDTO.class)
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Success", response = UserDTO.class),
+        @ApiResponse(code = 200, message = "Success", response = UserRegistrationResponseDTO.class),
         @ApiResponse(code = 400, message = "Bad Request", response = ValidationErrorExceptionResponse.class),
-        @ApiResponse(code = 500, message = "Internal server Error", response = CustomInternalServerErrorExceptionResponse.class)
+        @ApiResponse(code = 500, message = "Internal server Error", response = CustomGlobalExceptionResponse.class)
     })
-    ResponseEntity<UserDTO> registerUser(@ApiParam(required = true, name = "user", value = "New User")
+    ResponseEntity<UserRegistrationResponseDTO> registerUser(@ApiParam(required = true, name = "user", value = "New User")
                                          UserRegisterDTO userRegisterDTO,
-                                         @ApiIgnore
+                                                             @ApiIgnore
                                          BindingResult result);
 
     @ApiOperation(value = "Activation", notes = "Registered User activation endpoint", response = UserActivationDTO.class)
     @ApiResponses({
         @ApiResponse(code = 200, message = "Success", response = UserActivationDTO.class),
         @ApiResponse(code = 404, message = "Not Found", response = ActivationKeyNotFoundExceptionResponse.class),
-        @ApiResponse(code = 500, message = "Internal server Error", response = CustomInternalServerErrorExceptionResponse.class)
+        @ApiResponse(code = 500, message = "Internal server Error", response = CustomGlobalExceptionResponse.class)
     })
     ResponseEntity<UserActivationDTO> activateUser(@ApiParam(required = true, name = "key", value = "Activation key received in User Email")
                                                    String key);

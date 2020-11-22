@@ -3,7 +3,7 @@ package io.molnarsandor.trelloclone.util;
 import io.molnarsandor.trelloclone.collaborator.model.CollaboratorDTO;
 import io.molnarsandor.trelloclone.collaborator.model.CollaboratorEntity;
 import io.molnarsandor.trelloclone.project_task.model.ProjectTaskDTO;
-import io.molnarsandor.trelloclone.user.model.UserDTO;
+import io.molnarsandor.trelloclone.user.model.UserRegistrationResponseDTO;
 import io.molnarsandor.trelloclone.user.model.UserEntity;
 import io.molnarsandor.trelloclone.project.model.ProjectDTO;
 import io.molnarsandor.trelloclone.project.model.ProjectEntity;
@@ -27,9 +27,9 @@ public class ModelConverter {
         return modelMapper.map(dto, UserEntity.class);
     }
 
-    public UserDTO userEntityToDto(UserEntity userEntity) {
+    public UserRegistrationResponseDTO userEntityToDto(UserEntity userEntity) {
 
-        return modelMapper.map(userEntity, UserDTO.class);
+        return modelMapper.map(userEntity, UserRegistrationResponseDTO.class);
     }
 
     public ProjectTaskEntity projectTaskDtoToEntity(ProjectTaskDTO projectTaskDTO) {

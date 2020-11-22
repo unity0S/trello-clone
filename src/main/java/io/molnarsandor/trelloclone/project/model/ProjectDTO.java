@@ -1,22 +1,23 @@
 package io.molnarsandor.trelloclone.project.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.molnarsandor.trelloclone.collaborator.model.CollaboratorEntity;
+import io.molnarsandor.trelloclone.util.EntitySuperClass;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Set;
 
-@SuppressFBWarnings({"EI_EXPOSE_REP", "EI_EXPOSE_REP2"})
 @Data
-@ApiModel
-public class ProjectDTO {
+@EqualsAndHashCode(callSuper = false)
+@ApiModel(value = "Project", description = "A project")
+public class ProjectDTO extends EntitySuperClass {
 
     @NotBlank(message = "Project name is required")
     @Size(min = 5,max = 30, message = "Please use 5 to 30 characters")
@@ -35,10 +36,10 @@ public class ProjectDTO {
     private String description;
     @JsonFormat(pattern = "yyyy-mm-dd")
     @ApiModelProperty(value = "The Date when the Project starts", position = 3)
-    private Date startDate;
+    private LocalDateTime startDate;
     @JsonFormat(pattern = "yyyy-mm-dd")
     @ApiModelProperty(value = "The Date when the Project finishes", position = 4)
-    private Date endDate;
+    private LocalDateTime endDate;
     @ApiModelProperty(value = "The User email who created/owns the Project", position = 5)
     private String projectLeader;
     @ApiModelProperty(value = "Invited users to collaborate with the Project (Collaborators)", position = 6)

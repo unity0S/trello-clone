@@ -1,6 +1,6 @@
 package io.molnarsandor.trelloclone.project.controller;
 
-import io.molnarsandor.trelloclone.global_exceptions.CustomInternalServerErrorExceptionResponse;
+import io.molnarsandor.trelloclone.global_exceptions.CustomGlobalExceptionResponse;
 import io.molnarsandor.trelloclone.global_exceptions.ValidationErrorExceptionResponse;
 import io.molnarsandor.trelloclone.project.exceptions.ProjectIdExceptionResponse;
 import io.molnarsandor.trelloclone.project.exceptions.ProjectNotFoundExceptionResponse;
@@ -26,7 +26,7 @@ public interface ProjectController {
         @ApiResponse(code = 400, message = "Bad Request", response = ValidationErrorExceptionResponse.class),
         @ApiResponse(code = 401, message = "Unauthorized", response = UserNotLoggedInExceptionResponse.class),
         @ApiResponse(code = 409, message = "Conflict", response = ProjectIdExceptionResponse.class),
-        @ApiResponse(code = 500, message = "Internal server Error", response = CustomInternalServerErrorExceptionResponse.class)})
+        @ApiResponse(code = 500, message = "Internal server Error", response = CustomGlobalExceptionResponse.class)})
     ResponseEntity<ProjectDTO> createNewProject(@ApiParam(required = true, name = "project", value = "New Project")
                                                 ProjectDTO projectDTO,
                                                 @ApiIgnore
@@ -40,7 +40,7 @@ public interface ProjectController {
         @ApiResponse(code = 400, message = "Bad Request", response = ValidationErrorExceptionResponse.class),
         @ApiResponse(code = 401, message = "Unauthorized", response = UserNotLoggedInExceptionResponse.class),
         @ApiResponse(code = 404, message = "Not Found", response = ProjectNotFoundExceptionResponse.class),
-        @ApiResponse(code = 500, message = "Internal server Error", response = CustomInternalServerErrorExceptionResponse.class)})
+        @ApiResponse(code = 500, message = "Internal server Error", response = CustomGlobalExceptionResponse.class)})
     ResponseEntity<ProjectDTO> getProjectById(@ApiParam(required = true, name = "projectIdentifier", value = "ID of the Project you want to retrieve")
                                               String projectId,
                                               @ApiIgnore
@@ -51,7 +51,7 @@ public interface ProjectController {
         @ApiResponse(code = 200, message = "Success", response = ProjectDTO.class),
         @ApiResponse(code = 401, message = "Unauthorized", response = UserNotLoggedInExceptionResponse.class),
         @ApiResponse(code = 404, message = "Not Found", response = ProjectNotFoundExceptionResponse.class),
-        @ApiResponse(code = 500, message = "Internal server Error", response = CustomInternalServerErrorExceptionResponse.class)})
+        @ApiResponse(code = 500, message = "Internal server Error", response = CustomGlobalExceptionResponse.class)})
     ResponseEntity<List<ProjectDTO>> getAllProjects(@ApiIgnore Principal principal);
 
     @ApiOperation(value = "Delete Project", notes = "Deletes a Project by ID")
@@ -60,7 +60,7 @@ public interface ProjectController {
         @ApiResponse(code = 400, message = "Bad Request", response = ValidationErrorExceptionResponse.class),
         @ApiResponse(code = 401, message = "Unauthorized", response = UserNotLoggedInExceptionResponse.class),
         @ApiResponse(code = 404, message = "Not Found", response = ProjectNotFoundExceptionResponse.class),
-        @ApiResponse(code = 500, message = "Internal server Error", response = CustomInternalServerErrorExceptionResponse.class)
+        @ApiResponse(code = 500, message = "Internal server Error", response = CustomGlobalExceptionResponse.class)
     })
     ResponseEntity<DeleteDTO> deleteProject(@ApiParam(required = true, name = "projectIdentifier", value = "ID of the Project you want to Delete")
                                             String projectId,

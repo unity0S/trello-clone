@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @ApiModel
-public class UserDTO {
+public class UserRegistrationResponseDTO {
 
     @ApiModelProperty(value = "User email")
     private String email;

@@ -2,10 +2,8 @@ package io.molnarsandor.trelloclone.project.controller;
 
 import io.molnarsandor.trelloclone.project.ProjectService;
 import io.molnarsandor.trelloclone.project.model.ProjectDTO;
-import io.molnarsandor.trelloclone.project.model.ProjectEntity;
 import io.molnarsandor.trelloclone.util.DeleteDTO;
 import io.molnarsandor.trelloclone.util.MapValidationErrorService;
-import io.molnarsandor.trelloclone.util.ModelConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,8 +24,6 @@ public class ProjectControllerImpl implements ProjectController {
 
     private final MapValidationErrorService mapValidationErrorService;
 
-    private final ModelConverter modelConverter;
-
     @Override
     @PostMapping("/")
     public ResponseEntity<ProjectDTO> createNewProject(@Valid
@@ -37,9 +33,7 @@ public class ProjectControllerImpl implements ProjectController {
                                                        Principal principal) {
 
         mapValidationErrorService.mapValidationService(result);
-        ProjectEntity projectEntity = modelConverter.projectDtoToEntity(projectDTO);
-        ProjectDTO savedProject = modelConverter.projectEntityToDto(
-                projectService.saveOrUpdateProject(projectEntity, principal.getName()));
+        ProjectDTO savedProject = projectService.saveOrUpdateProject(projectDTO, principal.getName());
 
         return new ResponseEntity<>(savedProject, HttpStatus.CREATED);
     }
@@ -50,8 +44,7 @@ public class ProjectControllerImpl implements ProjectController {
                                                      String projectId,
                                                      Principal principal) {
 
-        ProjectDTO project = modelConverter.projectEntityToDto(
-                projectService.findProjectByIdentifier(projectId, principal.getName()));
+        ProjectDTO project = projectService.findProjectByIdentifierDTO(projectId, principal.getName());
 
         return new ResponseEntity<>(project, HttpStatus.OK);
     }
@@ -60,8 +53,7 @@ public class ProjectControllerImpl implements ProjectController {
     @GetMapping("/all")
     public ResponseEntity<List<ProjectDTO>> getAllProjects(Principal principal) {
 
-        List<ProjectDTO> projects = modelConverter.projectEntityListToDto(
-                projectService.findAllProject(principal.getName()));
+        List<ProjectDTO> projects = projectService.findAllProject(principal.getName());
 
         return new ResponseEntity<>(projects, HttpStatus.OK);
     }

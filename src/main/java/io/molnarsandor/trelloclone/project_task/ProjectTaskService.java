@@ -1,94 +1,75 @@
 package io.molnarsandor.trelloclone.project_task;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import io.molnarsandor.trelloclone.global_exceptions.CustomInternalServerErrorException;
-import io.molnarsandor.trelloclone.project.model.ProjectEntity;
 import io.molnarsandor.trelloclone.project.ProjectService;
 import io.molnarsandor.trelloclone.project.exceptions.ProjectNotFoundException;
+import io.molnarsandor.trelloclone.project.model.ProjectEntity;
 import io.molnarsandor.trelloclone.project_task.model.BacklogEntity;
+import io.molnarsandor.trelloclone.project_task.model.ProjectTaskDTO;
 import io.molnarsandor.trelloclone.project_task.model.ProjectTaskEntity;
 import io.molnarsandor.trelloclone.util.DeleteDTO;
+import io.molnarsandor.trelloclone.util.ModelConverter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@SuppressFBWarnings("DLS_DEAD_LOCAL_STORE")
 @RequiredArgsConstructor
 @Service
 public final class ProjectTaskService {
-
-    private static final String TO_DO = "TO_DO";
-
-    private static final int PRIORITY = 3;
 
     private final ProjectTaskRepository projectTaskRepository;
 
     private final ProjectService projectService;
 
+    private final ModelConverter modelConverter;
+
     // == PUBLIC METHODS ==
-    @SuppressFBWarnings("DLS_DEAD_LOCAL_STORE")
-    public ProjectTaskEntity addProjectTask(final String projectIdentifier, final ProjectTaskEntity projectTaskEntity, final String username) {
+    public ProjectTaskDTO addProjectTask(final String projectIdentifier, final ProjectTaskDTO projectTaskDTO, final String username) {
 
-        try {
-            ProjectEntity projectEntity = projectService.findProjectByIdentifier(projectIdentifier, username);
-            BacklogEntity backlogEntity = projectEntity.getBacklog();
-            projectTaskEntity.setBacklog(backlogEntity);
-            Integer backlogSequence = backlogEntity.getPtSequence();
-            backlogSequence++;
-            backlogEntity.setPtSequence(backlogSequence);
-            projectTaskEntity.setProjectSequence(backlogEntity.getProjectIdentifier() + "-" + backlogSequence);
-            projectTaskEntity.setProjectIdentifier(projectIdentifier.toUpperCase());
+        ProjectTaskEntity projectTaskEntity = modelConverter.projectTaskDtoToEntity(projectTaskDTO);
 
-            if (projectTaskEntity.getPriority() == null || projectTaskEntity.getPriority() == 0) {
-                projectTaskEntity.setPriority(PRIORITY);
-            }
-            if (projectTaskEntity.getStatus() == null || projectTaskEntity.getStatus().equals("")) {
-                projectTaskEntity.setStatus(TO_DO);
-            }
+        ProjectEntity projectEntity = projectService.findProjectByIdentifier(projectIdentifier, username);
+        BacklogEntity backlogEntity = projectEntity.getBacklog();
+        projectTaskEntity.setBacklog(backlogEntity);
+        Integer backlogSequence = backlogEntity.getPtSequence();
+        backlogSequence++;
+        backlogEntity.setPtSequence(backlogSequence);
+        projectTaskEntity.setProjectSequence(backlogEntity.getProjectIdentifier() + "-" + backlogSequence);
+        projectTaskEntity.setProjectIdentifier(projectIdentifier.toUpperCase());
 
-            return projectTaskRepository.save(projectTaskEntity);
-        } catch (DataAccessException io) {
-            throw new CustomInternalServerErrorException(io);
-        }
-
+        return modelConverter.projectTaskEntityToDto(
+                projectTaskRepository.save(projectTaskEntity));
     }
 
-    public List<ProjectTaskEntity> findBacklogById(final String id, final String username) {
+    public List<ProjectTaskDTO> findBacklogById(final String id, final String username) {
 
         projectService.findProjectByIdentifier(id, username);
-        List<ProjectTaskEntity> projectTaskEntities;
 
-        try {
-            projectTaskEntities = projectTaskRepository.findByProjectIdentifierIgnoreCaseOrderByPriority(id);
-        } catch (DataAccessException io) {
-            throw new CustomInternalServerErrorException(io);
-        }
-
-        return  projectTaskEntities;
+        return modelConverter.projectTasksEntityListToDto(
+                projectTaskRepository.findByProjectIdentifierIgnoreCaseOrderByPriority(id));
     }
 
     public ProjectTaskEntity findPtByProjectSequence(final String backlogId, final String ptId, final String username) {
 
-        projectService.findProjectByIdentifier(backlogId, username);
-        ProjectTaskEntity projectTaskEntity;
-
-        try {
-            projectTaskEntity = projectTaskRepository.findByProjectSequence(ptId);
-        } catch (DataAccessException io) {
-            throw new CustomInternalServerErrorException(io);
-        }
-
-        validateProjectTask(projectTaskEntity, ptId, backlogId);
-
-        return projectTaskEntity;
+        return getPTByProjectSequence(backlogId, ptId, username);
     }
 
-    public ProjectTaskEntity updateByProjectSequence(final ProjectTaskEntity updatedTask, final String backlogId, final String ptId, final String username) {
+    public ProjectTaskDTO findPtByProjectSequenceDTO(final String backlogId, final String ptId, final String username) {
+
+        return modelConverter.projectTaskEntityToDto(
+                getPTByProjectSequence(backlogId, ptId, username));
+    }
+
+    public ProjectTaskDTO updateByProjectSequence(final ProjectTaskDTO projectTaskDTO, final String backlogId, final String ptId, final String username) {
+
+        ProjectTaskEntity projectTaskEntity = modelConverter.projectTaskDtoToEntity(projectTaskDTO);
 
         findPtByProjectSequence(backlogId, ptId, username);
 
-        return projectTaskRepository.save(updatedTask);
+        return modelConverter.projectTaskEntityToDto(
+                projectTaskRepository.save(projectTaskEntity));
     }
 
     public DeleteDTO deletePTByProjectSequence(final String backlogId, final String ptId, final String username) {
@@ -109,5 +90,16 @@ public final class ProjectTaskService {
         if (!projectTaskEntity.getProjectIdentifier().equalsIgnoreCase(backlogId)) {
             throw new ProjectNotFoundException("Project Task '" + ptId + "' does not exists in project: '" + backlogId);
         }
+    }
+
+    private ProjectTaskEntity getPTByProjectSequence(String backlogId, String ptId, String username) {
+        projectService.findProjectByIdentifier(backlogId, username);
+        ProjectTaskEntity projectTaskEntity;
+
+        projectTaskEntity = projectTaskRepository.findByProjectSequence(ptId);
+
+        validateProjectTask(projectTaskEntity, ptId, backlogId);
+
+        return projectTaskEntity;
     }
 }

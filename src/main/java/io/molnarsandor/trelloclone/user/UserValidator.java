@@ -1,6 +1,7 @@
 package io.molnarsandor.trelloclone.user;
 
 import io.molnarsandor.trelloclone.user.model.UserEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -9,18 +10,14 @@ import org.springframework.validation.Validator;
 public class UserValidator implements Validator {
 
     @Override
-    public boolean supports(Class<?> aClass) {
+    public boolean supports(@NonNull  Class<?> aClass) {
         return UserEntity.class.equals(aClass);
     }
 
     @Override
-    public void validate(Object o, Errors errors) {
+    public void validate(@NonNull Object o, @NonNull Errors errors) {
 
         UserEntity userEntity = (UserEntity) o;
-
-        if(userEntity.getPassword().length() < 8) {
-            errors.rejectValue("password", "Length", "Password must be at least 8 characters");
-        }
 
         if(!userEntity.getPassword().equals(userEntity.getConfirmPassword())) {
             errors.rejectValue("confirmPassword", "Length", "Passwords must match");

@@ -1,6 +1,6 @@
 package io.molnarsandor.trelloclone.project_task.controller;
 
-import io.molnarsandor.trelloclone.global_exceptions.CustomInternalServerErrorExceptionResponse;
+import io.molnarsandor.trelloclone.global_exceptions.CustomGlobalExceptionResponse;
 import io.molnarsandor.trelloclone.global_exceptions.ValidationErrorExceptionResponse;
 import io.molnarsandor.trelloclone.project.exceptions.ProjectNotFoundExceptionResponse;
 import io.molnarsandor.trelloclone.project_task.model.ProjectTaskDTO;
@@ -25,7 +25,7 @@ public interface BacklogController {
         @ApiResponse(code = 400, message = "Bad Request", response = ValidationErrorExceptionResponse.class),
         @ApiResponse(code = 401, message = "Unauthorized", response = UserNotLoggedInExceptionResponse.class),
         @ApiResponse(code = 404, message = "Not Found", response = ProjectNotFoundExceptionResponse.class),
-        @ApiResponse(code = 500, message = "Internal server Error", response = CustomInternalServerErrorExceptionResponse.class)})
+        @ApiResponse(code = 500, message = "Internal server Error", response = CustomGlobalExceptionResponse.class)})
     ResponseEntity<ProjectTaskDTO> addPTtoBacklog(@ApiParam(required = true, name = "projectTask", value = "New Project Task")
                                                   ProjectTaskDTO projectTaskDTO,
                                                   @ApiIgnore
@@ -41,7 +41,7 @@ public interface BacklogController {
         @ApiResponse(code = 400, message = "Bad Request", response = ValidationErrorExceptionResponse.class),
         @ApiResponse(code = 401, message = "Unauthorized", response = UserNotLoggedInExceptionResponse.class),
         @ApiResponse(code = 404, message = "Not Found", response = ProjectNotFoundExceptionResponse.class),
-        @ApiResponse(code = 500, message = "Internal server Error", response = CustomInternalServerErrorExceptionResponse.class)})
+        @ApiResponse(code = 500, message = "Internal server Error", response = CustomGlobalExceptionResponse.class)})
     ResponseEntity<List<ProjectTaskDTO>> getProjectBacklog(@ApiParam(required = true, name = "projectIdentifier", value = "ID of the Project")
                                                            String backlogId,
                                                            @ApiIgnore
@@ -53,7 +53,7 @@ public interface BacklogController {
         @ApiResponse(code = 400, message = "Bad Request", response = ValidationErrorExceptionResponse.class),
         @ApiResponse(code = 401, message = "Unauthorized", response = UserNotLoggedInExceptionResponse.class),
         @ApiResponse(code = 404, message = "Not Found", response = ProjectNotFoundExceptionResponse.class),
-        @ApiResponse(code = 500, message = "Internal server Error", response = CustomInternalServerErrorExceptionResponse.class)})
+        @ApiResponse(code = 500, message = "Internal server Error", response = CustomGlobalExceptionResponse.class)})
     ResponseEntity<ProjectTaskDTO> getProjectTask(@ApiParam(required = true, name = "projectIdentifier", value = "ID of the Project")
                                                   String backlogId,
                                                   @ApiParam(required = true, name = "projectSequence", value = "ID of the Project Task you want to retrieve")
@@ -67,7 +67,7 @@ public interface BacklogController {
         @ApiResponse(code = 400, message = "Bad Request", response = ValidationErrorExceptionResponse.class),
         @ApiResponse(code = 401, message = "Unauthorized", response = UserNotLoggedInExceptionResponse.class),
         @ApiResponse(code = 404, message = "Not Found", response = ProjectNotFoundExceptionResponse.class),
-        @ApiResponse(code = 500, message = "Internal server Error", response = CustomInternalServerErrorExceptionResponse.class)})
+        @ApiResponse(code = 500, message = "Internal server Error", response = CustomGlobalExceptionResponse.class)})
     ResponseEntity<ProjectTaskDTO> updateProjectTask(@ApiParam(required = true, name = "Project Task", value = "Updated Project Task")
                                                      ProjectTaskDTO projectTaskDTO,
                                                      @ApiIgnore
@@ -85,7 +85,7 @@ public interface BacklogController {
         @ApiResponse(code = 400, message = "Bad Request", response = ValidationErrorExceptionResponse.class),
         @ApiResponse(code = 401, message = "Unauthorized", response = UserNotLoggedInExceptionResponse.class),
         @ApiResponse(code = 404, message = "Not Found", response = ProjectNotFoundExceptionResponse.class),
-        @ApiResponse(code = 500, message = "Internal server Error", response = CustomInternalServerErrorExceptionResponse.class)})
+        @ApiResponse(code = 500, message = "Internal server Error", response = CustomGlobalExceptionResponse.class)})
     ResponseEntity<DeleteDTO> deleteProjectTask(@ApiParam(required = true, name = "projectIdentifier", value = "ID of the Project that contains the Project Task you want to delete")
                                                 String backlogId,
                                                 @ApiParam(required = true, name = "projectSequence", value = "ID of the Project Task you want to delete")

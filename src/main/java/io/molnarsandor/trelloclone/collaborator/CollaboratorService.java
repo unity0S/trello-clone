@@ -1,14 +1,14 @@
 package io.molnarsandor.trelloclone.collaborator;
 
 import io.molnarsandor.trelloclone.collaborator.exceptions.CollaboratorAlreadyAssignedException;
+import io.molnarsandor.trelloclone.collaborator.model.CollaboratorDTO;
 import io.molnarsandor.trelloclone.collaborator.model.CollaboratorEntity;
-import io.molnarsandor.trelloclone.global_exceptions.CustomInternalServerErrorException;
-import io.molnarsandor.trelloclone.project.model.ProjectEntity;
 import io.molnarsandor.trelloclone.project.ProjectService;
 import io.molnarsandor.trelloclone.project.exceptions.ProjectNotFoundException;
+import io.molnarsandor.trelloclone.project.model.ProjectEntity;
 import io.molnarsandor.trelloclone.util.DeleteDTO;
+import io.molnarsandor.trelloclone.util.ModelConverter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
@@ -22,8 +22,12 @@ public class CollaboratorService {
 
     private final ProjectService projectService;
 
+    private final ModelConverter modelConverter;
+
     // == PUBLIC METHODS ==
-    public CollaboratorEntity addCollaborator(String projectIdentifier, CollaboratorEntity collaboratorEntity, String username) {
+    public CollaboratorDTO addCollaborator(String projectIdentifier, CollaboratorDTO collaboratorDTO, String username) {
+
+            CollaboratorEntity collaboratorEntity = modelConverter.collaboratorDtoToEntity(collaboratorDTO);
 
             ProjectEntity projectEntity = projectService.findProjectByIdentifier(projectIdentifier, username);
 
@@ -33,15 +37,8 @@ public class CollaboratorService {
             collaboratorEntity.setProjectIdentifier(projectEntity.getProjectIdentifier());
             collaboratorEntity.setCollaboratorSequence(projectEntity.getProjectIdentifier() + "-" + collaboratorEntity.getEmail());
 
-            CollaboratorEntity savedCollaborator;
-
-            try {
-                savedCollaborator = collaboratorRepository.save(collaboratorEntity);
-            } catch (DataAccessException io) {
-                throw new CustomInternalServerErrorException(io);
-            }
-
-            return savedCollaborator;
+            return modelConverter.collaboratorEntityToDto(
+                    collaboratorRepository.save(collaboratorEntity));
     }
 
     public DeleteDTO deleteCollaborator(String projectIdentifier, String collaboratorSequence, String username) {

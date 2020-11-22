@@ -1,17 +1,16 @@
 package io.molnarsandor.trelloclone.user.model;
 
-
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Getter;
+import lombok.Data;
 
+import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-@Getter
-@ApiModel
-public class UserLoginDTO {
+@MappedSuperclass
+@Data
+public class User {
 
     @Email(message = "Needs to be a valid email")
     @NotBlank(message = "Email is required")

@@ -1,45 +1,32 @@
 package io.molnarsandor.trelloclone.collaborator.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.molnarsandor.trelloclone.project.model.ProjectEntity;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import lombok.Getter;
+import io.molnarsandor.trelloclone.util.EntitySuperClass;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "collaborator")
-@Getter
-@Setter
 @NoArgsConstructor
-@ApiModel(value = "Collaborator", description = "A simplified User used to handle Project collaboration")
-public class CollaboratorEntity {
+@Data
+@EqualsAndHashCode(callSuper = false)
+public class CollaboratorEntity extends EntitySuperClass {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
-    private Long id;
     @Email(message = "Needs to be a valid email")
-    @NotBlank
-    @Column(updatable = false)
-    @ApiModelProperty(value = "Unique email of an existing or a non-existing User", required = true)
+    @Column(nullable = false)
     private String email;
-    @Column(updatable = false)
-    @ApiModelProperty(value = "Unique Project Identifier", required = true, position = 1)
+    @Column(nullable = false)
     private String projectIdentifier;
-    @Column(updatable = false, unique = true)
-    @ApiModelProperty(value = "Unique Collaborator identifier", position = 2)
+    @Column(nullable = false)
     private String collaboratorSequence;
-
     @ManyToOne
     @JoinColumn(name = "project_id", updatable = false, nullable = false)
     @JsonBackReference
-    @ApiModelProperty(hidden = true)
     private ProjectEntity project;
+
 }

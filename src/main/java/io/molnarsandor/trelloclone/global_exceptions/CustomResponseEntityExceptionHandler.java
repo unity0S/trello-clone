@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 @ControllerAdvice
@@ -68,16 +69,16 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
     }
 
     @ExceptionHandler
-    public final ResponseEntity<CustomInternalServerErrorExceptionResponse> handleCustomInternalServerErrorException(CustomInternalServerErrorException ex, WebRequest request) {
-        CustomInternalServerErrorExceptionResponse exceptionResponse = new CustomInternalServerErrorExceptionResponse();
-        log.error(ex.getCause());
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    @ExceptionHandler
     public final ResponseEntity<ActivationKeyNotFoundExceptionResponse> handleAvtivationKeyNotFoundException(ActivationKeyNotFoundException ex, WebRequest request) {
         ActivationKeyNotFoundExceptionResponse exceptionResponse = new ActivationKeyNotFoundExceptionResponse(ex.getMessage());
         log.error(ex);
         return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(value = Exception.class)
+    public final ResponseEntity<CustomGlobalExceptionResponse> handleGlobalException(HttpServletRequest req, Exception e) {
+        log.error("Request: " + req.getRequestURL() + " raised " + e);
+        return new ResponseEntity<>(new CustomGlobalExceptionResponse("Internal Server Error"), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
 }
