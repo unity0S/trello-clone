@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.molnarsandor.trelloclone.collaborator.model.CollaboratorEntity;
-import io.molnarsandor.trelloclone.project_task.model.BacklogEntity;
+import io.molnarsandor.trelloclone.projectTask.model.BacklogEntity;
 import io.molnarsandor.trelloclone.user.model.UserEntity;
 import io.molnarsandor.trelloclone.util.EntitySuperClass;
 import lombok.Data;

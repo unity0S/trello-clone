@@ -1,4 +1,4 @@
-package io.molnarsandor.trelloclone.project_task.model;
+package io.molnarsandor.trelloclone.projectTask.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.molnarsandor.trelloclone.util.EntitySuperClass;

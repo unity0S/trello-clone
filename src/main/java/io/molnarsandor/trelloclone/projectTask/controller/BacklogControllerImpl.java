@@ -1,7 +1,7 @@
-package io.molnarsandor.trelloclone.project_task.controller;
+package io.molnarsandor.trelloclone.projectTask.controller;
 
-import io.molnarsandor.trelloclone.project_task.ProjectTaskService;
-import io.molnarsandor.trelloclone.project_task.model.ProjectTaskDTO;
+import io.molnarsandor.trelloclone.projectTask.ProjectTaskService;
+import io.molnarsandor.trelloclone.projectTask.model.ProjectTaskDTO;
 import io.molnarsandor.trelloclone.util.DeleteDTO;
 import io.molnarsandor.trelloclone.util.MapValidationErrorService;
 import io.molnarsandor.trelloclone.util.ModelConverter;

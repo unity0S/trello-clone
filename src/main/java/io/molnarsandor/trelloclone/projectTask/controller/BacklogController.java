@@ -1,9 +1,9 @@
-package io.molnarsandor.trelloclone.project_task.controller;
+package io.molnarsandor.trelloclone.projectTask.controller;
 
 import io.molnarsandor.trelloclone.global_exceptions.CustomGlobalExceptionResponse;
 import io.molnarsandor.trelloclone.global_exceptions.ValidationErrorExceptionResponse;
 import io.molnarsandor.trelloclone.project.exceptions.ProjectNotFoundExceptionResponse;
-import io.molnarsandor.trelloclone.project_task.model.ProjectTaskDTO;
+import io.molnarsandor.trelloclone.projectTask.model.ProjectTaskDTO;
 import io.molnarsandor.trelloclone.user.exceptions.UserNotLoggedInExceptionResponse;
 import io.molnarsandor.trelloclone.util.DeleteDTO;
 import io.swagger.annotations.ApiOperation;

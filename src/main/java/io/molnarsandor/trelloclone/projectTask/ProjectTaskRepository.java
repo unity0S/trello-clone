@@ -1,6 +1,6 @@
-package io.molnarsandor.trelloclone.project_task;
+package io.molnarsandor.trelloclone.projectTask;
 
-import io.molnarsandor.trelloclone.project_task.model.ProjectTaskEntity;
+import io.molnarsandor.trelloclone.projectTask.model.ProjectTaskEntity;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

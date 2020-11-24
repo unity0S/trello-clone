@@ -1,12 +1,12 @@
-package io.molnarsandor.trelloclone.project_task;
+package io.molnarsandor.trelloclone.projectTask;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.molnarsandor.trelloclone.project.ProjectService;
 import io.molnarsandor.trelloclone.project.exceptions.ProjectNotFoundException;
 import io.molnarsandor.trelloclone.project.model.ProjectEntity;
-import io.molnarsandor.trelloclone.project_task.model.BacklogEntity;
-import io.molnarsandor.trelloclone.project_task.model.ProjectTaskDTO;
-import io.molnarsandor.trelloclone.project_task.model.ProjectTaskEntity;
+import io.molnarsandor.trelloclone.projectTask.model.BacklogEntity;
+import io.molnarsandor.trelloclone.projectTask.model.ProjectTaskDTO;
+import io.molnarsandor.trelloclone.projectTask.model.ProjectTaskEntity;
 import io.molnarsandor.trelloclone.util.DeleteDTO;
 import io.molnarsandor.trelloclone.util.ModelConverter;
 import lombok.RequiredArgsConstructor;
