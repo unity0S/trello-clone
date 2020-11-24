@@ -24,21 +24,20 @@ public class CollaboratorService {
 
     private final ModelConverter modelConverter;
 
-    // == PUBLIC METHODS ==
     public CollaboratorDTO addCollaborator(final String projectIdentifier, final CollaboratorDTO collaboratorDTO, final String username) {
 
-            CollaboratorEntity collaboratorEntity = modelConverter.collaboratorDtoToEntity(collaboratorDTO);
+        CollaboratorEntity collaboratorEntity = modelConverter.collaboratorDtoToEntity(collaboratorDTO);
 
-            ProjectEntity projectEntity = projectService.findProjectByIdentifier(projectIdentifier, username);
+        ProjectEntity projectEntity = projectService.findProjectByIdentifier(projectIdentifier, username);
 
-            checkIsCollaboratorAssigned(projectIdentifier, collaboratorEntity, projectEntity);
+        checkIsCollaboratorAssigned(projectIdentifier, collaboratorEntity, projectEntity);
 
-            collaboratorEntity.setProject(projectEntity);
-            collaboratorEntity.setProjectIdentifier(projectEntity.getProjectIdentifier());
-            collaboratorEntity.setCollaboratorSequence(projectEntity.getProjectIdentifier() + "-" + collaboratorEntity.getEmail());
+        collaboratorEntity.setProject(projectEntity);
+        collaboratorEntity.setProjectIdentifier(projectEntity.getProjectIdentifier());
+        collaboratorEntity.setCollaboratorSequence(projectEntity.getProjectIdentifier() + "-" + collaboratorEntity.getEmail());
 
-            return modelConverter.collaboratorEntityToDto(
-                    collaboratorRepository.save(collaboratorEntity));
+        return modelConverter.collaboratorEntityToDto(
+                collaboratorRepository.save(collaboratorEntity));
     }
 
     public DeleteDTO deleteCollaborator(final String projectIdentifier, final String collaboratorSequence, final String username) {
@@ -53,8 +52,6 @@ public class CollaboratorService {
         return new DeleteDTO("Collaborator with id " + collaboratorSequence + " deleted from Project " + projectIdentifier);
     }
 
-
-    // == PRIVATE METHODS ==
     private void checkIsCollaboratorAssigned(final String projectIdentifier, final CollaboratorEntity collaboratorEntity, final ProjectEntity projectEntity) {
 
         Predicate<CollaboratorEntity> collaboratorPredicate = collaborator1 -> collaborator1.getEmail().equals(collaboratorEntity.getEmail()) &&
@@ -71,6 +68,7 @@ public class CollaboratorService {
     }
 
     private void checkCollaboratorBeforeDelete(final ProjectEntity projectEntity, String username, final String projectIdentifier, final String collaboratorSequence) {
+
         if(!projectEntity.getProjectLeader().equals(username)) {
             throw new ProjectNotFoundException("You are not the owner of this project: '" + projectIdentifier + "'");
         }

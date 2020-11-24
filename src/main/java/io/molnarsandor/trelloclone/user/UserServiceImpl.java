@@ -35,7 +35,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserValidator userValidator;
 
-    // == PUBLIC METHODS ==
     @Transactional
     @Override
     public UserDetails loadUserById(final Long id) {
@@ -97,8 +96,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return new UserActivationDTO("User activated");
     }
 
-    // == PRIVATE METHODS ==
     private String generateKey() {
+
         return UUID.randomUUID().toString();
     }
 

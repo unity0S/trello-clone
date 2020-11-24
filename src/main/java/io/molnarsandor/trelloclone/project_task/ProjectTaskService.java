@@ -25,7 +25,6 @@ public final class ProjectTaskService {
 
     private final ModelConverter modelConverter;
 
-    // == PUBLIC METHODS ==
     public ProjectTaskDTO addProjectTask(final String projectIdentifier, final ProjectTaskDTO projectTaskDTO, final String username) {
 
         ProjectTaskEntity projectTaskEntity = modelConverter.projectTaskDtoToEntity(projectTaskDTO);
@@ -80,7 +79,6 @@ public final class ProjectTaskService {
         return new DeleteDTO("Project task " + ptId + " deleted");
     }
 
-    // == PRIVATE METHODS ==
     private void validateProjectTask(final ProjectTaskEntity projectTaskEntity, final String ptId, final String backlogId) {
 
         if (projectTaskEntity == null) {
@@ -93,6 +91,7 @@ public final class ProjectTaskService {
     }
 
     private ProjectTaskEntity getPTByProjectSequence(final String backlogId, final String ptId, final String username) {
+
         projectService.findProjectByIdentifier(backlogId, username);
         ProjectTaskEntity projectTaskEntity;
 

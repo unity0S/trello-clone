@@ -32,7 +32,6 @@ public class ProjectService {
 
     private final ModelConverter modelConverter;
 
-    // == PUBLIC METHODS ==
     public ProjectEntity findProjectByIdentifier(final String projectId, final String username) {
 
         return getProjectById(projectId, username);
@@ -98,8 +97,8 @@ public class ProjectService {
         return new DeleteDTO("Project " + projectId + " deleted");
     }
 
-    // == PRIVATE METHODS ==
     private void validateProject(final ProjectEntity projectEntity, final String projectIdentifier, final String username) {
+
         if (projectEntity != null && !projectEntity.getProjectLeader().equals(username)) {
             throw new ProjectNotFoundException("Project not found in your account");
         } else if (projectEntity == null) {
@@ -108,6 +107,7 @@ public class ProjectService {
     }
 
     private void validateProjectWithCollaborators(final ProjectEntity projectEntity, final String projectId, final String username) {
+
         if (projectEntity == null) {
             throw new ProjectNotFoundException("Project ID '" + projectId + "' does not exists");
         }
@@ -132,6 +132,7 @@ public class ProjectService {
     }
 
     private ProjectEntity getProjectById(final String projectId, final String username) {
+
         ProjectEntity projectEntity = projectRepository.findByProjectIdentifierIgnoreCase(projectId);
 
         validateProjectWithCollaborators(projectEntity, projectId, username);
