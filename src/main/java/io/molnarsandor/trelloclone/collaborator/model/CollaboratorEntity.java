@@ -1,6 +1,5 @@
 package io.molnarsandor.trelloclone.collaborator.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import io.molnarsandor.trelloclone.project.model.ProjectEntity;
 import io.molnarsandor.trelloclone.util.EntitySuperClass;
 import lombok.Data;
@@ -26,7 +25,6 @@ public class CollaboratorEntity extends EntitySuperClass {
     private String collaboratorSequence;
     @ManyToOne
     @JoinColumn(name = "project_id", updatable = false, nullable = false)
-    @JsonBackReference
     private ProjectEntity project;
 
 }
