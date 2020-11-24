@@ -25,7 +25,7 @@ public class CollaboratorService {
     private final ModelConverter modelConverter;
 
     // == PUBLIC METHODS ==
-    public CollaboratorDTO addCollaborator(String projectIdentifier, CollaboratorDTO collaboratorDTO, String username) {
+    public CollaboratorDTO addCollaborator(final String projectIdentifier, final CollaboratorDTO collaboratorDTO, final String username) {
 
             CollaboratorEntity collaboratorEntity = modelConverter.collaboratorDtoToEntity(collaboratorDTO);
 
@@ -41,7 +41,7 @@ public class CollaboratorService {
                     collaboratorRepository.save(collaboratorEntity));
     }
 
-    public DeleteDTO deleteCollaborator(String projectIdentifier, String collaboratorSequence, String username) {
+    public DeleteDTO deleteCollaborator(final String projectIdentifier, final String collaboratorSequence, final String username) {
 
         ProjectEntity projectEntity = projectService.findProjectByIdentifier(projectIdentifier, username);
 
@@ -55,7 +55,7 @@ public class CollaboratorService {
 
 
     // == PRIVATE METHODS ==
-    private void checkIsCollaboratorAssigned(String projectIdentifier, CollaboratorEntity collaboratorEntity, ProjectEntity projectEntity) {
+    private void checkIsCollaboratorAssigned(final String projectIdentifier, final CollaboratorEntity collaboratorEntity, final ProjectEntity projectEntity) {
 
         Predicate<CollaboratorEntity> collaboratorPredicate = collaborator1 -> collaborator1.getEmail().equals(collaboratorEntity.getEmail()) &&
                 collaborator1.getProjectIdentifier().equals(projectIdentifier);
@@ -70,7 +70,7 @@ public class CollaboratorService {
         }
     }
 
-    private void checkCollaboratorBeforeDelete(ProjectEntity projectEntity, String username, String projectIdentifier, String collaboratorSequence) {
+    private void checkCollaboratorBeforeDelete(final ProjectEntity projectEntity, String username, final String projectIdentifier, final String collaboratorSequence) {
         if(!projectEntity.getProjectLeader().equals(username)) {
             throw new ProjectNotFoundException("You are not the owner of this project: '" + projectIdentifier + "'");
         }

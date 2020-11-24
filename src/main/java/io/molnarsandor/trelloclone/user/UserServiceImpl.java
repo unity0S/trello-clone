@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
@@ -27,7 +27,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserRepository userRepository;
 
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     private final EmailService emailService;
 
@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     // == PUBLIC METHODS ==
     @Transactional
     @Override
-    public UserDetails loadUserById(Long id) {
+    public UserDetails loadUserById(final Long id) {
 
         UserEntity userEntity = userRepository.getById(id);
 
@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) {
+    public UserDetails loadUserByUsername(final String username) {
 
         UserEntity userEntity = userRepository.findByEmail(username);
 
@@ -62,7 +62,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public UserRegistrationResponseDTO registerUser(UserRegisterDTO userRegisterDTO, BindingResult result) {
+    public UserRegistrationResponseDTO registerUser(final UserRegisterDTO userRegisterDTO, final BindingResult result) {
 
         UserEntity userEntity = modelConverter.userRegisterDtoToEntity(userRegisterDTO);
 
@@ -72,7 +72,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
         String uuid = generateKey();
         userEntity.setEmail(userEntity.getEmail());
-        userEntity.setPassword(bCryptPasswordEncoder.encode(userEntity.getPassword()));
+        userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
         userEntity.setConfirmPassword("");
         userEntity.setEnabled(false);
         userEntity.setActivation(uuid);
@@ -82,7 +82,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return modelConverter.userEntityToDto(userEntity);
     }
 
-    public UserActivationDTO userActivation(String key) {
+    public UserActivationDTO userActivation(final String key) {
 
         UserEntity userEntity = userRepository.findByActivation(key);
 
@@ -102,7 +102,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return UUID.randomUUID().toString();
     }
 
-    private void checkIsUserExists(String email) {
+    private void checkIsUserExists(final String email) {
 
         UserEntity userEntity = userRepository.findByEmail(email);
 

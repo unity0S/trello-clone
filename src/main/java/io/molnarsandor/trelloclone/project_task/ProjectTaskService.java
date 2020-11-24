@@ -81,7 +81,7 @@ public final class ProjectTaskService {
     }
 
     // == PRIVATE METHODS ==
-    private void validateProjectTask(ProjectTaskEntity projectTaskEntity, String ptId, String backlogId) {
+    private void validateProjectTask(final ProjectTaskEntity projectTaskEntity, final String ptId, final String backlogId) {
 
         if (projectTaskEntity == null) {
             throw new ProjectNotFoundException("Project Task '" + ptId + "' was not found");
@@ -92,7 +92,7 @@ public final class ProjectTaskService {
         }
     }
 
-    private ProjectTaskEntity getPTByProjectSequence(String backlogId, String ptId, String username) {
+    private ProjectTaskEntity getPTByProjectSequence(final String backlogId, final String ptId, final String username) {
         projectService.findProjectByIdentifier(backlogId, username);
         ProjectTaskEntity projectTaskEntity;
 

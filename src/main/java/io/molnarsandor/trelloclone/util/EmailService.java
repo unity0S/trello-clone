@@ -19,7 +19,7 @@ public class EmailService {
 
     private final JavaMailSender javaMailSender;
 
-    public void sendMessage(String email, String subject, String text) {
+    public void sendMessage(final String email, final String subject, final String text) {
         SimpleMailMessage message;
 
         try {

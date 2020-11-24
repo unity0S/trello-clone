@@ -20,7 +20,7 @@ public class JwtTokenProvider {
 
     private final Log log = LogFactory.getLog(this.getClass());
 
-    public String generateToken(Authentication authentication) {
+    public String generateToken(final Authentication authentication) {
         UserEntity userEntity = ((UserDetailsImpl) authentication.getPrincipal()).getUser();
         Date now = new Date(System.currentTimeMillis());
 

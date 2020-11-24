@@ -33,18 +33,18 @@ public class ProjectService {
     private final ModelConverter modelConverter;
 
     // == PUBLIC METHODS ==
-    public ProjectEntity findProjectByIdentifier(String projectId, String username) {
+    public ProjectEntity findProjectByIdentifier(final String projectId, final String username) {
 
         return getProjectById(projectId, username);
     }
 
-    public ProjectDTO findProjectByIdentifierDTO(String projectId, String username) {
+    public ProjectDTO findProjectByIdentifierDTO(final String projectId, final String username) {
 
         return modelConverter.projectEntityToDto(
                 getProjectById(projectId, username));
     }
 
-    public ProjectDTO saveOrUpdateProject(ProjectDTO projectDTO, String username) {
+    public ProjectDTO saveOrUpdateProject(final ProjectDTO projectDTO, final String username) {
 
         ProjectEntity projectEntity = modelConverter.projectDtoToEntity(projectDTO);
 
@@ -78,7 +78,7 @@ public class ProjectService {
 
     }
 
-    public List<ProjectDTO> findAllProject(String username) {
+    public List<ProjectDTO> findAllProject(final String username) {
 
         List<ProjectEntity> byLeader = projectRepository.findAllByProjectLeader(username);
 
@@ -91,7 +91,7 @@ public class ProjectService {
         return modelConverter.projectEntityListToDto(byLeader);
     }
 
-    public DeleteDTO deleteProjectByIdentifier(String projectId, String username) {
+    public DeleteDTO deleteProjectByIdentifier(final String projectId, final String username) {
 
         projectRepository.delete(findProjectByIdentifier(projectId, username));
 
@@ -99,7 +99,7 @@ public class ProjectService {
     }
 
     // == PRIVATE METHODS ==
-    private void validateProject(ProjectEntity projectEntity, String projectIdentifier, String username) {
+    private void validateProject(final ProjectEntity projectEntity, final String projectIdentifier, final String username) {
         if (projectEntity != null && !projectEntity.getProjectLeader().equals(username)) {
             throw new ProjectNotFoundException("Project not found in your account");
         } else if (projectEntity == null) {
@@ -107,7 +107,7 @@ public class ProjectService {
         }
     }
 
-    private void validateProjectWithCollaborators(ProjectEntity projectEntity, String projectId, String username) {
+    private void validateProjectWithCollaborators(final ProjectEntity projectEntity, final String projectId, final String username) {
         if (projectEntity == null) {
             throw new ProjectNotFoundException("Project ID '" + projectId + "' does not exists");
         }
@@ -131,7 +131,7 @@ public class ProjectService {
         }
     }
 
-    private ProjectEntity getProjectById(String projectId, String username) {
+    private ProjectEntity getProjectById(final String projectId, final String username) {
         ProjectEntity projectEntity = projectRepository.findByProjectIdentifierIgnoreCase(projectId);
 
         validateProjectWithCollaborators(projectEntity, projectId, username);
