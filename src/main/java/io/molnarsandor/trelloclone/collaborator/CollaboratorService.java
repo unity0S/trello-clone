@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
-import java.util.function.Predicate;
 
 @RequiredArgsConstructor
 @Service
@@ -54,13 +53,12 @@ public class CollaboratorService {
 
     private void checkIsCollaboratorAssigned(final String projectIdentifier, final CollaboratorEntity collaboratorEntity, final ProjectEntity projectEntity) {
 
-        Predicate<CollaboratorEntity> collaboratorPredicate = collaborator1 -> collaborator1.getEmail().equals(collaboratorEntity.getEmail()) &&
-                collaborator1.getProjectIdentifier().equals(projectIdentifier);
-
         boolean collaboratorAlreadyOnProject = projectEntity
                 .getCollaborators()
                 .stream()
-                .anyMatch(collaboratorPredicate);
+                .anyMatch(collaborator1 ->
+                        collaborator1.getEmail().equals(collaboratorEntity.getEmail()) &&
+                        collaborator1.getProjectIdentifier().equals(projectIdentifier));
 
         if(collaboratorAlreadyOnProject) {
             throw new CollaboratorAlreadyAssignedException("Collaborator already assigned to this project");
@@ -75,14 +73,15 @@ public class CollaboratorService {
 
         Set<CollaboratorEntity> collaboratorEntities = projectEntity.getCollaborators();
 
-        Predicate<CollaboratorEntity> collaboratorPredicate = collaborator ->
-                collaborator.getCollaboratorSequence().equalsIgnoreCase(collaboratorSequence) &&
-                        collaborator.getProjectIdentifier().equalsIgnoreCase(projectIdentifier);
-        boolean collaboratorExists = false;
+        boolean collaboratorExists;
 
         if(!collaboratorEntities.isEmpty()) {
             collaboratorExists = collaboratorEntities.stream()
-                    .anyMatch(collaboratorPredicate);
+                    .anyMatch(collaborator ->
+                              collaborator.getCollaboratorSequence().equalsIgnoreCase(collaboratorSequence) &&
+                              collaborator.getProjectIdentifier().equalsIgnoreCase(projectIdentifier));
+        } else {
+            collaboratorExists = false;
         }
 
         if(!collaboratorExists) {
