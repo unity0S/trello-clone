@@ -61,7 +61,7 @@ public class BacklogControllerImpl implements BacklogController {
                                                          String ptId,
                                                          Principal principal) {
 
-        ProjectTaskDTO projectTask = projectTaskService.findPtByProjectSequenceDTO(backlogId, ptId, principal.getName());
+        ProjectTaskDTO projectTask = projectTaskService.findProjectTaskByProjectSequenceDTO(backlogId, ptId, principal.getName());
 
         return new ResponseEntity<>(projectTask, HttpStatus.OK);
     }
@@ -92,7 +92,7 @@ public class BacklogControllerImpl implements BacklogController {
                                                        String ptId,
                                                        Principal principal) {
 
-        DeleteDTO response = projectTaskService.deletePTByProjectSequence(backlogId, ptId, principal.getName());
+        DeleteDTO response = projectTaskService.deleteProjectTaskByProjectSequence(backlogId, ptId, principal.getName());
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

@@ -33,7 +33,7 @@ public class ProjectEntity extends EntitySuperClass {
     private LocalDateTime endDate;
     @Column(nullable = false)
     private String projectLeader;
-    @OneToMany(cascade = CascadeType.REFRESH, mappedBy = "project", orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH, mappedBy = "project", orphanRemoval = true)
     @JsonManagedReference
     private Set<CollaboratorEntity> collaborators;
 

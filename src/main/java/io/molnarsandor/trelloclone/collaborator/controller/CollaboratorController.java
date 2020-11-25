@@ -2,8 +2,8 @@ package io.molnarsandor.trelloclone.collaborator.controller;
 
 import io.molnarsandor.trelloclone.collaborator.exceptions.CollaboratorAlreadyAssignedExceptionResponse;
 import io.molnarsandor.trelloclone.collaborator.model.CollaboratorDTO;
-import io.molnarsandor.trelloclone.global_exceptions.CustomGlobalExceptionResponse;
-import io.molnarsandor.trelloclone.global_exceptions.ValidationErrorExceptionResponse;
+import io.molnarsandor.trelloclone.globalExceptions.CustomGlobalExceptionResponse;
+import io.molnarsandor.trelloclone.globalExceptions.ValidationErrorExceptionResponse;
 import io.molnarsandor.trelloclone.project.exceptions.ProjectNotFoundExceptionResponse;
 import io.molnarsandor.trelloclone.user.exceptions.UserNotLoggedInExceptionResponse;
 import io.molnarsandor.trelloclone.util.DeleteDTO;

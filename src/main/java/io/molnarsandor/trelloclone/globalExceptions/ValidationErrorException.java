@@ -1,4 +1,4 @@
-package io.molnarsandor.trelloclone.global_exceptions;
+package io.molnarsandor.trelloclone.globalExceptions;
 
 import lombok.Getter;
 import lombok.Setter;

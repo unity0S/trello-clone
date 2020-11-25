@@ -1,7 +1,7 @@
 package io.molnarsandor.trelloclone.user.controller;
 
-import io.molnarsandor.trelloclone.global_exceptions.CustomGlobalExceptionResponse;
-import io.molnarsandor.trelloclone.global_exceptions.ValidationErrorExceptionResponse;
+import io.molnarsandor.trelloclone.globalExceptions.CustomGlobalExceptionResponse;
+import io.molnarsandor.trelloclone.globalExceptions.ValidationErrorExceptionResponse;
 import io.molnarsandor.trelloclone.user.exceptions.ActivationKeyNotFoundExceptionResponse;
 import io.molnarsandor.trelloclone.user.exceptions.UserNotLoggedInExceptionResponse;
 import io.molnarsandor.trelloclone.user.model.*;

@@ -1,6 +1,6 @@
 package io.molnarsandor.trelloclone.util;
 
-import io.molnarsandor.trelloclone.global_exceptions.ValidationErrorException;
+import io.molnarsandor.trelloclone.globalExceptions.ValidationErrorException;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;

@@ -1,4 +1,4 @@
-package io.molnarsandor.trelloclone.global_exceptions;
+package io.molnarsandor.trelloclone.globalExceptions;
 
 import io.molnarsandor.trelloclone.collaborator.exceptions.CollaboratorAlreadyAssignedException;
 import io.molnarsandor.trelloclone.collaborator.exceptions.CollaboratorAlreadyAssignedExceptionResponse;

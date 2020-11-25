@@ -32,9 +32,9 @@ public final class ProjectTaskService {
         ProjectEntity projectEntity = projectService.findProjectByIdentifier(projectIdentifier, username);
         BacklogEntity backlogEntity = projectEntity.getBacklog();
         projectTaskEntity.setBacklog(backlogEntity);
-        Integer backlogSequence = backlogEntity.getPtSequence();
+        Integer backlogSequence = backlogEntity.getProjectTaskSequence();
         backlogSequence++;
-        backlogEntity.setPtSequence(backlogSequence);
+        backlogEntity.setProjectTaskSequence(backlogSequence);
         projectTaskEntity.setProjectSequence(backlogEntity.getProjectIdentifier() + "-" + backlogSequence);
         projectTaskEntity.setProjectIdentifier(projectIdentifier.toUpperCase());
 
@@ -50,54 +50,54 @@ public final class ProjectTaskService {
                 projectTaskRepository.findByProjectIdentifierIgnoreCaseOrderByPriority(id));
     }
 
-    public ProjectTaskEntity findPtByProjectSequence(final String backlogId, final String ptId, final String username) {
+    public ProjectTaskEntity findProjectTaskByProjectSequence(final String backlogId, final String projectTaskId, final String username) {
 
-        return getPTByProjectSequence(backlogId, ptId, username);
+        return getProjectTaskByProjectSequence(backlogId, projectTaskId, username);
     }
 
-    public ProjectTaskDTO findPtByProjectSequenceDTO(final String backlogId, final String ptId, final String username) {
+    public ProjectTaskDTO findProjectTaskByProjectSequenceDTO(final String backlogId, final String projectTaskId, final String username) {
 
         return modelConverter.projectTaskEntityToDto(
-                getPTByProjectSequence(backlogId, ptId, username));
+                getProjectTaskByProjectSequence(backlogId, projectTaskId, username));
     }
 
-    public ProjectTaskDTO updateByProjectSequence(final ProjectTaskDTO projectTaskDTO, final String backlogId, final String ptId, final String username) {
+    public ProjectTaskDTO updateByProjectSequence(final ProjectTaskDTO projectTaskDTO, final String backlogId, final String projectTaskId, final String username) {
 
         ProjectTaskEntity projectTaskEntity = modelConverter.projectTaskDtoToEntity(projectTaskDTO);
 
-        findPtByProjectSequence(backlogId, ptId, username);
+        findProjectTaskByProjectSequence(backlogId, projectTaskId, username);
 
         return modelConverter.projectTaskEntityToDto(
                 projectTaskRepository.save(projectTaskEntity));
     }
 
-    public DeleteDTO deletePTByProjectSequence(final String backlogId, final String ptId, final String username) {
+    public DeleteDTO deleteProjectTaskByProjectSequence(final String backlogId, final String projectTaskId, final String username) {
 
-        ProjectTaskEntity projectTaskEntity = findPtByProjectSequence(backlogId, ptId, username);
+        ProjectTaskEntity projectTaskEntity = findProjectTaskByProjectSequence(backlogId, projectTaskId, username);
         projectTaskRepository.delete(projectTaskEntity);
 
-        return new DeleteDTO("Project task " + ptId + " deleted");
+        return new DeleteDTO("Project task " + projectTaskId + " deleted");
     }
 
-    private void validateProjectTask(final ProjectTaskEntity projectTaskEntity, final String ptId, final String backlogId) {
+    private void validateProjectTask(final ProjectTaskEntity projectTaskEntity, final String projectTaskId, final String backlogId) {
 
         if (projectTaskEntity == null) {
-            throw new ProjectNotFoundException("Project Task '" + ptId + "' was not found");
+            throw new ProjectNotFoundException("Project Task '" + projectTaskId + "' was not found");
         }
 
         if (!projectTaskEntity.getProjectIdentifier().equalsIgnoreCase(backlogId)) {
-            throw new ProjectNotFoundException("Project Task '" + ptId + "' does not exists in project: '" + backlogId);
+            throw new ProjectNotFoundException("Project Task '" + projectTaskId + "' does not exists in project: '" + backlogId);
         }
     }
 
-    private ProjectTaskEntity getPTByProjectSequence(final String backlogId, final String ptId, final String username) {
+    private ProjectTaskEntity getProjectTaskByProjectSequence(final String backlogId, final String projectTaskId, final String username) {
 
         projectService.findProjectByIdentifier(backlogId, username);
         ProjectTaskEntity projectTaskEntity;
 
-        projectTaskEntity = projectTaskRepository.findByProjectSequence(ptId);
+        projectTaskEntity = projectTaskRepository.findByProjectSequence(projectTaskId);
 
-        validateProjectTask(projectTaskEntity, ptId, backlogId);
+        validateProjectTask(projectTaskEntity, projectTaskId, backlogId);
 
         return projectTaskEntity;
     }
