@@ -1,12 +1,10 @@
 package io.molnarsandor.trelloclone.user.exceptions;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import io.molnarsandor.trelloclone.globalExceptions.EntityOperationException;
 
-@ResponseStatus(HttpStatus.UNAUTHORIZED)
-public class UserNotLoggedInException extends RuntimeException {
+public class UserNotLoggedInException extends EntityOperationException {
 
     public UserNotLoggedInException(String message) {
-        super(message);
+        super(message, 401);
     }
 }

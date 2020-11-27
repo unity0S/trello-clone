@@ -1,12 +1,10 @@
 package io.molnarsandor.trelloclone.user.exceptions;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import io.molnarsandor.trelloclone.globalExceptions.EntityOperationException;
 
-@ResponseStatus(HttpStatus.NOT_FOUND)
-public class ActivationKeyNotFoundException extends RuntimeException {
+public class ActivationKeyNotFoundException extends EntityOperationException {
 
     public ActivationKeyNotFoundException(String message) {
-        super(message);
+        super(message, 404);
     }
 }

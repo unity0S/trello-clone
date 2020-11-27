@@ -12,9 +12,9 @@ import java.util.Map;
 @Setter
 public class ValidationErrorException extends RuntimeException {
 
-    private Map<String, String> msg;
+    private Map<String, String> error;
 
     public ValidationErrorException(Map<String, String> message) {
-        this.msg = message;
+        this.error = message;
     }
 }

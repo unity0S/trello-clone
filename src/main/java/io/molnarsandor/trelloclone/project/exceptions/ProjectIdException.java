@@ -1,12 +1,10 @@
 package io.molnarsandor.trelloclone.project.exceptions;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import io.molnarsandor.trelloclone.globalExceptions.EntityOperationException;
 
-@ResponseStatus(HttpStatus.CONFLICT)
-public class ProjectIdException extends RuntimeException {
+public class ProjectIdException extends EntityOperationException {
 
     public ProjectIdException(String message) {
-        super(message);
+        super(message, 409);
     }
 }

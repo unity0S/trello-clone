@@ -1,12 +1,10 @@
 package io.molnarsandor.trelloclone.project.exceptions;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import io.molnarsandor.trelloclone.globalExceptions.EntityOperationException;
 
-@ResponseStatus(HttpStatus.NOT_FOUND)
-public class ProjectNotFoundException extends RuntimeException {
+public class ProjectNotFoundException extends EntityOperationException {
 
     public ProjectNotFoundException(String message) {
-        super(message);
+        super(message, 404);
     }
 }

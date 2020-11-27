@@ -1,12 +1,12 @@
 package io.molnarsandor.trelloclone.util;
 
-import lombok.Getter;
+import lombok.Data;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @MappedSuperclass
-@Getter
+@Data
 public class EntitySuperClass {
 
     @Id
