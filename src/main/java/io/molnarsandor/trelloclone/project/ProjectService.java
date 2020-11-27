@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Set;
-import java.util.function.Predicate;
 
 @RequiredArgsConstructor
 @Service
@@ -83,9 +82,17 @@ public class ProjectService {
 
         CollaboratorEntity collaboratorEntity = collaboratorRepository.findByEmail(username);
 
-        List<ProjectEntity> byCollaborator = projectRepository.findAllByCollaborators(collaboratorEntity);
+        List<ProjectEntity> byCollaborator;
 
-        byLeader.addAll(byCollaborator);
+        if (collaboratorEntity != null) {
+            byCollaborator = projectRepository.findAllByCollaborators(collaboratorEntity);
+        } else {
+            byCollaborator = null;
+        }
+
+        if (byCollaborator != null) {
+            byLeader.addAll(byCollaborator);
+        }
 
         return modelConverter.projectEntityListToDto(byLeader);
     }
@@ -114,16 +121,15 @@ public class ProjectService {
 
         Set<CollaboratorEntity> collaboratorEntities = projectEntity.getCollaborators();
 
-        Predicate<CollaboratorEntity> collaboratorPredicate = collaborator ->
-                collaborator.getProjectIdentifier().equalsIgnoreCase(projectId) &&
-                        collaborator.getEmail().equals(username);
-
-
-        boolean collaboratorExists = false;
+        boolean collaboratorExists;
         if (!collaboratorEntities.isEmpty()) {
             collaboratorExists = collaboratorEntities
                     .stream()
-                    .anyMatch(collaboratorPredicate);
+                    .anyMatch(collaborator ->
+                                collaborator.getProjectIdentifier().equalsIgnoreCase(projectId) &&
+                                collaborator.getEmail().equals(username));
+        } else {
+            collaboratorExists = false;
         }
 
         if (!projectEntity.getProjectLeader().equals(username) && !collaboratorExists) {
