@@ -1,18 +1,18 @@
 package io.molnarsandor.trelloclone.projectTask.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.molnarsandor.trelloclone.util.EntitySuperClass;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@SuppressFBWarnings({"EI_EXPOSE_REP2", "EI_EXPOSE_REP"})
 @Entity
 @Table(name = "project_task")
 @Data
+@NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class ProjectTaskEntity extends EntitySuperClass {
 
@@ -30,10 +30,6 @@ public class ProjectTaskEntity extends EntitySuperClass {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "backlog_id", updatable = false, nullable = false)
     @JsonIgnore
+    @EqualsAndHashCode.Exclude
     private BacklogEntity backlog;
-
-    public ProjectTaskEntity() {
-        this.status = "TO_DO";
-        this.priority = 3;
-    }
 }

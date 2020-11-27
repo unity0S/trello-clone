@@ -1,7 +1,6 @@
 package io.molnarsandor.trelloclone.project.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.molnarsandor.trelloclone.collaborator.model.CollaboratorEntity;
 import io.molnarsandor.trelloclone.projectTask.model.BacklogEntity;
@@ -18,14 +17,14 @@ import java.util.Set;
 @SuppressFBWarnings({"EI_EXPOSE_REP2", "EI_EXPOSE_REP"})
 @Entity
 @Table(name = "project")
+@NoArgsConstructor
 @Data
 @EqualsAndHashCode(callSuper = false)
-@NoArgsConstructor
 public class ProjectEntity extends EntitySuperClass {
 
     @Column(nullable = false)
     private String projectName;
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String projectIdentifier;
     @Column(nullable = false)
     private String description;
@@ -34,16 +33,18 @@ public class ProjectEntity extends EntitySuperClass {
     @Column(nullable = false)
     private String projectLeader;
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH, mappedBy = "project", orphanRemoval = true)
-    @JsonManagedReference
+    @EqualsAndHashCode.Exclude
     private Set<CollaboratorEntity> collaborators;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "project")
     @JsonIgnore
+    @EqualsAndHashCode.Exclude
     private BacklogEntity backlog;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     @JsonIgnore
+    @EqualsAndHashCode.Exclude
     private UserEntity user;
 
 }

@@ -2,9 +2,9 @@ package io.molnarsandor.trelloclone.projectTask.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.molnarsandor.trelloclone.project.model.ProjectEntity;
-import lombok.Getter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -12,8 +12,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "backlog")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 public class BacklogEntity {
 
@@ -26,8 +25,10 @@ public class BacklogEntity {
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "project_id", nullable = false)
     @JsonIgnore
+    @EqualsAndHashCode.Exclude
     private ProjectEntity project;
 
     @OneToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER, mappedBy = "backlog", orphanRemoval = true)
+    @EqualsAndHashCode.Exclude
     private Set<ProjectTaskEntity> projectTasks = new HashSet<>();
 }

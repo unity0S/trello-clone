@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.molnarsandor.trelloclone.project.model.ProjectEntity;
 import io.molnarsandor.trelloclone.util.EntitySuperClass;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -24,7 +23,6 @@ import java.util.List;
 public class UserEntity extends EntitySuperClass {
 
     @Column(unique = true, nullable = false)
-    @ApiModelProperty(value = "Existing email where the activation link will be sent", required = true)
     private String email;
     @Column(nullable = false)
     private String fullName;
@@ -40,6 +38,7 @@ public class UserEntity extends EntitySuperClass {
     private String confirmPassword;
 
     @OneToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER, mappedBy = "user", orphanRemoval = true)
-    @ApiModelProperty(hidden = true)
+    @JsonIgnore
+    @EqualsAndHashCode.Exclude
     private List<ProjectEntity> projects = new ArrayList<>();
 }

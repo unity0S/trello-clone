@@ -14,7 +14,6 @@ public class CollaboratorDTO {
     @NotBlank
     @ApiModelProperty(value = "Unique email of an existing or a non-existing User", required = true)
     private String email;
-    @NotBlank
     @ApiModelProperty(value = "Unique Project Identifier", required = true, position = 1)
     private String projectIdentifier;
     @ApiModelProperty(value = "Unique Collaborator identifier", position = 2)

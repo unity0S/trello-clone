@@ -1,5 +1,6 @@
 package io.molnarsandor.trelloclone.collaborator.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.molnarsandor.trelloclone.project.model.ProjectEntity;
 import io.molnarsandor.trelloclone.util.EntitySuperClass;
 import lombok.Data;
@@ -23,8 +24,10 @@ public class CollaboratorEntity extends EntitySuperClass {
     private String projectIdentifier;
     @Column(nullable = false)
     private String collaboratorSequence;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id", updatable = false, nullable = false)
+    @JsonIgnore
+    @EqualsAndHashCode.Exclude
     private ProjectEntity project;
 
 }
