@@ -12,7 +12,8 @@ import java.util.Map;
 @Setter
 public class ValidationErrorException extends RuntimeException {
 
-    private Map<String, String> error;
+    public static final Integer CODE = 400;
+    private final Map<String, String> error;
 
     public ValidationErrorException(Map<String, String> message) {
         this.error = message;
