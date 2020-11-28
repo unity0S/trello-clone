@@ -4,6 +4,7 @@ import io.molnarsandor.trelloclone.security.JwtTokenProvider;
 import io.molnarsandor.trelloclone.user.UserServiceImpl;
 import io.molnarsandor.trelloclone.user.model.*;
 import io.molnarsandor.trelloclone.util.MapValidationErrorService;
+import io.molnarsandor.trelloclone.util.Paths;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ import static io.molnarsandor.trelloclone.security.SecurityConstants.TOKEN_PREFI
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping(Paths.User.PATH)
 @CrossOrigin
 public class UserControllerImpl implements UserController {
 
@@ -33,7 +34,7 @@ public class UserControllerImpl implements UserController {
     private final JwtTokenProvider tokenProvider;
 
     @Override
-    @PostMapping("/login")
+    @PostMapping(Paths.User.AuthenticateUser.PATH)
     public ResponseEntity<UserLoginResponseDTO> authenticateUser(@Valid
                                                                  @RequestBody
                                                                  UserLoginDTO userLoginDTO,
@@ -53,7 +54,7 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
-    @PostMapping("/register")
+    @PostMapping(Paths.User.RegisterUser.PATH)
     public ResponseEntity<UserRegistrationResponseDTO> registerUser(@Valid
                                                                     @RequestBody
                                                                     UserRegisterDTO userRegisterDTO,
@@ -66,7 +67,7 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
-    @GetMapping("/activation/{key}")
+    @GetMapping(Paths.User.ActivateUser.PATH)
     public ResponseEntity<UserActivationDTO> activateUser(@PathVariable String key) {
 
         UserActivationDTO result = userServiceImpl.userActivation(key);

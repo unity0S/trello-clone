@@ -4,6 +4,7 @@ import io.molnarsandor.trelloclone.project.ProjectService;
 import io.molnarsandor.trelloclone.project.model.ProjectDTO;
 import io.molnarsandor.trelloclone.util.DeleteDTO;
 import io.molnarsandor.trelloclone.util.MapValidationErrorService;
+import io.molnarsandor.trelloclone.util.Paths;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/project")
+@RequestMapping(Paths.Project.PATH)
 @CrossOrigin
 public class ProjectControllerImpl implements ProjectController {
 
@@ -25,7 +26,7 @@ public class ProjectControllerImpl implements ProjectController {
     private final MapValidationErrorService mapValidationErrorService;
 
     @Override
-    @PostMapping("/")
+    @PostMapping(Paths.Project.CreateNewProject.PATH)
     public ResponseEntity<ProjectDTO> createNewProject(@Valid
                                                        @RequestBody
                                                        ProjectDTO projectDTO,
@@ -39,7 +40,7 @@ public class ProjectControllerImpl implements ProjectController {
     }
 
     @Override
-    @GetMapping("/{projectId}")
+    @GetMapping(Paths.Project.GetProjectById.PATH)
     public ResponseEntity<ProjectDTO> getProjectById(@PathVariable
                                                      String projectId,
                                                      Principal principal) {
@@ -50,7 +51,7 @@ public class ProjectControllerImpl implements ProjectController {
     }
 
     @Override
-    @GetMapping("/all")
+    @GetMapping(Paths.Project.GetAllProjects.PATH)
     public ResponseEntity<List<ProjectDTO>> getAllProjects(Principal principal) {
 
         List<ProjectDTO> projects = projectService.findAllProject(principal.getName());
@@ -59,7 +60,7 @@ public class ProjectControllerImpl implements ProjectController {
     }
 
     @Override
-    @DeleteMapping("/{projectId}")
+    @DeleteMapping(Paths.Project.DeleteProject.PATH)
     public ResponseEntity<DeleteDTO> deleteProject(@PathVariable
                                                    String projectId,
                                                    Principal principal) {

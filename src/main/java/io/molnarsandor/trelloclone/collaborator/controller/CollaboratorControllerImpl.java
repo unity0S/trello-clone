@@ -5,6 +5,7 @@ import io.molnarsandor.trelloclone.collaborator.model.CollaboratorDTO;
 import io.molnarsandor.trelloclone.util.DeleteDTO;
 import io.molnarsandor.trelloclone.util.EmailService;
 import io.molnarsandor.trelloclone.util.MapValidationErrorService;
+import io.molnarsandor.trelloclone.util.Paths;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,7 @@ import java.security.Principal;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/collaborator")
+@RequestMapping(Paths.Collaborator.PATH)
 @CrossOrigin
 public class CollaboratorControllerImpl implements CollaboratorController {
 
@@ -27,7 +28,7 @@ public class CollaboratorControllerImpl implements CollaboratorController {
     private final EmailService emailService;
 
     @Override
-    @PostMapping("/{projectIdentifier}")
+    @PostMapping(Paths.Collaborator.AddCollaboratorToProject.PATH)
     public ResponseEntity<CollaboratorDTO> addCollaboratorToProject(@Valid
                                                                     @RequestBody
                                                                     CollaboratorDTO collaboratorDTO,
@@ -45,7 +46,7 @@ public class CollaboratorControllerImpl implements CollaboratorController {
     }
 
     @Override
-    @DeleteMapping("/{projectIdentifier}/{collaboratorSequence}")
+    @DeleteMapping(Paths.Collaborator.DeleteCollaborator.PATH)
     public ResponseEntity<DeleteDTO> deleteCollaborator(@PathVariable
                                                         String projectIdentifier,
                                                         @PathVariable
