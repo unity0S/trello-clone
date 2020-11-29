@@ -1,6 +1,7 @@
 package io.molnarsandor.trelloclone.projectTask.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.molnarsandor.trelloclone.project.model.ProjectEntity;
 import io.molnarsandor.trelloclone.util.EntitySuperClass;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -18,8 +19,6 @@ public class ProjectTaskEntity extends EntitySuperClass {
 
     @Column(updatable = false)
     private String projectIdentifier;
-    @Column(updatable = false, unique = true)
-    private String projectSequence;
     @Column(nullable = false)
     private String summary;
     @Column(nullable = false)
@@ -27,9 +26,9 @@ public class ProjectTaskEntity extends EntitySuperClass {
     @Column(nullable = false)
     private Integer priority;
     private LocalDateTime dueDate;
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "backlog_id", updatable = false, nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "project_id", updatable = false, nullable = false)
     @JsonIgnore
     @EqualsAndHashCode.Exclude
-    private BacklogEntity backlog;
+    private ProjectEntity project;
 }

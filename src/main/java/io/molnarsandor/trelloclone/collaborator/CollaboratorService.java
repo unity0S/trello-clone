@@ -1,6 +1,7 @@
 package io.molnarsandor.trelloclone.collaborator;
 
 import io.molnarsandor.trelloclone.collaborator.exceptions.CollaboratorAlreadyAssignedException;
+import io.molnarsandor.trelloclone.collaborator.exceptions.CollaboratorDoesntExistsException;
 import io.molnarsandor.trelloclone.collaborator.model.CollaboratorDTO;
 import io.molnarsandor.trelloclone.collaborator.model.CollaboratorEntity;
 import io.molnarsandor.trelloclone.project.ProjectService;
@@ -39,16 +40,21 @@ public class CollaboratorService {
                 collaboratorRepository.save(collaboratorEntity));
     }
 
-    public DeleteDTO deleteCollaborator(final String projectIdentifier, final String collaboratorSequence, final String username) {
+    public DeleteDTO deleteCollaborator(final String projectIdentifier, final Long collaboratorId, final String username) {
 
         ProjectEntity projectEntity = projectService.findProjectByIdentifier(projectIdentifier, username);
 
-        checkCollaboratorBeforeDelete(projectEntity, username, projectIdentifier, collaboratorSequence);
+        CollaboratorEntity collaboratorEntity = collaboratorRepository.findById(collaboratorId).orElse(null);
 
-        CollaboratorEntity collaboratorEntity = collaboratorRepository.findByCollaboratorSequence(collaboratorSequence);
+        checkCollaboratorBeforeDelete(projectEntity, username, projectIdentifier, collaboratorId);
+
+        if (collaboratorEntity == null) {
+            throw new CollaboratorDoesntExistsException("Collaborator does not exists");
+        }
+
         collaboratorRepository.delete(collaboratorEntity);
 
-        return new DeleteDTO("Collaborator with id " + collaboratorSequence + " deleted from Project " + projectIdentifier);
+        return new DeleteDTO("Collaborator with id " + collaboratorId + " deleted from Project " + projectIdentifier);
     }
 
     private void checkIsCollaboratorAssigned(final String projectIdentifier, final CollaboratorEntity collaboratorEntity, final ProjectEntity projectEntity) {
@@ -58,14 +64,14 @@ public class CollaboratorService {
                 .stream()
                 .anyMatch(collaborator1 ->
                         collaborator1.getEmail().equals(collaboratorEntity.getEmail()) &&
-                        collaborator1.getProjectIdentifier().equals(projectIdentifier));
+                        collaborator1.getProjectIdentifier().equalsIgnoreCase(projectIdentifier));
 
         if(collaboratorAlreadyOnProject) {
             throw new CollaboratorAlreadyAssignedException("Collaborator already assigned to this project");
         }
     }
 
-    private void checkCollaboratorBeforeDelete(final ProjectEntity projectEntity, String username, final String projectIdentifier, final String collaboratorSequence) {
+    private void checkCollaboratorBeforeDelete(final ProjectEntity projectEntity, String username, final String projectIdentifier, final Long collaboratorId) {
 
         if(!projectEntity.getProjectLeader().equals(username)) {
             throw new ProjectNotFoundException("You are not the owner of this project: '" + projectIdentifier + "'");
@@ -78,14 +84,14 @@ public class CollaboratorService {
         if(!collaboratorEntities.isEmpty()) {
             collaboratorExists = collaboratorEntities.stream()
                     .anyMatch(collaborator ->
-                              collaborator.getCollaboratorSequence().equalsIgnoreCase(collaboratorSequence) &&
+                              collaborator.getId().equals(collaboratorId) &&
                               collaborator.getProjectIdentifier().equalsIgnoreCase(projectIdentifier));
         } else {
             collaboratorExists = false;
         }
 
-        if(!collaboratorExists) {
-            throw new CollaboratorAlreadyAssignedException("Collaborator: '" + collaboratorSequence + "' does not assigned to this project");
+        if (!collaboratorExists) {
+            throw new CollaboratorAlreadyAssignedException("Collaborator: '" + collaboratorId + "' does not assigned to this project");
         }
     }
 }

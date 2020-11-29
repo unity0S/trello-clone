@@ -43,7 +43,7 @@ public interface CollaboratorController {
     ResponseEntity<DeleteDTO> deleteCollaborator(@ApiParam(required = true, name = "projectIdentifier", value = "ID of the Project where you want to Delete the Collaborator")
                                                  String projectIdentifier,
                                                  @ApiParam(required = true, name = "collaboratorSequence", value = "ID of the Collaborator which you want to Delete")
-                                                 String collaboratorSequence,
+                                                 Long collaboratorId,
                                                  @ApiIgnore
                                                  Principal principal);
 }

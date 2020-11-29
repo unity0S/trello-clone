@@ -37,7 +37,7 @@ public class UserEntity extends EntitySuperClass {
     @Transient
     private String confirmPassword;
 
-    @OneToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER, mappedBy = "user", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY, mappedBy = "user", orphanRemoval = true)
     @JsonIgnore
     @EqualsAndHashCode.Exclude
     private List<ProjectEntity> projects = new ArrayList<>();

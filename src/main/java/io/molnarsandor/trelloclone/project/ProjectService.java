@@ -2,11 +2,10 @@ package io.molnarsandor.trelloclone.project;
 
 import io.molnarsandor.trelloclone.collaborator.CollaboratorRepository;
 import io.molnarsandor.trelloclone.collaborator.model.CollaboratorEntity;
+import io.molnarsandor.trelloclone.project.exceptions.ProjectAlreadyExistsException;
 import io.molnarsandor.trelloclone.project.exceptions.ProjectNotFoundException;
 import io.molnarsandor.trelloclone.project.model.ProjectDTO;
 import io.molnarsandor.trelloclone.project.model.ProjectEntity;
-import io.molnarsandor.trelloclone.projectTask.BacklogRepository;
-import io.molnarsandor.trelloclone.projectTask.model.BacklogEntity;
 import io.molnarsandor.trelloclone.user.UserRepository;
 import io.molnarsandor.trelloclone.user.model.UserEntity;
 import io.molnarsandor.trelloclone.util.DeleteDTO;
@@ -22,8 +21,6 @@ import java.util.Set;
 public class ProjectService {
 
     private final ProjectRepository projectRepository;
-
-    private final BacklogRepository backlogRepository;
 
     private final UserRepository userRepository;
 
@@ -46,12 +43,18 @@ public class ProjectService {
 
         ProjectEntity projectEntity = modelConverter.projectDtoToEntity(projectDTO);
 
+        ProjectEntity existingProjectEntity;
         if (projectEntity.getId() != null) {
-            ProjectEntity existingProjectEntity;
 
             existingProjectEntity = projectRepository.findByProjectIdentifierIgnoreCase(projectEntity.getProjectIdentifier());
 
             validateProject(existingProjectEntity, projectEntity.getProjectIdentifier(), username);
+        } else {
+            existingProjectEntity = projectRepository.findByProjectIdentifierIgnoreCase(projectEntity.getProjectIdentifier());
+
+            if (existingProjectEntity != null) {
+                throw new ProjectAlreadyExistsException("Project with Identifier: " + existingProjectEntity.getProjectIdentifier() + " already exists. Must be unique");
+            }
         }
 
 
@@ -60,20 +63,19 @@ public class ProjectService {
         projectEntity.setProjectLeader(userEntity.getEmail());
         projectEntity.setProjectIdentifier(projectEntity.getProjectIdentifier().toUpperCase());
 
-        if (projectEntity.getId() == null) {
-            BacklogEntity backlogEntity = new BacklogEntity();
-            projectEntity.setBacklog(backlogEntity);
-            backlogEntity.setProject(projectEntity);
-            backlogEntity.setProjectIdentifier(projectEntity.getProjectIdentifier().toUpperCase());
-        }
 
         if (projectEntity.getId() != null) {
-            projectEntity.setBacklog(backlogRepository.findByProjectIdentifierIgnoreCase(projectEntity.getProjectIdentifier().toUpperCase()));
+            ProjectEntity projectEntityFromDb = projectRepository.findByProjectIdentifierIgnoreCase(projectEntity.getProjectIdentifier());
+            projectEntityFromDb.setProjectName(projectEntity.getProjectName());
+            projectEntityFromDb.setDescription(projectEntity.getDescription());
+
+            return modelConverter.projectEntityToDto(
+                    projectRepository.save(projectEntityFromDb));
+
         }
 
         return modelConverter.projectEntityToDto(
                 projectRepository.save(projectEntity));
-
     }
 
     public List<ProjectDTO> findAllProject(final String username) {

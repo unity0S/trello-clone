@@ -4,7 +4,6 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.molnarsandor.trelloclone.project.ProjectService;
 import io.molnarsandor.trelloclone.project.exceptions.ProjectNotFoundException;
 import io.molnarsandor.trelloclone.project.model.ProjectEntity;
-import io.molnarsandor.trelloclone.projectTask.model.BacklogEntity;
 import io.molnarsandor.trelloclone.projectTask.model.ProjectTaskDTO;
 import io.molnarsandor.trelloclone.projectTask.model.ProjectTaskEntity;
 import io.molnarsandor.trelloclone.util.DeleteDTO;
@@ -30,19 +29,22 @@ public final class ProjectTaskService {
         ProjectTaskEntity projectTaskEntity = modelConverter.projectTaskDtoToEntity(projectTaskDTO);
 
         ProjectEntity projectEntity = projectService.findProjectByIdentifier(projectIdentifier, username);
-        BacklogEntity backlogEntity = projectEntity.getBacklog();
-        projectTaskEntity.setBacklog(backlogEntity);
-        Integer backlogSequence = backlogEntity.getProjectTaskSequence();
-        backlogSequence++;
-        backlogEntity.setProjectTaskSequence(backlogSequence);
-        projectTaskEntity.setProjectSequence(backlogEntity.getProjectIdentifier() + "-" + backlogSequence);
+        projectTaskEntity.setProject(projectEntity);
         projectTaskEntity.setProjectIdentifier(projectIdentifier.toUpperCase());
 
+        if (projectTaskEntity.getPriority() == null) {
+            projectTaskEntity.setPriority(3);
+        }
+
+        if (projectTaskEntity.getStatus() == null || projectTaskEntity.getStatus().equals("")) {
+            projectTaskEntity.setStatus("TO_DO");
+        }
+
         return modelConverter.projectTaskEntityToDto(
-                projectTaskRepository.save(projectTaskEntity));
+            projectTaskRepository.save(projectTaskEntity));
     }
 
-    public List<ProjectTaskDTO> findBacklogById(final String id, final String username) {
+    public List<ProjectTaskDTO> findProjectTasksByProjectId(final String id, final String username) {
 
         projectService.findProjectByIdentifier(id, username);
 
@@ -50,54 +52,52 @@ public final class ProjectTaskService {
                 projectTaskRepository.findByProjectIdentifierIgnoreCaseOrderByPriority(id));
     }
 
-    public ProjectTaskEntity findProjectTaskByProjectSequence(final String backlogId, final String projectTaskId, final String username) {
-
-        return getProjectTaskByProjectSequence(backlogId, projectTaskId, username);
-    }
-
-    public ProjectTaskDTO findProjectTaskByProjectSequenceDTO(final String backlogId, final String projectTaskId, final String username) {
+    public ProjectTaskDTO findProjectTaskByIdDTO(final String projectId, final Long projectTaskId, final String username) {
 
         return modelConverter.projectTaskEntityToDto(
-                getProjectTaskByProjectSequence(backlogId, projectTaskId, username));
+                getProjectTaskById(projectId, projectTaskId, username));
     }
 
-    public ProjectTaskDTO updateByProjectSequence(final ProjectTaskDTO projectTaskDTO, final String backlogId, final String projectTaskId, final String username) {
+    public ProjectTaskDTO updateByProjectTaskById(final ProjectTaskDTO projectTaskDTO, final String projectId, final Long projectTaskId, final String username) {
 
         ProjectTaskEntity projectTaskEntity = modelConverter.projectTaskDtoToEntity(projectTaskDTO);
 
-        findProjectTaskByProjectSequence(backlogId, projectTaskId, username);
+        getProjectTaskById(projectId, projectTaskId, username);
 
         return modelConverter.projectTaskEntityToDto(
                 projectTaskRepository.save(projectTaskEntity));
     }
 
-    public DeleteDTO deleteProjectTaskByProjectSequence(final String backlogId, final String projectTaskId, final String username) {
+    public DeleteDTO deleteProjectTaskById(final String projectId, final Long projectTaskId, final String username) {
 
-        ProjectTaskEntity projectTaskEntity = findProjectTaskByProjectSequence(backlogId, projectTaskId, username);
+        getProjectTaskById(projectId, projectTaskId, username);
+
+        ProjectTaskEntity projectTaskEntity = projectTaskRepository.findById(projectTaskId).orElse(null);
+
+        validateProjectTask(projectTaskEntity, projectTaskId, projectId);
+
         projectTaskRepository.delete(projectTaskEntity);
 
         return new DeleteDTO("Project task " + projectTaskId + " deleted");
     }
 
-    private void validateProjectTask(final ProjectTaskEntity projectTaskEntity, final String projectTaskId, final String backlogId) {
+    private void validateProjectTask(final ProjectTaskEntity projectTaskEntity, final Long projectTaskId, final String projectId) {
 
         if (projectTaskEntity == null) {
             throw new ProjectNotFoundException("Project Task '" + projectTaskId + "' was not found");
         }
 
-        if (!projectTaskEntity.getProjectIdentifier().equalsIgnoreCase(backlogId)) {
-            throw new ProjectNotFoundException("Project Task '" + projectTaskId + "' does not exists in project: '" + backlogId);
+        if (!projectTaskEntity.getProjectIdentifier().equalsIgnoreCase(projectId)) {
+            throw new ProjectNotFoundException("Project Task '" + projectTaskId + "' does not exists in project: '" + projectId);
         }
     }
 
-    private ProjectTaskEntity getProjectTaskByProjectSequence(final String backlogId, final String projectTaskId, final String username) {
+    private ProjectTaskEntity getProjectTaskById(final String projectId, final Long projectTaskId, final String username) {
 
-        projectService.findProjectByIdentifier(backlogId, username);
-        ProjectTaskEntity projectTaskEntity;
+        projectService.findProjectByIdentifier(projectId, username);
+        ProjectTaskEntity projectTaskEntity = projectTaskRepository.findById(projectTaskId).orElse(null);
 
-        projectTaskEntity = projectTaskRepository.findByProjectSequence(projectTaskId);
-
-        validateProjectTask(projectTaskEntity, projectTaskId, backlogId);
+        validateProjectTask(projectTaskEntity, projectTaskId, projectId);
 
         return projectTaskEntity;
     }

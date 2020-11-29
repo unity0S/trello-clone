@@ -4,7 +4,6 @@ import io.molnarsandor.trelloclone.projectTask.ProjectTaskService;
 import io.molnarsandor.trelloclone.projectTask.model.ProjectTaskDTO;
 import io.molnarsandor.trelloclone.util.DeleteDTO;
 import io.molnarsandor.trelloclone.util.MapValidationErrorService;
-import io.molnarsandor.trelloclone.util.ModelConverter;
 import io.molnarsandor.trelloclone.util.Paths;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,82 +17,80 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(Paths.Backlog.PATH)
+@RequestMapping(Paths.ProjectTask.PATH)
 @CrossOrigin
-public class BacklogControllerImpl implements BacklogController {
+public class ProjectTaskControllerImpl implements ProjectTaskController {
 
     private final ProjectTaskService projectTaskService;
 
     private final MapValidationErrorService mapValidationErrorService;
 
-    private final ModelConverter modelConverter;
-
     @Override
-    @PostMapping(Paths.Backlog.AddProjectTaskToBacklog.PATH)
-    public ResponseEntity<ProjectTaskDTO> addProjectTaskToBacklog(@Valid
-                                                         @RequestBody
-                                                         ProjectTaskDTO projectTaskDTO,
+    @PostMapping(Paths.ProjectTask.AddProjectTaskToProject.PATH)
+    public ResponseEntity<ProjectTaskDTO> addProjectTaskToProject(@Valid
+                                                                  @RequestBody
+                                                                  ProjectTaskDTO projectTaskDTO,
                                                                   BindingResult result,
                                                                   @PathVariable
-                                                         String backlogId,
+                                                                  String projectId,
                                                                   Principal principal) {
 
-        ProjectTaskDTO savedProjectTask = projectTaskService.addProjectTask(backlogId, projectTaskDTO, principal.getName());
+        ProjectTaskDTO savedProjectTask = projectTaskService.addProjectTask(projectId, projectTaskDTO, principal.getName());
 
         return new ResponseEntity<>(savedProjectTask, HttpStatus.CREATED);
     }
 
     @Override
-    @GetMapping(Paths.Backlog.GetProjectBacklog.PATH)
-    public ResponseEntity<List<ProjectTaskDTO>> getProjectBacklog(@PathVariable
-                                                                  String backlogId,
-                                                                  Principal principal) {
+    @GetMapping(Paths.ProjectTask.GetProjectTasks.PATH)
+    public ResponseEntity<List<ProjectTaskDTO>> getProjectTasks(@PathVariable
+                                                                String projectId,
+                                                                Principal principal) {
 
-        List<ProjectTaskDTO> projectTasks = projectTaskService.findBacklogById(backlogId, principal.getName());
+        List<ProjectTaskDTO> projectTasks = projectTaskService.findProjectTasksByProjectId(projectId, principal.getName());
 
         return new ResponseEntity<>(projectTasks, HttpStatus.OK);
     }
 
     @Override
-    @GetMapping(Paths.Backlog.GetProjectTask.PATH)
+    @GetMapping(Paths.ProjectTask.GetProjectTask.PATH)
     public ResponseEntity<ProjectTaskDTO> getProjectTask(@PathVariable
-                                                         String backlogId,
+                                                         String projectId,
                                                          @PathVariable
-                                                         String projectSequence,
+                                                         Long projectTaskId,
                                                          Principal principal) {
 
-        ProjectTaskDTO projectTask = projectTaskService.findProjectTaskByProjectSequenceDTO(backlogId, projectSequence, principal.getName());
+        ProjectTaskDTO projectTask = projectTaskService.findProjectTaskByIdDTO(projectId, projectTaskId, principal.getName());
 
         return new ResponseEntity<>(projectTask, HttpStatus.OK);
     }
 
     @Override
-    @PatchMapping(Paths.Backlog.UpdateProjectTask.PATH)
+    @PatchMapping(Paths.ProjectTask.UpdateProjectTask.PATH)
     public ResponseEntity<ProjectTaskDTO> updateProjectTask(@Valid
                                                             @RequestBody
                                                             ProjectTaskDTO projectTaskDTO,
                                                             BindingResult result,
                                                             @PathVariable
-                                                            String backlogId,
+                                                            String projectId,
                                                             @PathVariable
-                                                            String projectSequence,
+                                                            Long projectTaskId,
                                                             Principal principal) {
 
         mapValidationErrorService.mapValidationService(result);
-        ProjectTaskDTO updatedTask = projectTaskService.updateByProjectSequence(projectTaskDTO,backlogId, projectSequence, principal.getName());
+        ProjectTaskDTO updatedTask = projectTaskService.updateByProjectTaskById(projectTaskDTO, projectId, projectTaskId, principal.getName());
 
         return new ResponseEntity<>(updatedTask, HttpStatus.OK);
     }
 
     @Override
-    @DeleteMapping(Paths.Backlog.DeleteProjectTask.PATH)
+    @DeleteMapping(Paths.ProjectTask.DeleteProjectTask.PATH)
     public ResponseEntity<DeleteDTO> deleteProjectTask(@PathVariable
-                                                       String backlogId,
+                                                       String projectId,
                                                        @PathVariable
-                                                       String projectSequence,
+                                                       Long projectTaskId,
                                                        Principal principal) {
 
-        DeleteDTO response = projectTaskService.deleteProjectTaskByProjectSequence(backlogId, projectSequence, principal.getName());
+        DeleteDTO response = projectTaskService.deleteProjectTaskById(projectId, projectTaskId, principal.getName());
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

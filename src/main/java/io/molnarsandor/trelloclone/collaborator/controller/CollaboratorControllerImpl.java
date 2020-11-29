@@ -50,10 +50,10 @@ public class CollaboratorControllerImpl implements CollaboratorController {
     public ResponseEntity<DeleteDTO> deleteCollaborator(@PathVariable
                                                         String projectIdentifier,
                                                         @PathVariable
-                                                        String collaboratorSequence,
+                                                        Long collaboratorId,
                                                         Principal principal) {
 
-        DeleteDTO response = collaboratorService.deleteCollaborator(projectIdentifier.toUpperCase(), collaboratorSequence, principal.getName());
+        DeleteDTO response = collaboratorService.deleteCollaborator(projectIdentifier.toUpperCase(), collaboratorId, principal.getName());
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

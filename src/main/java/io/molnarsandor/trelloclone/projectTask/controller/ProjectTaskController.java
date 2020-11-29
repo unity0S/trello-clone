@@ -14,7 +14,7 @@ import springfox.documentation.annotations.ApiIgnore;
 import java.security.Principal;
 import java.util.List;
 
-public interface BacklogController {
+public interface ProjectTaskController {
 
     @ApiOperation(value = "Add Project Task to Project", notes = "Add New Project Task to Project", response = ProjectTaskDTO.class)
     @ApiResponses({
@@ -23,14 +23,14 @@ public interface BacklogController {
         @ApiResponse(code = 401, message = "Unauthorized", response = CustomGeneralExceptionResponse.class),
         @ApiResponse(code = 404, message = "Not Found", response = CustomGeneralExceptionResponse.class),
         @ApiResponse(code = 500, message = "Internal server Error", response = CustomGeneralExceptionResponse.class)})
-    ResponseEntity<ProjectTaskDTO> addProjectTaskToBacklog(@ApiParam(required = true, name = "projectTask", value = "New Project Task")
-                                                  ProjectTaskDTO projectTaskDTO,
+    ResponseEntity<ProjectTaskDTO> addProjectTaskToProject(@ApiParam(required = true, name = "projectTask", value = "New Project Task")
+                                                           ProjectTaskDTO projectTaskDTO,
                                                            @ApiIgnore
-                                                  BindingResult result,
+                                                           BindingResult result,
                                                            @ApiParam(required = true, name = "projectIdentifier", value = "ID of the Project where you want to add a Project Task")
-                                                  String backlogId,
+                                                           String projectId,
                                                            @ApiIgnore
-                                                  Principal principal);
+                                                           Principal principal);
 
     @ApiOperation(value = "Get Project Tasks", notes = "Retrieves List of Project Tasks", response = ProjectTaskDTO.class)
     @ApiResponses({
@@ -39,10 +39,10 @@ public interface BacklogController {
         @ApiResponse(code = 401, message = "Unauthorized", response = CustomGeneralExceptionResponse.class),
         @ApiResponse(code = 404, message = "Not Found", response = CustomGeneralExceptionResponse.class),
         @ApiResponse(code = 500, message = "Internal server Error", response = CustomGeneralExceptionResponse.class)})
-    ResponseEntity<List<ProjectTaskDTO>> getProjectBacklog(@ApiParam(required = true, name = "projectIdentifier", value = "ID of the Project")
-                                                           String backlogId,
-                                                           @ApiIgnore
-                                                           Principal principal);
+    ResponseEntity<List<ProjectTaskDTO>> getProjectTasks(@ApiParam(required = true, name = "projectIdentifier", value = "ID of the Project")
+                                                         String projectId,
+                                                         @ApiIgnore
+                                                         Principal principal);
 
     @ApiOperation(value = "Get Project Task", notes = "Retrieves a single Project Task", response = ProjectTaskDTO.class)
     @ApiResponses({
@@ -52,9 +52,9 @@ public interface BacklogController {
         @ApiResponse(code = 404, message = "Not Found", response = CustomGeneralExceptionResponse.class),
         @ApiResponse(code = 500, message = "Internal server Error", response = CustomGeneralExceptionResponse.class)})
     ResponseEntity<ProjectTaskDTO> getProjectTask(@ApiParam(required = true, name = "projectIdentifier", value = "ID of the Project")
-                                                  String backlogId,
+                                                  String projectId,
                                                   @ApiParam(required = true, name = "projectSequence", value = "ID of the Project Task you want to retrieve")
-                                                  String projectSequence,
+                                                  Long projectTaskId,
                                                   @ApiIgnore
                                                   Principal principal);
 
@@ -70,9 +70,9 @@ public interface BacklogController {
                                                      @ApiIgnore
                                                      BindingResult result,
                                                      @ApiParam(required = true, name = "projectIdentifier", value = "ID of the Project containing the updatable Project Task")
-                                                     String backlogId,
+                                                     String projectId,
                                                      @ApiParam(required = true, name = "projectSequence", value = "ID of the Project Task to be updated")
-                                                     String projectSequence,
+                                                     Long projectTaskId,
                                                      @ApiIgnore
                                                      Principal principal);
 
@@ -84,9 +84,9 @@ public interface BacklogController {
         @ApiResponse(code = 404, message = "Not Found", response = CustomGeneralExceptionResponse.class),
         @ApiResponse(code = 500, message = "Internal server Error", response = CustomGeneralExceptionResponse.class)})
     ResponseEntity<DeleteDTO> deleteProjectTask(@ApiParam(required = true, name = "projectIdentifier", value = "ID of the Project that contains the Project Task you want to delete")
-                                                String backlogId,
+                                                String projectId,
                                                 @ApiParam(required = true, name = "projectSequence", value = "ID of the Project Task you want to delete")
-                                                String projectSequence,
+                                                Long projectTaskId,
                                                 @ApiIgnore
                                                 Principal principal);
 }

@@ -17,7 +17,7 @@ public final class Paths {
 
         public static final class DeleteCollaborator {
 
-            public static final String PATH = PROJECT_IDENTIFIER + COLLABORATOR_SEQUENCE;
+            public static final String PATH = PROJECT_IDENTIFIER + COLLABORATOR_ID;
 
             private DeleteCollaborator() {}
         }
@@ -60,45 +60,45 @@ public final class Paths {
         private Project() {}
     }
 
-    public static final class Backlog {
+    public static final class ProjectTask {
 
-        public static final String PATH = BACKLOG;
+        public static final String PATH = PROJECT_TASKS;
 
-        public static final class AddProjectTaskToBacklog {
+        public static final class AddProjectTaskToProject {
 
-            public static final String PATH = BACKLOG_ID;
+            public static final String PATH = PROJECT_ID;
 
-            private AddProjectTaskToBacklog() {}
+            private AddProjectTaskToProject() {}
         }
 
-        public static final class GetProjectBacklog {
+        public static final class GetProjectTasks {
 
-            public static final String PATH = BACKLOG_ID;
+            public static final String PATH = PROJECT_ID;
 
-            private GetProjectBacklog() {}
+            private GetProjectTasks() {}
         }
 
         public static final class GetProjectTask {
 
-            public static final String PATH = BACKLOG_ID + PROJECT_SEQUENCE;
+            public static final String PATH = PROJECT_ID + PROJECT_TASK_ID;
 
             private GetProjectTask() {}
         }
 
         public static final class UpdateProjectTask {
 
-            public static final String PATH =BACKLOG_ID + PROJECT_SEQUENCE;
+            public static final String PATH = PROJECT_ID + PROJECT_TASK_ID;
 
             private UpdateProjectTask() {}
         }
         public static final class DeleteProjectTask {
 
-            public static final String PATH = BACKLOG_ID + PROJECT_SEQUENCE;
+            public static final String PATH = PROJECT_ID + PROJECT_TASK_ID;
 
             private DeleteProjectTask() {}
         }
 
-        private Backlog() {}
+        private ProjectTask() {}
 
     }
 

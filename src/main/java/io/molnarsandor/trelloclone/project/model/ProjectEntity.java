@@ -3,7 +3,7 @@ package io.molnarsandor.trelloclone.project.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.molnarsandor.trelloclone.collaborator.model.CollaboratorEntity;
-import io.molnarsandor.trelloclone.projectTask.model.BacklogEntity;
+import io.molnarsandor.trelloclone.projectTask.model.ProjectTaskEntity;
 import io.molnarsandor.trelloclone.user.model.UserEntity;
 import io.molnarsandor.trelloclone.util.EntitySuperClass;
 import lombok.Data;
@@ -24,7 +24,7 @@ public class ProjectEntity extends EntitySuperClass {
 
     @Column(nullable = false)
     private String projectName;
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String projectIdentifier;
     @Column(nullable = false)
     private String description;
@@ -32,14 +32,13 @@ public class ProjectEntity extends EntitySuperClass {
     private LocalDateTime endDate;
     @Column(nullable = false)
     private String projectLeader;
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH, mappedBy = "project", orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "project", orphanRemoval = true)
     @EqualsAndHashCode.Exclude
     private Set<CollaboratorEntity> collaborators;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "project")
-    @JsonIgnore
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH, mappedBy = "project", orphanRemoval = true)
     @EqualsAndHashCode.Exclude
-    private BacklogEntity backlog;
+    private Set<ProjectTaskEntity> projectTasks;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
