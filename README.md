@@ -72,7 +72,6 @@ Collaborators can:
 - [x] Check thrown Exceptions and fix them
 - [x] Check field based Dependencies and change it to Constructor based Dep.
 - [x] Add and use DTO's
-- [ ] Extract ENUMs
 - [x] Feed env variables from outside, not from application.properties
 - [x] Delete other Repo
 - [ ] Rework Docker file
@@ -83,8 +82,7 @@ Collaborators can:
 - [ ] Rework Collaborator entity
 - [x] Rework exception responses to a global/unified response
 - [ ] Rework DTO-s to request/response classes
-- [ ] Extract endpoints paths to Paths.class
+- [x] Extract endpoints paths to Paths.class
 - [ ] Create email message templates
-- [ ] Move annotations from controller implementation to the interface
 - [ ] Add logging to controller and service layer
 - [ ] Read about Clean and Hexagonal architecture
