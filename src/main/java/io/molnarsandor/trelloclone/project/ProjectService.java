@@ -30,48 +30,53 @@ public class ProjectService {
 
     public ProjectEntity findProjectByIdentifier(final String projectId, final String username) {
 
-        return getProjectById(projectId, username);
+        ProjectEntity projectEntity = getProjectById(projectId);
+
+        validateProjectWithCollaborators(projectEntity, projectId, username);
+
+        return projectEntity;
     }
 
     public ProjectDTO findProjectByIdentifierDTO(final String projectId, final String username) {
 
-        return modelConverter.projectEntityToDto(
-                getProjectById(projectId, username));
+        ProjectEntity projectEntity = getProjectById(projectId);
+
+        validateProjectWithCollaborators(projectEntity, projectId, username);
+
+        return modelConverter.projectEntityToDto(projectEntity);
     }
 
     public ProjectDTO saveOrUpdateProject(final ProjectDTO projectDTO, final String username) {
 
-        ProjectEntity projectEntity = modelConverter.projectDtoToEntity(projectDTO);
-
+        ProjectEntity projectEntity;
         ProjectEntity existingProjectEntity;
-        if (projectEntity.getId() != null) {
 
-            existingProjectEntity = projectRepository.findByProjectIdentifierIgnoreCase(projectEntity.getProjectIdentifier());
-
-            validateProject(existingProjectEntity, projectEntity.getProjectIdentifier(), username);
-        } else {
+        if (projectDTO.getId() == null) {
+            // new project
+            projectEntity = modelConverter.projectDtoToEntity(projectDTO);
             existingProjectEntity = projectRepository.findByProjectIdentifierIgnoreCase(projectEntity.getProjectIdentifier());
 
             if (existingProjectEntity != null) {
                 throw new ProjectAlreadyExistsException("Project with Identifier: " + existingProjectEntity.getProjectIdentifier() + " already exists. Must be unique");
             }
-        }
 
+            UserEntity userEntity = userRepository.findByEmail(username);
+            projectEntity.setUser(userEntity);
+            projectEntity.setProjectLeader(userEntity.getEmail());
+            projectEntity.setProjectIdentifier(projectEntity.getProjectIdentifier().toUpperCase());
 
-        UserEntity userEntity = userRepository.findByEmail(username);
-        projectEntity.setUser(userEntity);
-        projectEntity.setProjectLeader(userEntity.getEmail());
-        projectEntity.setProjectIdentifier(projectEntity.getProjectIdentifier().toUpperCase());
+        } else {
+            // update project
+            existingProjectEntity = projectRepository.findById(projectDTO.getId()).orElse(null);
 
+            validateProject(existingProjectEntity, projectDTO.getProjectIdentifier(), username);
 
-        if (projectEntity.getId() != null) {
-            ProjectEntity projectEntityFromDb = projectRepository.findByProjectIdentifierIgnoreCase(projectEntity.getProjectIdentifier());
-            projectEntityFromDb.setProjectName(projectEntity.getProjectName());
-            projectEntityFromDb.setDescription(projectEntity.getDescription());
+            projectEntity = projectRepository.findById(projectDTO.getId()).orElse(null);
 
-            return modelConverter.projectEntityToDto(
-                    projectRepository.save(projectEntityFromDb));
+            validateProject(projectEntity, projectDTO.getProjectIdentifier(), username);
 
+            projectEntity.setProjectName(projectDTO.getProjectName());
+            projectEntity.setDescription(projectDTO.getDescription());
         }
 
         return modelConverter.projectEntityToDto(
@@ -139,12 +144,8 @@ public class ProjectService {
         }
     }
 
-    private ProjectEntity getProjectById(final String projectId, final String username) {
+    private ProjectEntity getProjectById(final String projectId) {
 
-        ProjectEntity projectEntity = projectRepository.findByProjectIdentifierIgnoreCase(projectId);
-
-        validateProjectWithCollaborators(projectEntity, projectId, username);
-
-        return projectEntity;
+        return projectRepository.findByProjectIdentifierIgnoreCase(projectId);
     }
 }
