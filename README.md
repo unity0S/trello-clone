@@ -68,7 +68,7 @@ Collaborators can:
 ## TODO LIST
 - [x] Updating Github READ.ME
 - [x] Adding error codes to documentation
-- [x] Refractor variable names
+- [x] Refactor variable names
 - [x] Check thrown Exceptions and fix them
 - [x] Check field based Dependencies and change it to Constructor based Dep.
 - [x] Add and use DTO's
@@ -76,10 +76,10 @@ Collaborators can:
 - [x] Delete other Repo
 - [ ] Rework Docker file
 - [x] UserValidator review (no changes, checks password and confirm password are the same)
-- [ ] ProjectTaskService and the other services: code smell => check them
+- [x] ProjectTaskService and the other services: code smell => check them
 - [ ] Unit/Integration Tests
-- [ ] Add interfaces to services
-- [ ] Rework Collaborator entity
+- [x] Add interfaces to services
+- [x] Rework Collaborator entity
 - [x] Rework exception responses to a global/unified response
 - [ ] Rework DTO-s to request/response classes
 - [x] Extract endpoints paths to Paths.class
