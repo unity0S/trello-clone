@@ -1,7 +1,7 @@
 package io.molnarsandor.trelloclone.collaborator.controller;
 
-import io.molnarsandor.trelloclone.collaborator.CollaboratorService;
 import io.molnarsandor.trelloclone.collaborator.model.CollaboratorDTO;
+import io.molnarsandor.trelloclone.collaborator.CollaboratorService;
 import io.molnarsandor.trelloclone.util.DeleteDTO;
 import io.molnarsandor.trelloclone.util.EmailService;
 import io.molnarsandor.trelloclone.util.MapValidationErrorService;

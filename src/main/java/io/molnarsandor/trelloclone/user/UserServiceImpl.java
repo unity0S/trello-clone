@@ -81,6 +81,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return modelConverter.userEntityToDto(userEntity);
     }
 
+    @Override
     public UserActivationDTO userActivation(final String key) {
 
         UserEntity userEntity = userRepository.findByActivation(key);

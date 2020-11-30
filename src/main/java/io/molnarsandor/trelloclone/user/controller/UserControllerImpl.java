@@ -1,7 +1,7 @@
 package io.molnarsandor.trelloclone.user.controller;
 
 import io.molnarsandor.trelloclone.security.JwtTokenProvider;
-import io.molnarsandor.trelloclone.user.UserServiceImpl;
+import io.molnarsandor.trelloclone.user.UserService;
 import io.molnarsandor.trelloclone.user.model.*;
 import io.molnarsandor.trelloclone.util.MapValidationErrorService;
 import io.molnarsandor.trelloclone.util.Paths;
@@ -27,7 +27,7 @@ public class UserControllerImpl implements UserController {
 
     private final MapValidationErrorService mapValidationErrorService;
 
-    private final UserServiceImpl userServiceImpl;
+    private final UserService userService;
 
     private final AuthenticationManager authenticationManager;
 
@@ -61,7 +61,7 @@ public class UserControllerImpl implements UserController {
                                                                     BindingResult result) {
 
         mapValidationErrorService.mapValidationService(result);
-        UserRegistrationResponseDTO newUser = userServiceImpl.registerUser(userRegisterDTO, result);
+        UserRegistrationResponseDTO newUser = userService.registerUser(userRegisterDTO, result);
 
         return new ResponseEntity<>(newUser, HttpStatus.CREATED);
     }
@@ -70,7 +70,7 @@ public class UserControllerImpl implements UserController {
     @GetMapping(Paths.User.ActivateUser.PATH)
     public ResponseEntity<UserActivationDTO> activateUser(@PathVariable String key) {
 
-        UserActivationDTO result = userServiceImpl.userActivation(key);
+        UserActivationDTO result = userService.userActivation(key);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
